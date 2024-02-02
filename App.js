@@ -3,30 +3,29 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-//import of components
-import HomeScreen from './screens/HomeScreen';
-import LoginScreen from './screens/LoginScreen';
-import ProfileScreen from './screens/ProfileScreen';
-
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-// ceci est un test pour git !
 
 //import for redux persistance
 import { Provider } from 'react-redux';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-
-import user from './reducers/user';
-
-//import for redux persistance
 import { persistStore, persistReducer } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
 //import storage from 'redux-persist/lib/storage'; //pour react "classique"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+//import of components
+import HomeScreen from './screens/HomeScreen';
+import LoginScreen from './screens/LoginScreen';
+import ProfileScreen from './screens/ProfileScreen';
+
+
+// import of reducers
+import user from './reducers/user';
+
 
 const reducers = combineReducers({ user });
-const persistConfig = { key: 'canniconnect', storage: AsyncStorage }; //ici le storage de react est remplacé par AsyncStorage de react-native
+const persistConfig = { key: 'canniconnect', storage: AsyncStorage }; //ici le storage de react est remplacé par "storage: AsyncStorage" de react-native
 
 const store = configureStore({
   reducer: persistReducer(persistConfig, reducers),
