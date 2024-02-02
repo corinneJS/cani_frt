@@ -4,7 +4,7 @@ const initialState = {
  value: {nickname: null},
 };
 
-export const friendsSlice = createSlice({
+export const userSlice = createSlice({
  name: 'user',
   initialState,
  reducers: {
