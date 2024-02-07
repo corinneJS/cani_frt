@@ -7,7 +7,7 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/olea.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -36,6 +36,9 @@
     },
     "updates": {
       "url": "https://u.expo.dev/51276322-0b74-4b57-893c-ffc527bd4606"
-    }
+    },
+    "plugins": [
+      "expo-font"
+    ]
   }
 }

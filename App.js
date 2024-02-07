@@ -15,9 +15,12 @@ import { PersistGate } from 'redux-persist/integration/react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 //import of components
+import SplashScreen from "./screens/SplashScreen"; // CP
 import HomeScreen from './screens/HomeScreen';
 import LoginScreen from './screens/LoginScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import PromenadeScreen from "./screens/PromenadeScreen";
+import FavorisScreen from "./screens/FavorisScreen";
 
 
 // import of reducers
@@ -25,7 +28,7 @@ import user from './reducers/user';
 
 
 const reducers = combineReducers({ user });
-const persistConfig = { key: 'canniconnect', storage: AsyncStorage }; //ici le storage de react est remplacé par "storage: AsyncStorage" de react-native
+const persistConfig = { key: 'caniconnect', storage: AsyncStorage }; //ici le storage de react est remplacé par "storage: AsyncStorage" de react-native
 
 const store = configureStore({
   reducer: persistReducer(persistConfig, reducers),
@@ -40,23 +43,28 @@ const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
   return (
-    <Tab.Navigator screenOptions={({ route }) => ({
-      tabBarIcon: ({ color, size }) => {
-        let iconName = '';
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ color, size }) => {
+          let iconName = "";
 
-        if (route.name === 'Home') {
-          iconName = 'home';
-        } else if (route.name === 'Profile') {
-          iconName = 'user-o';
-        }
+          if (route.name === "Home") {
+            iconName = "home";
+          } else if (route.name === "Profile") {
+            iconName = "user-o";
+          }
 
-        return <FontAwesome name={iconName} size={size} color={color} />;
-      },
-      tabBarActiveTintColor: '#f2B872',
-      tabBarInactiveTintColor: '#335561',
-      headerShown: false,
-    })}>
+          return <FontAwesome name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: "#f2B872",
+        tabBarInactiveTintColor: "#335561",
+        headerShown: false,
+      })}
+    >
       <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Promenade" component={PromenadeScreen} />
+      <Tab.Screen name="Favoris" component={FavorisScreen} />
+
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
@@ -67,11 +75,12 @@ export default function App() {
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="TabNavigator" component={TabNavigator} />
-        </Stack.Navigator>
-      </NavigationContainer>
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Splash" component={SplashScreen} />
+            <Stack.Screen name="TabNavigator" component={TabNavigator} />
+          </Stack.Navigator>
+        </NavigationContainer>
       </PersistGate>
     </Provider>
   );
