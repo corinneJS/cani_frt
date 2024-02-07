@@ -18,7 +18,7 @@ const globalCSS = require("../styles/global.js");
 import { useDispatch } from 'react-redux';
 import { updateNickname } from '../reducers/user';
 
-export default function HomeScreen() {
+export default function PromenadeScreen() {
   
 
   return (
@@ -26,7 +26,7 @@ export default function HomeScreen() {
       colors={["#F2B872", "#FFFFFF"]}
       style={globalCSS.backgrdContainer}
     >
-      <Text>Welcome to caniconnect HomeScreen !</Text>
+      <Text>Welcome to caniconnect PromenadeScreen !</Text>
       <StatusBar style="auto" />
     </LinearGradient>
   );
