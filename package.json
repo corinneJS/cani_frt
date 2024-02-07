@@ -11,6 +11,7 @@
   "dependencies": {
     "@ant-design/icons-react-native": "^2.3.2",
     "@ant-design/react-native": "^5.0.5",
+    "@expo/ngrok": "^4.1.0",
     "@react-native-async-storage/async-storage": "^1.21.0",
     "@react-navigation/bottom-tabs": "6",
     "@react-navigation/native": "6",
