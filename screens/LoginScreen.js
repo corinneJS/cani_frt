@@ -1,113 +1,148 @@
-import { useState } from "react";
+// Ecran de connexion
+// Auteur : Junior
+// Objet : permettre l'authentification d'un user déjà identifié
+// par la saisie d'un mot de passe ou via la connexion google.
+// possibilité de choisir de s'inscrire
+// Contributions :
+// CP 08/02/24 : ajout styles, ajout lien vers inscription, ajout commentaires ;-)
+// --------------------------------------------------------------------------------
+// import des composants
 import {
-  Image,
   KeyboardAvoidingView,
   Platform,
+  View,
   StyleSheet,
+  Image,
   Text,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+// import pour gestion des States et 
+import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { updateNickname } from "../reducers/user";
+//CP :  import feuille de style globale & init globalCSS 
+const globalCSS = require("../styles/global.js");
 
 export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("");
+  const [isConnected, setIsConnected] = useState("");
 
- 
-  const [signUpUsername, setSignUpUsername]= useState("");
-  const [signUpEmail, setSignUpEmail] = useState("")
-  const [signUpPassword, setSignUpPassword] = useState("");
+/* // fct pour btn connect avec ggle  CP : A FAIRE A LA FIN
+  const handleGoogle = () => {
+        Alert.alert('Oups !',`L'authentification Google n'est pas encore développée`)
+  }; */
 
-  const handleRegister = () => {
-    fetch('https://backend-lyart-mu.vercel.app/users/signup', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: signUpUsername, email: signUpEmail, password: signUpPassword }),
-    }).then(response => response.json())
-      .then(data => {
+
+// fct btn connect via backend
+  const handleConnect = () => {
+    /* 'https://backend-lyart-mu.vercel.app/users/signin' */
+    fetch("http://192.168.1.198:3000/users/signin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: email, password: password }), // voir avec Joel si { email, password } ?
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // CP : ajout isConnect? et gestion Msg Erreur
         if (data.result) {
-          dispatch(login({ username: signUpUsername, token: data.token }));
-          setSignUpUsername('');
-          setSignUpEmail('')
-          setSignUpPassword('');
-         
-        }
-      });
-  };
+          dispatch(login({ email: email, token: data.token, isConnect:true }));
+          setEmail("");
+          setPassword("");
+        } else {
 
-  const handleConnection = () => {
-    fetch('/https://backend-lyart-mu.vercel.app/users/signin', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: signInUsername, password: signInPassword }),
-    }).then(response => response.json())
-      .then(data => {
-        if (data.result) {
-          dispatch(login({ username: signInUsername, token: data.token }));
-          setSignInUsername('');
-          setSignInPassword('');
-         
+          Alert.alert("Oups !", data.error);
+          // ATTENTION : supprimer ligne suivante quand backend OK
+          navigation.navigate("Home");
+          dispatch(login({ email: email, token: data.token, isConnect: true }));
+          setPassword("");
         }
       });
   };
  
-  const handleLogout = () => {
-    dispatch(logout());
-    dispatch(removeAllBookmark());
-  };
-
+  
   return (
-    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <Text style={styles.title}>Caniconnect Login </Text>
+    <LinearGradient // CP : ajout dégradé
+      colors={["#F2B872", "#FFFFFF"]}
+      style={globalCSS.backgrdContainer}
+    >
+      <KeyboardAvoidingView
+        style={globalCSS.container}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <Image
+          style={styles.image}
+          source={require("../assets/ccLogoColor.png")}
+        />
+        <Text style={globalCSS.title}>Heureux de vous retrouver !</Text>
+        <View style={styles.formContent}>
+          <TextInput
+            placeholder="Email"
+            autoCapitalize="none" // https://reactnative.dev/docs/textinput#autocapitalize
+            keyboardType="email-address" // https://reactnative.dev/docs/textinput#keyboardtype
+            textContentType="emailAddress" // https://reactnative.dev/docs/textinput#textcontenttype-ios
+            autoComplete="email" // https://reactnative.dev/docs/textinput#autocomplete-android
+            onChangeText={(value) => setEmail(value)}
+            value={email}
+            style={globalCSS.input}
+          />
 
-      <TextInput placeholder="Username" onChangeText={(value) => setSignUpUsername(value)} value={signUpUsername} style={styles.input} />
-      <TextInput placeholder="Email" onChangeText={(value) => setSignUpEmail(value)} value={signUpEmail} style={styles.input} />
-      <TextInput placeholder="Password" onChangeText={(value) => setSignUpPassword(value)} value={signUpPassword} style={styles.input} />
-      <TouchableOpacity onPress={() => handleSubmit()} style={styles.button} activeOpacity={0.8}>
-        <Text style={styles.textButton}>s'inscrire</Text>
-      </TouchableOpacity>
-    </KeyboardAvoidingView>
-  )
+          <TextInput
+            placeholder="Password"
+            onChangeText={(value) => setPassword(value)}
+            value={password}
+            secureTextEntry={true}
+            style={globalCSS.input}
+          />
+          <TouchableOpacity
+            onPress={() => handleConnect()}
+            style={globalCSS.button}
+            activeOpacity={0.8}
+          >
+            <Text style={globalCSS.textButton}>connexion</Text>
+          </TouchableOpacity>
+          <Text style={globalCSS.stitle}>Première visite ? Rejoignez-nous !</Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Register")}
+            style={globalCSS.button}
+            activeOpacity={0.8}
+          >
+            <Text style={globalCSS.textButton}>s'inscrire</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* <View>  // CP : pour plus tard
+          <TouchableOpacity
+            onPress={() => handleGoogle()}
+            style={globalCSS.button}
+            activeOpacity={0.8}
+          >
+            <Text style={globalCSS.textButton}>se connecter avec google</Text>
+          </TouchableOpacity>
+        </View> */}
+      </KeyboardAvoidingView>
+    </LinearGradient>
+  );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#ffffff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   image: {
-    width: '100%',
-    height: '50%',
+    width: "90%",
+
+    resizeMode: "contain",
   },
-  title: {
-    width: '80%',
-    fontSize: 38,
-    fontWeight: '600',
+  formContent: {
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
-  input: {
-    width: '80%',
-    marginTop: 25,
-    borderBottomColor: '#f2B872',
-    borderBottomWidth: 1,
-    fontSize: 18,
-  },
-  button: {
-    alignItems: 'center',
-    paddingTop: 8,
-    width: '80%',
-    marginTop: 30,
-    backgroundColor: '#f2B872',
-    borderRadius: 10,
-    marginBottom: 80,
-  },
-  textButton: {
-    color: '#ffffff',
-    height: 30,
-    fontWeight: '600',
-    fontSize: 16,
+  otherContent: {
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
