@@ -9,7 +9,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
 //import for redux persistance
 import { Provider } from "react-redux";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
@@ -23,10 +22,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
+import WelcomeScreen from "./screens/WelcomeScreen";
 import ProfilScreen from "./screens/ProfilScreen";
 import PromenadeScreen from "./screens/PromenadeScreen";
 import FavorisScreen from "./screens/FavorisScreen";
 import RegisterScreen from "./screens/RegisterScreen";
+
 import {Alert,StyleSheet} from "react-native";
 // import font & Icons
 import {
@@ -50,6 +51,10 @@ const store = configureStore({
 });
 
 const persistor = persistStore(store);
+
+// Base Url du backend
+const BASE_URL = "https://backend-one-nu-35.vercel.app/";
+
 
 //pour la navigation "nested"
 const Stack = createNativeStackNavigator();

@@ -39,25 +39,22 @@ export default function LoginScreen({ navigation }) {
 
 // fct btn connect via backend
   const handleConnect = () => {
-    /* 'https://backend-lyart-mu.vercel.app/users/signin' */
-    fetch("http://192.168.1.198:3000/users/signin", {
+    /* 'https://backend-one-nu-35.vercel.app/' */
+    fetch(`${BASE_URL}/users/signin`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: email, password: password }), // voir avec Joel si { email, password } ?
+      body: JSON.stringify({ email, password }), 
     })
       .then((response) => response.json())
       .then((data) => {
         // CP : ajout isConnect? et gestion Msg Erreur
         if (data.result) {
-          dispatch(login({ email: email, token: data.token, isConnect:true }));
+          dispatch(login({ email, token: data.token, isConnect: true }));
           setEmail("");
           setPassword("");
+          navigation.navigate("TabNavigator");
         } else {
-
           Alert.alert("Oups !", data.error);
-          // ATTENTION : supprimer ligne suivante quand backend OK
-          navigation.navigate("Home");
-          dispatch(login({ email: email, token: data.token, isConnect: true }));
           setPassword("");
         }
       });
