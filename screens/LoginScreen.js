@@ -39,8 +39,8 @@ export default function LoginScreen({ navigation }) {
 
 // fct btn connect via backend
   const handleConnect = () => {
-    /* 'https://backend-lyart-mu.vercel.app/users/signin' */
-    fetch("http://192.168.1.198:3000/users/signin", {
+    /* 'https://backend-one-nu-35.vercel.app' */
+    fetch("https://backend-one-nu-35.vercel.app/users/signin", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: email, password: password }), // voir avec Joel si { email, password } ?
