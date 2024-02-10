@@ -24,14 +24,18 @@ export default function LoginScreen({ navigation }) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username: signUpUsername, email: signUpEmail, password: signUpPassword }),
-    }).then(response => response.json())
+    }).then(response => {
+      console.log(response)
+      return response.json()
+      })
       .then(data => {
+        console.log(data)
         if (data.result) {
           dispatch(login({ username: signUpUsername, token: data.token }));
           setSignUpUsername('');
           setSignUpEmail('')
           setSignUpPassword('');
-         
+         navigation.navigate('TabNavigator')
         }
       });
   };
@@ -64,7 +68,7 @@ export default function LoginScreen({ navigation }) {
       <TextInput placeholder="Username" onChangeText={(value) => setSignUpUsername(value)} value={signUpUsername} style={styles.input} />
       <TextInput placeholder="Email" onChangeText={(value) => setSignUpEmail(value)} value={signUpEmail} style={styles.input} />
       <TextInput placeholder="Password" onChangeText={(value) => setSignUpPassword(value)} value={signUpPassword} style={styles.input} />
-      <TouchableOpacity onPress={() => handleSubmit()} style={styles.button} activeOpacity={0.8}>
+      <TouchableOpacity onPress={() => handleRegister()} style={styles.button} activeOpacity={0.8}>
         <Text style={styles.textButton}>s'inscrire</Text>
       </TouchableOpacity>
     </KeyboardAvoidingView>
