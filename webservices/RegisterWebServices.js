@@ -1,7 +1,7 @@
 // RegisterWebServices.js
 
-const BASE_URL = "http://localhost:3000"
-// "https://backend-lyart-mu.vercel.app";
+const BASE_URL = "https://backend-one-nu-35.vercel.app/"
+// "https://backend-one-nu-35.vercel.app/";
 
 
 export const addUser_ws = async (userData) => {
