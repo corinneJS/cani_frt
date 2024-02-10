@@ -24,19 +24,20 @@ import {addUser_ws} from "../webservices/RegisterWebServices.js";
 
 //CP :  import feuille de style globale
 const globalCSS = require("../styles/global.js");
-// Import Fct FETCH
+
 
 
 
 export default function RegisterScreen({ navigation }) {
   const dispatch = useDispatch();
+  const [username, setUsername] = useState("");
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("");
   const [city, setCity] = useState("");
-  const[isOwnerDog, setIsOwnerDog] = useState(true);
-  const toggleSwitchOwnerDog = ()=> setIsOwnerDog(previewsState => !previewsState);
+  const[isDogOwner, setIsDogOwner] = useState(true);
+  const toggleSwitchDogOwner = ()=> setIsDogOwner(previewsState => !previewsState);
   const [isProfessional, setIsProfessional] = useState(false);
   const toggleSwitchProfessional = () => setIsProfessional((previewsState) => !previewsState);
   const [description, setDescription] = useState("");
@@ -45,10 +46,11 @@ export default function RegisterScreen({ navigation }) {
   const handleRegister = async () => {
   
   await  addUser_ws(
-        {firstname,
+        {username,
+          firstname,
         lastname,
         email,
-        isOwnerDog,
+        isDogOwner,
         isProfessional,
         password,
         city,
@@ -57,20 +59,20 @@ export default function RegisterScreen({ navigation }) {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
-          dispatch(infoUser({ firstname,email, isOwnerDog, isProfessional, city, token: data.token }));
+          dispatch(infoUser({ username, firstname,email, isDogOwner, isProfessional, city, token: data.token }));
+          setUsername("");
           setFirstname("");
           setLastname("");
           setEmail("");
-          setIsOwnerDog(true);
+          setIsDogOwner(true);
           setIsProfessional(false);
           setPassword("");
           setCity("");
           setDescription("");
-          navigation.navigate("Home");
+          navigation.navigate("TabNavigator");
         } else {
           Alert.alert("Oups !", `un pb est survenu : ${data.error}`);
-          // a supprimer quand le data.result sera traité
-          navigation.navigate("Home");
+          
         }})
         
   };
@@ -113,9 +115,9 @@ export default function RegisterScreen({ navigation }) {
           <View style={styles.switchContainer}>
             <Switch
               trackColor={{ false: "#B39C81", true: "#F2B872" }}
-              thumbColor={isOwnerDog ? "#F2B872" : "#B39C81"}
-              onValueChange={toggleSwitchOwnerDog}
-              value={isOwnerDog}
+              thumbColor={isDogOwner ? "#F2B872" : "#B39C81"}
+              onValueChange={toggleSwitchDogOwner}
+              value={isDogOwner}
             />
             <Text>Je suis propriétaire d'un ou plusieurs 4 pattes.</Text>
           </View>
