@@ -4,7 +4,7 @@
 export const registerUser_ws = async ({userData}) => {
   console.log("register_ws, userData ", userData);
   /* 'https://backend-one-nu-35.vercel.app/' */
-  await fetch(`'https://backend-one-nu-35.vercel.app/users/signup`, {
+  await fetch(`https://backend-one-nu-35.vercel.app/users/signup`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

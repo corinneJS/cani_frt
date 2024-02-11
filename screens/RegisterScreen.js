@@ -50,8 +50,9 @@ export default function RegisterScreen({ navigation }) {
       isProfessional: isProfessional,
       city:city,
     };
-    await registerUser_ws({userData}).then((data) => {
-      Alert.alert("le data reçu dans le Screen", data);
+    Alert.alert("Console Log",`le userData envoyé au _ws :${userData}`);
+    registerUser_ws({userData}).then((data) => {
+      Alert.alert("Console Log",`le data de retour du _ws dans le Screen : ${data}`);
       if (data.result) {
         dispatch(
           infoUser({
