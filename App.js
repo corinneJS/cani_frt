@@ -29,6 +29,7 @@ import FavorisScreen from "./screens/FavorisScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 
 import {Alert,StyleSheet} from "react-native";
+
 // import font & Icons
 import {
   useFonts,
@@ -36,6 +37,7 @@ import {
   BioRhyme_700Bold,
 } from "@expo-google-fonts/biorhyme";
 import { Lato_400Regular, Lato_700Bold } from "@expo-google-fonts/lato";
+
 import { MaterialCommunityIcons, MaterialIcons, AntDesign } from "@expo/vector-icons";
 
 
@@ -52,8 +54,6 @@ const store = configureStore({
 
 const persistor = persistStore(store);
 
-// Base Url du backend
-const BASE_URL = "https://backend-one-nu-35.vercel.app/";
 
 
 //pour la navigation "nested"
@@ -71,7 +71,7 @@ const TabNavigator = () => {
           Alert.alert("Console Log", `Info : ${route.name}`)
           switch (route.name) {
             case "Home":
-              iconLib = "MaterialIcons";
+              iconLib = "MI";
               iconName ="home";
               
               break;
@@ -148,7 +148,7 @@ export default function App() {
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={RegisterScreen} />
-            <Stack.Screen name="Home" component={HomeScreen} />
+            
             <Stack.Screen name="TabNavigator" component={TabNavigator} />
           </Stack.Navigator>
         </NavigationContainer>

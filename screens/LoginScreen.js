@@ -29,7 +29,7 @@ export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("");
-  const [isConnected, setIsConnected] = useState("");
+  const [isConnected, setIsConnected] = useState(false);
 
 /* // fct pour btn connect avec ggle  CP : A FAIRE A LA FIN
   const handleGoogle = () => {
@@ -43,7 +43,7 @@ export default function LoginScreen({ navigation }) {
     fetch(`${BASE_URL}/users/signin`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }), 
+      body: JSON.stringify({ email, password }),
     })
       .then((response) => response.json())
       .then((data) => {

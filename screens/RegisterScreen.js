@@ -20,7 +20,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 //CP : import pour la gestion des échanges avec le backend
-import {addUser_ws} from "../webservices/RegisterWebServices.js"; 
+import {registerUser_ws} from "../webservices/RegisterWebServices.js"; 
 
 //CP :  import feuille de style globale
 const globalCSS = require("../styles/global.js");
@@ -31,49 +31,50 @@ const globalCSS = require("../styles/global.js");
 export default function RegisterScreen({ navigation }) {
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [email, setEmail] = useState("")
+   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("");
   const [city, setCity] = useState("");
   const[isDogOwner, setIsDogOwner] = useState(true);
   const toggleSwitchDogOwner = ()=> setIsDogOwner(previewsState => !previewsState);
   const [isProfessional, setIsProfessional] = useState(false);
   const toggleSwitchProfessional = () => setIsProfessional((previewsState) => !previewsState);
-  const [description, setDescription] = useState("");
+  
 
 // fct btn connect via backend
-  const handleRegister = async () => {
-  
-  await  addUser_ws(
-        {username,
-          firstname,
-        lastname,
-        email,
-        isDogOwner,
-        isProfessional,
-        password,
-        city,
-        description}
-      )
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.result) {
-          dispatch(infoUser({ username, firstname,email, isDogOwner, isProfessional, city, token: data.token }));
-          setUsername("");
-          setFirstname("");
-          setLastname("");
-          setEmail("");
-          setIsDogOwner(true);
-          setIsProfessional(false);
-          setPassword("");
-          setCity("");
-          setDescription("");
-          navigation.navigate("TabNavigator");
-        } else {
-          Alert.alert("Oups !", `un pb est survenu : ${data.error}`);
-          
-        }})
+  const handleRegister = async () => { // KB :voir si async est nécessaire risque pb aleatoire
+    const userData = {
+      username: username,
+      email: email,
+      password: password,
+      isDogOwner: isDogOwner,
+      isProfessional: isProfessional,
+      city:city,
+    };
+    await registerUser_ws({userData}).then((data) => {
+      Alert.alert("le data reçu dans le Screen", data);
+      if (data.result) {
+        dispatch(
+          infoUser({
+            username,
+            email,
+            isDogOwner,
+            isProfessional,
+            city,
+            token: data.token,
+          })
+        );
+        setUsername("");
+        setEmail("");
+        setIsDogOwner(true);
+        setIsProfessional(false);
+        setPassword("");
+        setCity("");
+        setDescription("");
+        navigation.navigate("TabNavigator");
+      } else {
+        Alert.alert("Oups !", `un pb est survenu : ${data.error}`);
+      }
+    });
         
   };
 
@@ -95,40 +96,38 @@ export default function RegisterScreen({ navigation }) {
         <Text style={globalCSS.stitle}>Bienvenue !</Text>
         <View style={styles.formContent}>
           <TextInput
-            placeholder="prénom"
-            onChangeText={(value) => setFirstname(value)}
-            value={firstname}
+            placeholder="nom d'utilisateur"
+            label="Choisissez votre :"
+            onChangeText={(value) => setUsername(value)}
+            value={username}
             style={globalCSS.input}
           />
+
           <TextInput
-            placeholder="nom"
-            onChangeText={(value) => setLastname(value)}
-            value={lastname}
-            style={globalCSS.input}
-          />
-          <TextInput
-            placeholder="city"
+            placeholder="votre ville"
             onChangeText={(value) => setCity(value)}
             value={city}
             style={globalCSS.input}
           />
-          <View style={styles.switchContainer}>
-            <Switch
-              trackColor={{ false: "#B39C81", true: "#F2B872" }}
-              thumbColor={isDogOwner ? "#F2B872" : "#B39C81"}
-              onValueChange={toggleSwitchDogOwner}
-              value={isDogOwner}
-            />
-            <Text>Je suis propriétaire d'un ou plusieurs 4 pattes.</Text>
-          </View>
-          <View style={styles.switchContainer}>
-            <Switch
-              trackColor={{ false: "#B39C81", true: "#F2B872" }}
-              thumbColor={isProfessional ? "#F2B872" : "B39C81"}
-              onValueChange={toggleSwitchProfessional}
-              value={isProfessional}
-            />
-            <Text>Je suis un professionel</Text>
+          <View style={styles.listSwitchContainer}>
+            <View style={styles.switchContainer}>
+              <Switch
+                trackColor={{ false: "#B39C81", true: "#F2B872" }}
+                thumbColor={isDogOwner ? "#F2B872" : "#B39C81"}
+                onValueChange={toggleSwitchDogOwner}
+                value={isDogOwner}
+              />
+              <Text>Je suis propriétaire d'un ou plusieurs 4 pattes.</Text>
+            </View>
+            <View style={styles.switchContainer}>
+              <Switch
+                trackColor={{ false: "#B39C81", true: "#F2B872" }}
+                thumbColor={isProfessional ? "#F2B872" : "B39C81"}
+                onValueChange={toggleSwitchProfessional}
+                value={isProfessional}
+              />
+              <Text>Je suis un professionel</Text>
+            </View>
           </View>
           <TextInput
             placeholder="Email"
@@ -148,18 +147,13 @@ export default function RegisterScreen({ navigation }) {
             secureTextEntry={true}
             style={globalCSS.input}
           />
-          <TextInput
-            placeholder="description"
-            onChangeText={(value) => setDescription(value)}
-            value={description}
-            style={globalCSS.input}
-          />
+          
           <TouchableOpacity
             onPress={() => handleRegister()}
             style={globalCSS.button}
             activeOpacity={0.8}
           >
-            <Text style={globalCSS.textButton}>enregistrer</Text>
+            <Text style={globalCSS.textButton}>je valide</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -178,6 +172,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  listSwitchContainer: {
+    width: "100%",
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
+
   switchContainer: {
     flexDirection: "row",
     justifyContent: "center",
