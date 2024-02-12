@@ -64,11 +64,12 @@ const TabNavigator = () => {
   return (
     <Tab.Navigator
       screenOptions={({ route}) => ({
-        tabBarIcon: ({ focused, color, size }) => {
+        tabBarIcon: ({ color, size }) => {
           let iconName = "";
           let iconLib = "";
+           color = "#000000";
+          size = 24;
           
-          Alert.alert("Console Log", `Info : ${route.name}`)
           switch (route.name) {
             case "Home":
               iconLib = "MI";
@@ -77,7 +78,7 @@ const TabNavigator = () => {
               break;
             case "Promenade":
               iconLib = "MCI";
-              iconName = focused ? "paw":"paw-outline";
+              iconName = "paw-outline";
               break;
             case "Favoris":
               iconLib = "AD";
@@ -96,25 +97,28 @@ const TabNavigator = () => {
             default:
               return Alert.alert("Oups !", "Pb switch case TabNavigator : route.name ");
           }
-          focused
-            ? ((size = 22), (color = "#F2B872"))
-            : ((size = 20), (color = "black"));
           switch (iconLib) {
-            case MI:
-              <MaterialIcons name={iconName} size={size} color={color} />;
+            case "MI":
+              return <MaterialIcons name={iconName} size={size} color={color} />;
               break;
-            case MCI:
-              <MaterialCommunityIcons name={iconName} size={size} color={color} />;
+            case "MCI":
+              return (
+                <MaterialCommunityIcons
+                  name={iconName}
+                  size={size}
+                  color={color}
+                />
+              );
               break;
-              case AD:
-              <AntDesign name={iconName} size={size} color={color} />;
+              case "AD":
+              return <AntDesign name={iconName} size={size} color={color} />;
               break;
             default:
               return Alert.alert("Oups !", "Pb switch iconLib TabNavigator");
               break;
           }
           
-          return 
+           
         },
         tabBarActiveTintColor: "#f2B872",
         tabBarInactiveTintColor: "#335561",

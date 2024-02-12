@@ -1,17 +1,21 @@
 // RegisterWebServices.js
 
 
-export const registerUser_ws = async ({userData}) => {
+export const registerUser_ws = (userData) => {
   console.log("register_ws, userData ", userData);
-  /* 'https://backend-one-nu-35.vercel.app/' */
-  await fetch(`https://backend-one-nu-35.vercel.app/users/signup`, {
+  
+  fetch(`${process.env.EXPO_PUBLIC_BASE_URL}users/signup`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({userData}),
+    body: JSON.stringify(userData),
   })
-    .then((response) => response.json())
+    .then((response) => {
+      console.log(response);
+      return response.json();
+    })
+
     .then((data) => {
       console.log("register_ws, data ", data);
       return data;
