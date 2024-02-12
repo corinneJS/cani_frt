@@ -22,6 +22,7 @@ import { LinearGradient } from "expo-linear-gradient";
 // import pour gestion des States et 
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { infoUser } from "../reducers/user";
 //CP :  import feuille de style globale & init globalCSS 
 const globalCSS = require("../styles/global.js");
 
@@ -40,15 +41,19 @@ export default function LoginScreen({ navigation }) {
 // fct btn connect via backend
   const handleConnect = () => {
     /* 'https://backend-one-nu-35.vercel.app/' */
-    fetch(`${BASE_URL}/users/signin`, {
+       fetch(`${process.env.EXPO_PUBLIC_BASE_URL}users/signin`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        console.log(response);
+        return  response.json()})
       .then((data) => {
+        console.log('data en retour du fetch login ', data)
         // CP : ajout isConnect? et gestion Msg Erreur
         if (data.result) {
+
           dispatch(login({ email, token: data.token, isConnect: true }));
           setEmail("");
           setPassword("");
@@ -58,8 +63,13 @@ export default function LoginScreen({ navigation }) {
           setPassword("");
         }
       });
-  };
- 
+      // A supprimer quand OK pour connect Backend
+      dispatch(infoUser({ email, token: "data.token - TEST ByPASS LOGIN", isConnect: true }));
+      setEmail("");
+      setPassword("");
+      navigation.navigate("TabNavigator");
+  }; // Fin HandleConnect
+  
   
   return (
     <LinearGradient // CP : ajout dégradé
