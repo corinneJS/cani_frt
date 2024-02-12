@@ -145,10 +145,6 @@ export default function App() {
     return null;
   }
 
-  useEffect(() => {
-    navigation.navigate('TabNavigator')
-  } ,[])
-
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>
