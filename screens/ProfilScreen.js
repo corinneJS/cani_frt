@@ -13,12 +13,12 @@ import {
 import { useDispatch } from 'react-redux';
 import { updateNickname } from '../reducers/user';
 
-export default function ProfileScreen() {
+export default function ProfilScreen() {
   
 
   return (
     <View style={styles.container}>
-    <Text>Welcome to caniconnect ProfileScreen !</Text>
+    <Text>Welcome to caniconnect ProfilScreen !</Text>
     <StatusBar style="auto" />
   </View>
   )
