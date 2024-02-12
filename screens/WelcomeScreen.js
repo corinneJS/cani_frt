@@ -1,9 +1,9 @@
-// Feuille de style globale pour caniConnect
+// WelcomeScreen.js
 // Auteur : CP
 // Contributeurs :
-// Objet : Ecran d'accueil de l'application
-// 
-// 
+// Objet : Ecran de présentation de l'application
+// apparait lorsque l'on souhaite s'inscrire, il suffit de  
+// cliquer sur l'écran pour voir le formulaire d'inscription
 // 
 // 
 // --------------------------------------------------
@@ -20,7 +20,7 @@ import { LinearGradient } from "expo-linear-gradient"; // yarn add expo-linear-g
 //feuille de style global
 const globalCSS = require("../styles/global.js");
 
-export default function SplashScreen({navigation}) {
+export default function WelcomeScreen({navigation}) {
   return (
     <ImageBackground
       source={require("../assets/olea.png")}
@@ -32,15 +32,15 @@ export default function SplashScreen({navigation}) {
       >
         <Image source={require("../assets/ccLogoColor.png")}></Image>
         <Text style={globalCSS.title}>On va se promener ?</Text>
-        <Text style={globalCSS.title}>
+        <Text style={globalCSS.stitle}>
           Localisez et rejoignez les 4pattes préférés de votre loulou de sortie
           dans votre quartier
         </Text>
-        <Text style={globalCSS.title}>
+        <Text style={globalCSS.stitle}>
           Enregistrez votre promenade et partagez votre expérience avec la
           communauté
         </Text>
-        <Text style={globalCSS.title}>Invitez vos amis à vous accompagner</Text>
+        <Text style={globalCSS.stitle}>Invitez vos amis à vous accompagner</Text>
         <TouchableOpacity
           onPress={() => () => navigation.navigate("Login")}
           style={globalCSS.button}

@@ -1,20 +1,23 @@
 // RegisterWebServices.js
 
-const BASE_URL = "http://localhost:3000"
-// "https://backend-lyart-mu.vercel.app";
 
-
-export const addUser_ws = async (userData) => {
+export const registerUser_ws = (userData) => {
+  console.log("register_ws, userData ", userData);
   
-  await  fetch(`${BASE_URL}/users/signup`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
+  fetch(`${process.env.EXPO_PUBLIC_BASE_URL}users/signup`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(userData),
+  })
+    .then((response) => {
+      console.log(response);
+      return response.json();
     })
-      .then((response) => response.json())
-      .then((data) => {return data})
-      
-  
+
+    .then((data) => {
+      console.log("register_ws, data ", data);
+      return data;
+    });
 };

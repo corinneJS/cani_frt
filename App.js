@@ -9,7 +9,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
 //import for redux persistance
 import { Provider } from "react-redux";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
@@ -23,11 +22,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
+import WelcomeScreen from "./screens/WelcomeScreen";
 import ProfilScreen from "./screens/ProfilScreen";
 import PromenadeScreen from "./screens/PromenadeScreen";
 import FavorisScreen from "./screens/FavorisScreen";
 import RegisterScreen from "./screens/RegisterScreen";
+
 import {Alert,StyleSheet} from "react-native";
+
 // import font & Icons
 import {
   useFonts,
@@ -35,6 +37,7 @@ import {
   BioRhyme_700Bold,
 } from "@expo-google-fonts/biorhyme";
 import { Lato_400Regular, Lato_700Bold } from "@expo-google-fonts/lato";
+
 import { MaterialCommunityIcons, MaterialIcons, AntDesign } from "@expo/vector-icons";
 
 
@@ -51,6 +54,8 @@ const store = configureStore({
 
 const persistor = persistStore(store);
 
+
+
 //pour la navigation "nested"
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -59,20 +64,21 @@ const TabNavigator = () => {
   return (
     <Tab.Navigator
       screenOptions={({ route}) => ({
-        tabBarIcon: ({ focused, color, size }) => {
+        tabBarIcon: ({ color, size }) => {
           let iconName = "";
           let iconLib = "";
+           color = "#000000";
+          size = 24;
           
-          Alert.alert("Console Log", `Info : ${route.name}`)
           switch (route.name) {
             case "Home":
-              iconLib = "MaterialIcons";
+              iconLib = "MI";
               iconName ="home";
               
               break;
             case "Promenade":
               iconLib = "MCI";
-              iconName = focused ? "paw":"paw-outline";
+              iconName = "paw-outline";
               break;
             case "Favoris":
               iconLib = "AD";
@@ -91,25 +97,28 @@ const TabNavigator = () => {
             default:
               return Alert.alert("Oups !", "Pb switch case TabNavigator : route.name ");
           }
-          focused
-            ? ((size = 22), (color = "#F2B872"))
-            : ((size = 20), (color = "black"));
           switch (iconLib) {
-            case MI:
-              <MaterialIcons name={iconName} size={size} color={color} />;
+            case "MI":
+              return <MaterialIcons name={iconName} size={size} color={color} />;
               break;
-            case MCI:
-              <MaterialCommunityIcons name={iconName} size={size} color={color} />;
+            case "MCI":
+              return (
+                <MaterialCommunityIcons
+                  name={iconName}
+                  size={size}
+                  color={color}
+                />
+              );
               break;
-              case AD:
-              <AntDesign name={iconName} size={size} color={color} />;
+              case "AD":
+              return <AntDesign name={iconName} size={size} color={color} />;
               break;
             default:
               return Alert.alert("Oups !", "Pb switch iconLib TabNavigator");
               break;
           }
           
-          return 
+           
         },
         tabBarActiveTintColor: "#f2B872",
         tabBarInactiveTintColor: "#335561",
@@ -143,7 +152,7 @@ export default function App() {
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={RegisterScreen} />
-            <Stack.Screen name="Home" component={HomeScreen} />
+            
             <Stack.Screen name="TabNavigator" component={TabNavigator} />
           </Stack.Navigator>
         </NavigationContainer>

@@ -11,7 +11,7 @@ export const userSlice = createSlice({
   reducers: {
     
     infoUser: (state, action) => {
-      state.value.token = action.payload.token;
+      state.value.token = action.payload.token; // KB : bonne pratique sécurité préférer le seesion storage
       state.value.isConnect = action.payload.isConnect;
       state.value.firstname = action.payload.firstname;
       state.value.email = action.payload.email;

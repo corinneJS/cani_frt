@@ -1,4 +1,4 @@
-// RegisterScreen : inscription des utilisateurs
+// PromenadeDetailScreen : Voir l'écran détaillé d'une promenade
 // Auteur : CP
 // 
 // --------------------------------------------------
@@ -20,7 +20,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 //CP : import pour la gestion des échanges avec le backend
-import {registerUser_ws} from "../webservices/RegisterWebServices.js"; 
+// import {_ws} from "../webservices/XXXWebServices.js"; 
 
 //CP :  import feuille de style globale
 const globalCSS = require("../styles/global.js");
@@ -28,7 +28,7 @@ const globalCSS = require("../styles/global.js");
 
 
 
-export default function RegisterScreen({ navigation }) {
+export default function PromenadeDetailScreen({ navigation }) {
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
    const [email, setEmail] = useState("")
@@ -50,9 +50,9 @@ export default function RegisterScreen({ navigation }) {
       isProfessional: isProfessional,
       city:city,
     };
-    console.log(userData);
-    registerUser_ws(userData).then((data) => {
-      console.log('data in screen',data);
+    Alert.alert("Console Log",`le userData envoyé au _ws :${userData}`);
+    registerUser_ws({userData}).then((data) => {
+      Alert.alert("Console Log",`le data de retour du _ws dans le Screen : ${data}`);
       if (data.result) {
         dispatch(
           infoUser({

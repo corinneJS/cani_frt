@@ -22,6 +22,7 @@ import { LinearGradient } from "expo-linear-gradient";
 // import pour gestion des States et 
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { infoUser } from "../reducers/user";
 //CP :  import feuille de style globale & init globalCSS 
 const globalCSS = require("../styles/global.js");
 
@@ -29,14 +30,14 @@ export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("");
-  const [isConnected, setIsConnected] = useState("");
+  const [isConnected, setIsConnected] = useState(false);
 
 /* // fct pour btn connect avec ggle  CP : A FAIRE A LA FIN
   const handleGoogle = () => {
         Alert.alert('Oups !',`L'authentification Google n'est pas encore développée`)
   }; */
 
-<<<<<<< HEAD
+
   const handleRegister = () => {
     fetch('https://backend-lyart-mu.vercel.app/users/signup', {
       method: 'POST',
@@ -57,35 +58,40 @@ export default function LoginScreen({ navigation }) {
         }
       });
   };
-=======
+
 
 // fct btn connect via backend
   const handleConnect = () => {
-    /* 'https://backend-lyart-mu.vercel.app/users/signin' */
-    fetch("http://192.168.1.198:3000/users/signin", {
+    /* 'https://backend-one-nu-35.vercel.app/' */
+       fetch(`${process.env.EXPO_PUBLIC_BASE_URL}users/signin`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: email, password: password }), // voir avec Joel si { email, password } ?
+      body: JSON.stringify({ email, password }),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        console.log(response);
+        return  response.json()})
       .then((data) => {
+        console.log('data en retour du fetch login ', data)
         // CP : ajout isConnect? et gestion Msg Erreur
         if (data.result) {
-          dispatch(login({ email: email, token: data.token, isConnect:true }));
+
+          dispatch(login({ email, token: data.token, isConnect: true }));
           setEmail("");
           setPassword("");
+          navigation.navigate("TabNavigator");
         } else {
->>>>>>> 4b206408810e3e3eb8e45e69d929c5c71954d260
-
           Alert.alert("Oups !", data.error);
-          // ATTENTION : supprimer ligne suivante quand backend OK
-          navigation.navigate("Home");
-          dispatch(login({ email: email, token: data.token, isConnect: true }));
           setPassword("");
         }
       });
-  };
- 
+      // A supprimer quand OK pour connect Backend
+      dispatch(infoUser({ email, token: "data.token - TEST ByPASS LOGIN", isConnect: true }));
+      setEmail("");
+      setPassword("");
+      navigation.navigate("TabNavigator");
+  }; // Fin HandleConnect
+  
   
   return (
     <LinearGradient // CP : ajout dégradé
@@ -113,7 +119,7 @@ export default function LoginScreen({ navigation }) {
             style={globalCSS.input}
           />
 
-<<<<<<< HEAD
+
       <TextInput placeholder="Username" onChangeText={(value) => setSignUpUsername(value)} value={signUpUsername} style={styles.input} />
       <TextInput placeholder="Email" onChangeText={(value) => setSignUpEmail(value)} value={signUpEmail} style={styles.input} />
       <TextInput placeholder="Password" onChangeText={(value) => setSignUpPassword(value)} value={signUpPassword} style={styles.input} />
@@ -122,7 +128,7 @@ export default function LoginScreen({ navigation }) {
       </TouchableOpacity>
     </KeyboardAvoidingView>
   )
-=======
+
           <TextInput
             placeholder="Password"
             onChangeText={(value) => setPassword(value)}
@@ -159,7 +165,7 @@ export default function LoginScreen({ navigation }) {
       </KeyboardAvoidingView>
     </LinearGradient>
   );
->>>>>>> 4b206408810e3e3eb8e45e69d929c5c71954d260
+
 }
 
 const styles = StyleSheet.create({
