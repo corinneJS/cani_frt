@@ -63,11 +63,11 @@ export default function LoginScreen({ navigation }) {
           setPassword("");
         }
       });
-      // A supprimer quand OK pour connect Backend
+      /* // A supprimer quand OK pour connect Backend
       dispatch(infoUser({ email, token: "data.token - TEST ByPASS LOGIN", isConnect: true }));
       setEmail("");
       setPassword("");
-      navigation.navigate("TabNavigator");
+      navigation.navigate("TabNavigator"); */
   }; // Fin HandleConnect
   
   

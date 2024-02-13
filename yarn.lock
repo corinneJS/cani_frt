@@ -6504,6 +6504,13 @@ react-native-modal-popover@^2.0.1:
     lodash ">4.17.0"
     prop-types "^15.8.1"
 
+react-native-paper-dates@^0.21.9:
+  version "0.21.9"
+  resolved "https://registry.yarnpkg.com/react-native-paper-dates/-/react-native-paper-dates-0.21.9.tgz#1333112bb6c00fe9550c2d3e70d051095787ec59"
+  integrity sha512-beBigyrSSai+gO3hG+MQjFJ4VhhTgta4n+DELfpHiOa2MY7xIPlnYwY5GYUBYnwBBcs/ju5ug+uxcOv2CPe2uA==
+  dependencies:
+    color "^4.2.3"
+
 react-native-paper@^5.12.3:
   version "5.12.3"
   resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-5.12.3.tgz#d583119722ebbfbb7fe40400181d63748cca3683"

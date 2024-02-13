@@ -1,15 +1,14 @@
 // RegisterWebServices.js
 
+export const dogs_webSrv = (dogData) => {
+  console.log("dogs_webSrv, reception dogData ", dogData);
 
-export const registerUser_webSrv = (userData) => {
-  console.log("register_ws, userData ", userData);
-  
-  fetch(`${process.env.EXPO_PUBLIC_BASE_URL}users/signup`, {
+  fetch(`${process.env.EXPO_PUBLIC_BASE_URL}dogs/add`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(userData),
+    body: JSON.stringify(dogData),
   })
     .then((response) => {
       console.log(response);
@@ -17,7 +16,7 @@ export const registerUser_webSrv = (userData) => {
     })
 
     .then((data) => {
-      console.log("register_ws, data ", data);
+      console.log("dog_webSrv, retour data ", data);  
       return data;
     });
 };

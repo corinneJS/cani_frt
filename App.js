@@ -28,7 +28,7 @@ import PromenadeScreen from "./screens/PromenadeScreen";
 import FavorisScreen from "./screens/FavorisScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 
-import {Alert,StyleSheet} from "react-native";
+import {Alert,StyleSheet,View} from "react-native";
 
 // import font & Icons
 import {
@@ -122,7 +122,7 @@ const TabNavigator = () => {
         },
         tabBarActiveTintColor: "#f2B872",
         tabBarInactiveTintColor: "#335561",
-        headerShown: true,
+        headerShown: false,
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
@@ -149,11 +149,46 @@ export default function App() {
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <NavigationContainer>
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="Register" component={RegisterScreen} />
-            
-            <Stack.Screen name="TabNavigator" component={TabNavigator} />
+          <Stack.Navigator
+            screenOptions={({ navigation }) => ({
+              headerTransparent: true,
+              headerRight: () => (
+                <View style={{ flexDirection: "row" }}>
+                  <MaterialIcons
+                    name="location-off" // "location-on" CP : Changez le nom de l'icône en fonction du statut
+                    size={24}
+                    onPress={() => {
+                      // Logique pour basculer/afficher le statut de géolocalisation
+                    }}
+                  />
+                  <MaterialIcons
+                    name="menu"
+                    size={24}
+                    onPress={() => navigation.navigate("TabNavigator")}
+                    // onPress={() => navigation.navigate("UserMenu")} // Naviguez vers un écran de menu ou ouvrez un menu contextuel
+                  />
+                </View>
+              ),
+            })}
+          >
+            <Stack.Screen
+              name="Login"
+              options={{ title: "caniConnect" }}
+              component={LoginScreen}
+              /* options={{ headerShown: false }} */
+            />
+            <Stack.Screen
+              name="Register"
+              component={RegisterScreen}
+              options={{ title: "caniConnect" }}
+              /* options={{ headerShown: false }} */
+            />
+            {/*  <Stack.Screen name="UserMenu" component={UserMenu} /> */}
+            <Stack.Screen
+              name="TabNavigator"
+              component={TabNavigator}
+              options={{ title: "caniConnect" }}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       </PersistGate>
