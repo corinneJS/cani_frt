@@ -36,3 +36,6 @@ yarn-error.*
 
 # yarn.lock
 yarn.lock
+
+# dotenv environment variables file
+.env
