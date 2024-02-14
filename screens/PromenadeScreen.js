@@ -1,7 +1,7 @@
 // Auteur : KB
 // Date : Mercredi 14 Février
 // Ecran pour créer une promenade
-import { useState, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Image,
   KeyboardAvoidingView,
