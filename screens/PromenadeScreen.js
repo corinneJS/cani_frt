@@ -27,6 +27,25 @@ import { updateNickname } from '../reducers/user';
 export default function PromenadeScreen() {
   
 
+  useEffect(() => {
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+
+      if (status === 'granted') {
+        Location.watchPositionAsync({ distanceInterval: 10 },
+          (location) => {
+            setCurrentPosition(location.coords);
+          });
+      }
+    })();
+
+  /*   fetch(`${BACKEND_ADDRESS}/places/${user.nickname}`)
+      .then((response) => response.json())
+      .then((data) => {
+        data.result && dispatch(importPlaces(data.places));
+      }); */
+  }, []);
+
   /* const markers = user.places.map((data, i) => {
     return <Marker key={i} coordinate={{ latitude: data.latitude, longitude: data.longitude }} title={data.name} />;
   }); */
@@ -37,7 +56,8 @@ export default function PromenadeScreen() {
       style={globalCSS.backgrdContainer}
     >
       <Text>Welcome to caniconnect PromenadeScreen !</Text>
-      <MapView mapType="standard" style={styles.map}>
+      <MapView onLongPress={(e) => handleLongPress(e)} mapType="hybrid" style={styles.map}>
+        {currentPosition && <Marker coordinate={currentPosition} title="My position" pinColor="#fecb2d" />}
        
       </MapView>
       <StatusBar style="auto" />
