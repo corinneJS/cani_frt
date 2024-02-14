@@ -27,9 +27,9 @@ import { updateNickname } from '../reducers/user';
 export default function PromenadeScreen() {
   
 
-  const markers = user.places.map((data, i) => {
+  /* const markers = user.places.map((data, i) => {
     return <Marker key={i} coordinate={{ latitude: data.latitude, longitude: data.longitude }} title={data.name} />;
-  });
+  }); */
 
   return (
     <LinearGradient
@@ -37,7 +37,7 @@ export default function PromenadeScreen() {
       style={globalCSS.backgrdContainer}
     >
       <Text>Welcome to caniconnect PromenadeScreen !</Text>
-      <MapView onLongPress={(e) => handleLongPress(e)} mapType="standard" style={styles.map}>
+      <MapView mapType="standard" style={styles.map}>
        
       </MapView>
       <StatusBar style="auto" />
