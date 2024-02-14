@@ -1,4 +1,4 @@
-// RegisterWebServices.js
+// Register_webSrv.js
 
 
 export const registerUser_webSrv = (userData) => {
@@ -11,11 +11,11 @@ export const registerUser_webSrv = (userData) => {
     },
     body: JSON.stringify(userData),
   })
-    .then((response) => {
+    /*  .then((response) => {
       console.log(response);
       return response.json();
-    })
-
+    }) */
+    .then((response) =>  response.json())
     .then((data) => {
       console.log("register_ws, data ", data);
       return data;

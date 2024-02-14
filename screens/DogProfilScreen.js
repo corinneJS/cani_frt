@@ -17,39 +17,72 @@ import {
 } from "react-native";
 import { DatePickerModal } from "react-native-paper-dates";
 import { LinearGradient } from "expo-linear-gradient";
+import {  MaterialIcons} from "@expo/vector-icons";
 // import pour gestion states
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 //CP : import pour la gestion des échanges avec le backend
-import { dogs_webSrv } from "../webservices/dogs_webSrv.js";
+import { viewDog_webSrv } from "../webservices/dogs_webSrv.js";
 
 //CP :  import feuille de style globale
 const globalCSS = require("../styles/global.js");
 
 export default function DogProfilScreen({ navigation }) {
   const dispatch = useDispatch();
+
+  // Variables Form
   const [dogName, setDogName] = useState("");
-  const [birthdate, setBirthdate] = useState(""); // CP A faire DatePicker
-  const [gender, setGender] = useState(""); // CP A faire proposer Mâle / Femelle
-  const [isSterilized, setIsSterilized] = useState(False);
+  const [description, setDescription] = useState("");
+  const [birthdate, setBirthdate] = useState(new Date()); // CP A faire DatePicker
+  const [isFemale, setIsFemale] = useState(Boolean); 
+  const toggleSwitchIsFemale = () =>
+    setIsFemale((previewsState) => !previewsState);
+  const [isSterilized, setIsSterilized] = useState(false);
   const toggleSwitchIsSterilized = () =>
     setIsSterilized((previewsState) => !previewsState);
   const [trait, setTrait] = useState(""); // CP : A faire : proposer liste déroulante choix multiple
   const [activity, setActivity] = useState("");
   const [dateCreated, setDateCreated] = useState("");
   const [dateModified, setDateModified] = useState("");
-
   const [userID, setUserID] = useState(""); // CP : A faire : init avec user connecté
   const [breedID, setBreedID] = useState("");
 
-  const [openModal, setOpenModal] = React.useState(false);
-  // fct btn Save via backend
-  const handleSave = async () => {
+// variables UX
+const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
+
+
+
+  //
+  // FONCTIONS UX
+
+  // Gestion Picker Date
+  // Fonction pour ouvrir le modal
+  const showDatePicker = () => {
+    setIsDatePickerVisible(true);
+  };
+
+  // Fonction pour gérer la confirmation de la date
+  const onConfirm = (date) => {
+    setBirthdate(date);
+    setIsDatePickerVisible(false); // Fermer le modal après la sélection
+  };
+
+  // Fonction pour gérer l'annulation
+  const onCancel = () => {
+    setIsDatePickerVisible(false);
+  };
+//
+// FONCTIONS CRUD
+// 
+// Afficher le 4pattes
+
+// Ajouter un nouveau 4pattes
+const handle_ADD = async () => {
     const dogData = {
       dogName: dogName,
       description: description,
       birthdate: birthdate,
-      gender: gender,
+      isFemale: isFemale,
       isSterilized: isSterilized,
       trait: trait,
       activity: activity,
@@ -65,31 +98,84 @@ export default function DogProfilScreen({ navigation }) {
         dispatch(
           infoDog({
             dogName,
-            gender,
+            isFemale,
             isSterilized,
           })
         );
-        Alert.alert('Profil', `le profil de ${dogName} est enregistré !`)  
-        
+        Alert.alert("Profil 4 pattes", `le profil de ${dogName} est enregistré !`);
       } else {
         Alert.alert("Oups !", `un pb est survenu : ${data.error}`);
       }
     });
   };
 
-  const onDismissSingle =
-    (() => {
-      setOpenModal(false);
-    },
-    [setOpenModal]);
+  // 
+  // Use Effect : afficher le profil du 4 pattes
+  //
+/*   useEffect(() => {
+    (async () => {
 
-  const onConfirmSingle =
-    ((params) => {
-      setOpenModal(false);
-      setBirthdate(params.birthdate);
-    },
-    [setOpen, setDate]);
 
+
+
+viewDog_webSrv(userData).then((data) => {
+      console.log("data in screen", data);
+      if (data.result) {
+        dispatch(
+          infoUser({
+            username,
+            email,
+            isDogOwner,
+            isProfessional,
+            city,
+            token: data.token,
+          })
+        );
+        setUsername("");
+        setEmail("");
+        setIsDogOwner(true);
+        setIsProfessional(false);
+        setPassword("");
+        setCity("");
+        setDescription("");
+        navigation.navigate("TabNavigator");
+      } else {
+        Alert.alert("Oups !", `un pb est survenu : ${data.error}`);
+      }
+    });
+        
+  };
+
+
+
+
+
+      
+      if () {
+        
+      }
+    })();
+    fetch(
+      `http://192.168.1.198:3000/places/${encodeURIComponent(user.nickname)}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          dispatch(importPlaces(data.places));
+          setPlaces(data.places);
+        }
+      });
+  }, []); */
+  
+  
+  
+  
+  
+  
+  
+  //
+  // RETURN DU COMPOSANT
+  //
   return (
     <LinearGradient
       colors={["#F2B872", "#FFFFFF"]}
@@ -102,82 +188,88 @@ export default function DogProfilScreen({ navigation }) {
         <View style={styles.formContent}>
           <TextInput
             placeholder="nom du 4 pattes"
-            label="Choisissez votre :"
-            onChangeText={(value) => setName(value)}
-            value={name}
+            onChangeText={(value) => setDogName(value)}
+            value={dogName}
             style={globalCSS.input}
           />
-          <View
-            style={{ justifyContent: "center", flex: 1, alignItems: "center" }}
-          >
-            <Button
-              onPress={() => setOpen(true)}
-              uppercase={false}
-              mode="outlined"
-            >
-              Choisir une date
-            </Button>
+
+          <View style={styles.listSwitchContainer}>
+            <View style={styles.switchContainer}>
+              <Text>{isFemale ? "Femelle" : "Mâle"}</Text>
+              <Switch
+                value={isFemale}
+                onValueChange={toggleSwitchIsFemale}
+                color={isFemale ? "#E91E63" : "#3F51B5"}
+              />
+            </View>
+
+            <View style={styles.switchContainer}>
+              <Switch
+                trackColor={{ false: "#B39C81", true: "#F2B872" }}
+                thumbColor={isSterilized ? "#F2B872" : "#B39C81"}
+                onValueChange={toggleSwitchIsSterilized}
+                value={isSterilized}
+              />
+              <Text>Stérilisé ?</Text>
+            </View>
+          </View>
+
+          <View style={styles.dateContainer}>
+            <TextInput
+              placeholder="date de naissance"
+              onChangeText={(value) => setBirthdate(value)}
+              value={birthdate}
+              style={globalCSS.input}
+            />
+            <TouchableOpacity onPress={showDatePicker}>
+              <MaterialIcons name="calendar-month" size={24} color="black" />
+            </TouchableOpacity>
+
             <DatePickerModal
               locale="fr"
+              // Propriété pour rendre le modal visible ou non
+              visible={isDatePickerVisible}
+              // La date actuellement sélectionnée à afficher
+              date={birthdate}
+              // Fonction appelée lorsque l'utilisateur confirme la sélection
+              onConfirm={onConfirm}
+              // Fonction appelée lorsque l'utilisateur annule la sélection
+              onCancel={onCancel}
+              // Configuration supplémentaire, comme la limitation de la plage de dates
               mode="single"
-              visible={open}
-              onDismiss={onDismissSingle}
-              date={date}
-              onConfirm={onConfirmSingle}
             />
           </View>
           <TextInput
-            placeholder="votre ville"
-            onChangeText={(value) => setCity(value)}
-            value={city}
-            style={globalCSS.input}
-          />
-          <View style={styles.listSwitchContainer}>
-            <View style={styles.switchContainer}>
-              <Switch
-                trackColor={{ false: "#B39C81", true: "#F2B872" }}
-                thumbColor={isDogOwner ? "#F2B872" : "#B39C81"}
-                onValueChange={toggleSwitchDogOwner}
-                value={isDogOwner}
-              />
-              <Text>Je suis propriétaire d'un ou plusieurs 4 pattes.</Text>
-            </View>
-            <View style={styles.switchContainer}>
-              <Switch
-                trackColor={{ false: "#B39C81", true: "#F2B872" }}
-                thumbColor={isProfessional ? "#F2B872" : "B39C81"}
-                onValueChange={toggleSwitchProfessional}
-                value={isProfessional}
-              />
-              <Text>Je suis un professionel</Text>
-            </View>
-          </View>
-          <TextInput
-            placeholder="Email"
-            autoCapitalize="none" // https://reactnative.dev/docs/textinput#autocapitalize
-            keyboardType="email-address" // https://reactnative.dev/docs/textinput#keyboardtype
-            textContentType="emailAddress" // https://reactnative.dev/docs/textinput#textcontenttype-ios
-            autoComplete="email" // https://reactnative.dev/docs/textinput#autocomplete-android
-            onChangeText={(value) => setEmail(value)}
-            value={email}
+            placeholder="Je suis un 4pattes ..."
+            onChangeText={(value) => setDescription(value)}
+            value={description}
             style={globalCSS.input}
           />
 
           <TextInput
-            placeholder="Password"
-            onChangeText={(value) => setPassword(value)}
-            value={password}
-            secureTextEntry={true}
+            placeholder="traits de caractère"
+            onChangeText={(value) => setTrait(value)}
+            value={trait}
             style={globalCSS.input}
           />
-
-          <TouchableOpacity
-            onPress={() => handleSave()}
-            style={globalCSS.button}
-            activeOpacity={0.8}
-          >
-            <Text style={globalCSS.textButton}>Enregistrer</Text>
-          </TouchableOpacity>
+          <TextInput
+            placeholder="Activités"
+            onChangeText={(value) => setActivity(value)}
+            value={activity}
+            style={globalCSS.input}
+          />
+          <TextInput
+            placeholder="créé le"
+            onChangeText={(value) => setDateCreated(value)}
+            value={dateCreated}
+            style={globalCSS.input}
+          />
+          <TextInput
+            placeholder="Modifié le"
+            onChangeText={(value) => setDateModified(value)}
+            value={dateModified}
+            style={globalCSS.input}
+          />
         </View>
       </KeyboardAvoidingView>
     </LinearGradient>
@@ -197,13 +289,18 @@ const styles = StyleSheet.create({
   },
   listSwitchContainer: {
     width: "100%",
-    justifyContent: "flex-start",
-    alignItems: "center",
+    justifyContent: "center",
+    alignItems: "flex-start",
   },
 
   switchContainer: {
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
+  dateContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
     alignItems: "center",
   },
 });
