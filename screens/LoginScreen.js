@@ -47,8 +47,8 @@ export default function LoginScreen({ navigation }) {
       body: JSON.stringify({ email, password }),
     })
       .then((response) => {
-        console.log(response);
-        return  response.json()})
+        
+        response.json()})
       .then((data) => {
         console.log('data en retour du fetch login ', data)
         // CP : ajout isConnect? et gestion Msg Erreur
