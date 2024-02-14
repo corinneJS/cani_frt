@@ -1,4 +1,7 @@
-import { useState } from 'react';
+// Auteur : KB
+// Date : Mercredi 14 Février
+// Ecran pour créer une promenade
+import { useState, useState } from 'react';
 import {
   Image,
   KeyboardAvoidingView,
@@ -11,15 +14,22 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { LinearGradient } from "expo-linear-gradient"; 
+import { useDispatch, useSelector } from 'react-redux';
+import { addPlace, importPlaces } from '../reducers/user';
+import MapView, { Marker } from 'react-native-maps';
+import * as Location from 'expo-location';
+
 //feuille de style global
 const globalCSS = require("../styles/global.js");
 
-
-import { useDispatch } from 'react-redux';
 import { updateNickname } from '../reducers/user';
 
 export default function PromenadeScreen() {
   
+
+  const markers = user.places.map((data, i) => {
+    return <Marker key={i} coordinate={{ latitude: data.latitude, longitude: data.longitude }} title={data.name} />;
+  });
 
   return (
     <LinearGradient
@@ -27,6 +37,9 @@ export default function PromenadeScreen() {
       style={globalCSS.backgrdContainer}
     >
       <Text>Welcome to caniconnect PromenadeScreen !</Text>
+      <MapView onLongPress={(e) => handleLongPress(e)} mapType="standard" style={styles.map}>
+       
+      </MapView>
       <StatusBar style="auto" />
     </LinearGradient>
   );
@@ -38,6 +51,9 @@ const styles = StyleSheet.create({
       backgroundColor: '#f2B872',
       alignItems: 'center',
       justifyContent: 'center',
+    },
+    map: {
+      flex: 0.5,
     },
   });
   
