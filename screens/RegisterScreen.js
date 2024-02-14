@@ -20,7 +20,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 //CP : import pour la gestion des échanges avec le backend
-import {registerUser_ws} from "../webservices/RegisterWebServices.js"; 
+import { registerUser_webSrv } from "../webservices/Register_webSrv.js"; 
 
 //CP :  import feuille de style globale
 const globalCSS = require("../styles/global.js");
@@ -41,7 +41,7 @@ export default function RegisterScreen({ navigation }) {
   
 
 // fct btn connect via backend
-  const handleRegister = async () => { // KB :voir si async est nécessaire risque pb aleatoire
+  const handleRegister = () => { // KB :voir si async est nécessaire risque pb aleatoire
     const userData = {
       username: username,
       email: email,
@@ -51,8 +51,8 @@ export default function RegisterScreen({ navigation }) {
       city:city,
     };
     console.log(userData);
-    registerUser_ws(userData).then((data) => {
-      console.log('data in screen',data);
+    registerUser_webSrv(userData).then((data) => {
+      console.log("data in screen", data);
       if (data.result) {
         dispatch(
           infoUser({

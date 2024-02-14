@@ -69,8 +69,8 @@ export default function LoginScreen({ navigation }) {
       body: JSON.stringify({ email, password }),
     })
       .then((response) => {
-        console.log(response);
-        return  response.json()})
+        
+        response.json()})
       .then((data) => {
         console.log('data en retour du fetch login ', data)
         // CP : ajout isConnect? et gestion Msg Erreur
@@ -85,11 +85,11 @@ export default function LoginScreen({ navigation }) {
           setPassword("");
         }
       });
-      // A supprimer quand OK pour connect Backend
+      /* // A supprimer quand OK pour connect Backend
       dispatch(infoUser({ email, token: "data.token - TEST ByPASS LOGIN", isConnect: true }));
       setEmail("");
       setPassword("");
-      navigation.navigate("TabNavigator");
+      navigation.navigate("TabNavigator"); */
   }; // Fin HandleConnect
   
   
