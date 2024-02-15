@@ -26,7 +26,13 @@ import { updateNickname } from '../reducers/user';
 
 export default function PromenadeScreen() {
   const [currentPosition, setCurrentPosition] = useState(null);
-
+  const [name, setName] = useState("");
+  const [environment, setEnvironment] = useState("");
+  const [rythme, setRythme] = useState("");
+  const [distance, setDistance] = useState(0);
+  const [description, setDescription] = useState("");
+  const [duration, setDuration] = useState(0);
+  const [itinerary, setItinerary] = useState([]);
   
   useEffect(() => {
     (async () => {
@@ -62,13 +68,18 @@ export default function PromenadeScreen() {
        
       </MapView>
       <View style={styles.modalView}>
-        <TextInput placeholder="Nom de la promenade" onChangeText={(value) => {console.log(value);setNewPlace(value)}} value={newPlace} style={styles.input} />
-        <TouchableOpacity onPress={() => handleNewPlace()} style={styles.button} activeOpacity={0.8}>
-            <Text style={styles.textButton}>Add</Text>
+        <TextInput placeholder="Nom de la promenade" onChangeText={(value) => setName(value)} value={name} style={styles.input} />
+        <TextInput placeholder="Environnement" onChangeText={(value) => setEnvironment(value)} value={environment} style={styles.input} />
+        <TextInput placeholder="Rythme" onChangeText={(value) => setRythme(value)} value={rythme} style={styles.input} />
+        <TextInput placeholder="Distance" onChangeText={(value) => setDistance(value)} value={distance} style={styles.input} />
+        <TextInput placeholder="Desription" onChangeText={(value) => setDescription(value)} value={description} style={styles.input} />
+        <TextInput placeholder="Durée" onChangeText={(value) => setDuration(value)} value={duration} style={styles.input} />
+        <TextInput placeholder="Itinéraire" onChangeText={(value) => setItinerary(value)} value={itinerary} style={styles.input} />
+
+        <TouchableOpacity onPress={() => handleNewWalk()} style={styles.button} activeOpacity={0.8}>
+            <Text style={styles.textButton}>Valider</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleClose()} style={styles.button} activeOpacity={0.8}>
-            <Text style={styles.textButton}>Close</Text>
-        </TouchableOpacity>
+        
       </View>
       <StatusBar style="auto" />
     </LinearGradient>
