@@ -67,16 +67,16 @@ export default function PromenadeScreen() {
         {currentPosition && <Marker coordinate={currentPosition} title="My position" pinColor="#fecb2d" />}
        
       </MapView>
-      <View style={styles.modalView}>
-        <TextInput placeholder="Nom de la promenade" onChangeText={(value) => setName(value)} value={name} style={styles.input} />
-        <TextInput placeholder="Environnement" onChangeText={(value) => setEnvironment(value)} value={environment} style={styles.input} />
-        <TextInput placeholder="Rythme" onChangeText={(value) => setRythme(value)} value={rythme} style={styles.input} />
-        <TextInput placeholder="Distance" onChangeText={(value) => setDistance(value)} value={distance} style={styles.input} />
-        <TextInput placeholder="Desription" onChangeText={(value) => setDescription(value)} value={description} style={styles.input} />
-        <TextInput placeholder="Durée" onChangeText={(value) => setDuration(value)} value={duration} style={styles.input} />
-        <TextInput placeholder="Itinéraire" onChangeText={(value) => setItinerary(value)} value={itinerary} style={styles.input} />
+      <View style={styles.formContent}>
+        <TextInput placeholder="Nom de la promenade" onChangeText={(value) => setName(value)} value={name} style={globalCSS.input} />
+        <TextInput placeholder="Environnement" onChangeText={(value) => setEnvironment(value)} value={environment} style={globalCSS.input} />
+        <TextInput placeholder="Rythme" onChangeText={(value) => setRythme(value)} value={rythme} style={globalCSS.input} />
+        <TextInput placeholder="Distance" onChangeText={(value) => setDistance(value)} value={distance} style={globalCSS.input} />
+        <TextInput placeholder="Desription" onChangeText={(value) => setDescription(value)} value={description} style={globalCSS.input} />
+        <TextInput placeholder="Durée" onChangeText={(value) => setDuration(value)} value={duration} style={globalCSS.input} />
+        <TextInput placeholder="Itinéraire" onChangeText={(value) => setItinerary(value)} value={itinerary} style={globalCSS.input} />
 
-        <TouchableOpacity onPress={() => handleNewWalk()} style={styles.button} activeOpacity={0.8}>
+        <TouchableOpacity onPress={() => handleNewWalk()} style={globalCSS.button} activeOpacity={0.8}>
             <Text style={styles.textButton}>Valider</Text>
         </TouchableOpacity>
         
@@ -96,6 +96,11 @@ const styles = StyleSheet.create({
     map: {
       width: '100%',
       height: '30%',
+    },
+    formContent: {
+      width: "100%",
+      justifyContent: "center",
+      alignItems: "center",
     },
   });
   
