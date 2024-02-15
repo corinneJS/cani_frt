@@ -68,14 +68,15 @@ export default function PromenadeScreen() {
         rythme: rythme,
         distance: distance,
         description: description,
+        token: "0dff_dNSfK6RLg-HmaDWWQxoOj1NoYZD",
         duration : duration,
         dateCreated: new Date,
         dateModified: null,
         itinerary: [{"lat":48.86,"lon":2.33}, {"lat":49.86,"lon":2.50}, {"lat":50.86,"lon":2.63}],
-        userID: "65c77f8a928ffc58a07fd306",
       }),
     }).then((response) => response.json())
       .then((data) => {
+        console.log(data)
         // Dispatch in Redux store if the new place have been registered in database
         if (data.result) {
           console.log("tout est ok")
