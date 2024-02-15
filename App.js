@@ -3,7 +3,7 @@
 // Objet : Page principale
 // MAJ 08/02, CP : ajout écrans supplémentaires, TabNavigation et Stack, 
 // gestion fontGoogle MaterialCommunityIcons, suppression des imports et fonctions inutilisées
-//
+// MAJ 15/02, CP :  ajout reducer dog, modif du Menu right header du Stack.navigator : DevMenu 
 // --------------------------------------------------
 
 import { NavigationContainer } from "@react-navigation/native";
@@ -18,7 +18,7 @@ import { PersistGate } from "redux-persist/integration/react";
 //import storage from 'redux-persist/lib/storage'; //KB : pour react "classique"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-//import of components
+//import of Screen
 
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
@@ -27,6 +27,11 @@ import DogProfilScreen from "./screens/DogProfilScreen";
 import PromenadeScreen from "./screens/PromenadeScreen";
 import FavorisScreen from "./screens/FavorisScreen";
 import RegisterScreen from "./screens/RegisterScreen";
+
+// import Component
+import DevMenu from "./components/DevMenu";
+
+
 
 import {Alert,StyleSheet,View} from "react-native";
 
@@ -42,8 +47,9 @@ import { MaterialCommunityIcons, MaterialIcons, AntDesign } from "@expo/vector-i
 
 
 // import of reducers
-import user from "./reducers/user";
-const reducers = combineReducers({ user });
+import user, { logout } from "./reducers/user";
+import dog from "./reducers/dog";
+const reducers = combineReducers({ user, dog });
 const persistConfig = { key: "caniconnect", storage: AsyncStorage }; //ici le storage de react est remplacé par "storage: AsyncStorage" de react-native
 
 const store = configureStore({
@@ -144,6 +150,12 @@ export default function App() {
   if (!fontsLoaded) {
     return null;
   }
+  //
+  // Affichage userMenu ou DevMenu 
+  // 
+  const handleMenu = () => {
+    return <DevMenu/>
+  };
 
   return (
     <Provider store={store}>
@@ -164,7 +176,7 @@ export default function App() {
                   <MaterialIcons
                     name="menu"
                     size={24}
-                    onPress={() => navigation.navigate("TabNavigator")}
+                    onPress={() => handleMenu()}
                     // onPress={() => navigation.navigate("UserMenu")} // Naviguez vers un écran de menu ou ouvrez un menu contextuel
                   />
                 </View>
@@ -180,7 +192,7 @@ export default function App() {
             <Stack.Screen
               name="Register"
               component={RegisterScreen}
-              options={{ title: "caniConnect" }}
+              options={{ title: "🐾 S'inscrire" }}
               /* options={{ headerShown: false }} */
             />
             {/*  <Stack.Screen name="UserMenu" component={UserMenu} /> */}
