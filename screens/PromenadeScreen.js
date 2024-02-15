@@ -98,9 +98,9 @@ export default function PromenadeScreen() {
         <TextInput placeholder="Nom de la promenade" onChangeText={(value) => setName(value)} value={name} style={globalCSS.input} />
         <TextInput placeholder="Environnement" onChangeText={(value) => setEnvironment(value)} value={environment} style={globalCSS.input} />
         <TextInput placeholder="Rythme" onChangeText={(value) => setRythme(value)} value={rythme} style={globalCSS.input} />
-        <TextInput placeholder="Distance" onChangeText={(value) => setDistance(value)} value={distance.toString()} style={globalCSS.input} />
+        <TextInput placeholder="Distance" onChangeText={(value) => setDistance(value)} value={distance} style={globalCSS.input} />
         <TextInput placeholder="Description" onChangeText={(value) => setDescription(value)} value={description} style={globalCSS.input} />
-        <TextInput placeholder="Durée" onChangeText={(value) => setDuration(value)} value={duration.toString()} style={globalCSS.input} />
+        <TextInput placeholder="Durée" onChangeText={(value) => setDuration(value)} value={duration} style={globalCSS.input} />
        
 
         <TouchableOpacity onPress={() => handleNewWalk()} style={globalCSS.button} activeOpacity={0.8}>
