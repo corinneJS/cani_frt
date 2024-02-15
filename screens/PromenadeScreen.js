@@ -12,6 +12,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Modal,
 } from 'react-native';
 import { LinearGradient } from "expo-linear-gradient"; 
 import { useDispatch, useSelector } from 'react-redux';
@@ -33,6 +34,7 @@ export default function PromenadeScreen() {
   const [description, setDescription] = useState("");
   const [duration, setDuration] = useState();
   const [itinerary, setItinerary] = useState([]);
+  const [tempCoordinates, setTempCoordinates] = useState(null);
   
   useEffect(() => {
     (async () => {
@@ -45,6 +47,10 @@ export default function PromenadeScreen() {
           });
       }
     })();
+
+    const handleLongPress = (e) => {
+      setTempCoordinates(e.nativeEvent.coordinate);
+    };
 
   /*   fetch(`${BACKEND_ADDRESS}/places/${user.nickname}`)
       .then((response) => response.json())
@@ -72,7 +78,7 @@ export default function PromenadeScreen() {
         duration : duration,
         dateCreated: new Date,
         dateModified: null,
-        itinerary: [{"lat":48.86,"lon":2.33}, {"lat":49.86,"lon":2.50}, {"lat":50.86,"lon":2.63}],
+        itinerary: [{"lat": tempCoordinates.latitude,"lon": tempCoordinates.longitude}],
       }),
     }).then((response) => response.json())
       .then((data) => {
