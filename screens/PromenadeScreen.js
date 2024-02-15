@@ -57,6 +57,32 @@ export default function PromenadeScreen() {
     return <Marker key={i} coordinate={{ latitude: data.latitude, longitude: data.longitude }} title={data.name} />;
   }); */
 
+  const handleNewWalk= () => {
+    // Send new walk to backend to register it in database
+    fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/walks/create`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        name: name, 
+        environment: environment, 
+        rythme: rythme,
+        distance: distance,
+        description: description,
+        duration : duration,
+        dateCreated: new Date,
+        dateModified: null,
+        itinerary: [{"lat":48.86,"lon":2.33}, {"lat":49.86,"lon":2.50}, {"lat":50.86,"lon":2.63}],
+        userID: "65c77f8a928ffc58a07fd306",
+      }),
+    }).then((response) => response.json())
+      .then((data) => {
+        // Dispatch in Redux store if the new place have been registered in database
+        if (data.result) {
+          console.log("tout est ok")
+        }
+      });
+  };
+
   return (
     <LinearGradient
       colors={["#F2B872", "#FFFFFF"]}
