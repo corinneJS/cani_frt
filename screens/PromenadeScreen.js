@@ -86,6 +86,13 @@ export default function PromenadeScreen() {
         // Dispatch in Redux store if the new place have been registered in database
         if (data.result) {
           console.log("tout est ok")
+          setName('');
+          setEnvironment('');
+          setRythme('');
+          setDistance();
+          setDescription('');
+          setDuration();
+          setItinerary([]);
         }
       });
   };
