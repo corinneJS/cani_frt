@@ -102,5 +102,33 @@ const styles = StyleSheet.create({
       justifyContent: "center",
       alignItems: "center",
     },
+    text:{
+      fontFamily: "Lato_400Regular",
+      fontSize: 12,
+      color: "black",
+  
+    },
+    button: {
+      alignItems: "center",
+      paddingTop: 8,
+      width: "80%",
+      marginTop: 30,
+      backgroundColor: "#f2B872",
+      borderRadius: 10,
+      marginBottom: 80,
+    },
+    textButton: {
+      color: "#ffffff",
+      height: 30,
+      fontWeight: "600",
+      fontSize: 16,
+    },
+    input: {
+      width: "80%",
+      marginTop: 25,
+      borderBottomColor: "#f2B872",
+      borderBottomWidth: 1,
+      fontSize: 18,
+    },
   });
   
