@@ -16,16 +16,19 @@ import {
 } from 'react-native';
 import { LinearGradient } from "expo-linear-gradient"; 
 import { useDispatch, useSelector } from 'react-redux';
-import { addPlace, importPlaces } from '../reducers/user';
+import { addWalk, removeWalk, importWalks, addItinerary } from '../reducers/walk';
+import { infoUser } from '../reducers/user';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 
 //feuille de style global
 const globalCSS = require("../styles/global.js");
 
-import { updateNickname } from '../reducers/user';
-
 export default function PromenadeScreen() {
+  const dispatch = useDispatch();
+  const walk = useSelector((state) => state.walk.value);
+
+
   const [currentPosition, setCurrentPosition] = useState(null);
   const [name, setName] = useState("");
   const [environment, setEnvironment] = useState("");
@@ -34,7 +37,7 @@ export default function PromenadeScreen() {
   const [description, setDescription] = useState("");
   const [duration, setDuration] = useState();
   const [itinerary, setItinerary] = useState([]);
-  const [tempCoordinates, setTempCoordinates] = useState(null);
+  const [tempCoordinates, setTempCoordinates] = useState([]);
   
   useEffect(() => {
     (async () => {
@@ -48,16 +51,17 @@ export default function PromenadeScreen() {
       }
     })();
 
-    const handleLongPress = (e) => {
-      setTempCoordinates(e.nativeEvent.coordinate);
-    };
-
   /*   fetch(`${BACKEND_ADDRESS}/places/${user.nickname}`)
       .then((response) => response.json())
       .then((data) => {
         data.result && dispatch(importPlaces(data.places));
       }); */
   }, []);
+
+  const handleLongPress = (e) => {
+    let coord = e.nativeEvent.coordinate;
+    setTempCoordinates([...tempCoordinates, {latitude: coord.latitude , longitude: coord.longitude }]);
+  };
 
   /* const markers = user.places.map((data, i) => {
     return <Marker key={i} coordinate={{ latitude: data.latitude, longitude: data.longitude }} title={data.name} />;
@@ -86,6 +90,18 @@ export default function PromenadeScreen() {
         // Dispatch in Redux store if the new place have been registered in database
         if (data.result) {
           console.log("tout est ok")
+          dispatch(addWalk({
+            name: name, 
+            environment: environment, 
+            rythme: rythme,
+            distance: distance,
+            description: description,
+            duration : duration,
+          }))
+          dispatch(addItinerary(tempCoordinates));
+
+          console.log("reducer walk:", walk)
+          console.log("reducer walk/itineraries:", walk.itineraries)
           setName('');
           setEnvironment('');
           setRythme('');
@@ -97,6 +113,10 @@ export default function PromenadeScreen() {
       });
   };
 
+  const markers = walk.itineraries.map((data, i) => {
+    return <Marker key={i} coordinate={{ latitude: data.latitude, longitude: data.longitude }} />;
+  });
+
   return (
     <LinearGradient
       colors={["#F2B872", "#FFFFFF"]}
@@ -105,7 +125,7 @@ export default function PromenadeScreen() {
       <Text>Welcome to caniconnect PromenadeScreen !</Text>
       <MapView onLongPress={(e) => handleLongPress(e)} mapType="standard" style={styles.map}>
         {currentPosition && <Marker coordinate={currentPosition} title="My position" pinColor="#fecb2d" />}
-       
+        {markers}
       </MapView>
       <View style={styles.formContent}>
         <TextInput placeholder="Nom de la promenade" onChangeText={(value) => setName(value)} value={name} style={globalCSS.input} />

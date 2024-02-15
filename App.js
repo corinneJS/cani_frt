@@ -4,6 +4,7 @@
 // MAJ 08/02, CP : ajout écrans supplémentaires, TabNavigation et Stack, 
 // gestion fontGoogle MaterialCommunityIcons, suppression des imports et fonctions inutilisées
 // MAJ 15/02, CP :  ajout reducer dog, modif du Menu right header du Stack.navigator : DevMenu 
+// MAJ 15/02/, KB : ajout reducer walk
 // --------------------------------------------------
 
 import { NavigationContainer } from "@react-navigation/native";
@@ -49,7 +50,9 @@ import { MaterialCommunityIcons, MaterialIcons, AntDesign } from "@expo/vector-i
 // import of reducers
 import user, { logout } from "./reducers/user";
 import dog from "./reducers/dog";
-const reducers = combineReducers({ user, dog });
+import walk from "./reducers/walk";
+
+const reducers = combineReducers({ user, dog, walk });
 const persistConfig = { key: "caniconnect", storage: AsyncStorage }; //ici le storage de react est remplacé par "storage: AsyncStorage" de react-native
 
 const store = configureStore({
