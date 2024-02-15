@@ -25,8 +25,9 @@ const globalCSS = require("../styles/global.js");
 import { updateNickname } from '../reducers/user';
 
 export default function PromenadeScreen() {
-  
+  const [currentPosition, setCurrentPosition] = useState(null);
 
+  
   useEffect(() => {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -56,10 +57,19 @@ export default function PromenadeScreen() {
       style={globalCSS.backgrdContainer}
     >
       <Text>Welcome to caniconnect PromenadeScreen !</Text>
-      <MapView onLongPress={(e) => handleLongPress(e)} mapType="hybrid" style={styles.map}>
+      <MapView onLongPress={(e) => handleLongPress(e)} mapType="standard" style={styles.map}>
         {currentPosition && <Marker coordinate={currentPosition} title="My position" pinColor="#fecb2d" />}
        
       </MapView>
+      <View style={styles.modalView}>
+        <TextInput placeholder="Nom de la promenade" onChangeText={(value) => {console.log(value);setNewPlace(value)}} value={newPlace} style={styles.input} />
+        <TouchableOpacity onPress={() => handleNewPlace()} style={styles.button} activeOpacity={0.8}>
+            <Text style={styles.textButton}>Add</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleClose()} style={styles.button} activeOpacity={0.8}>
+            <Text style={styles.textButton}>Close</Text>
+        </TouchableOpacity>
+      </View>
       <StatusBar style="auto" />
     </LinearGradient>
   );
@@ -73,7 +83,8 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
     },
     map: {
-      flex: 0.5,
+      width: '100%',
+      height: '30%',
     },
   });
   
