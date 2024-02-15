@@ -48,13 +48,24 @@ export default function LoginScreen({ navigation }) {
     })
       .then((response) => {
         
-        response.json()})
+       return response.json()})
       .then((data) => {
         console.log('data en retour du fetch login ', data)
         // CP : ajout isConnect? et gestion Msg Erreur
         if (data.result) {
-
-          dispatch(login({ email, token: data.token, isConnect: true }));
+                     
+          dispatch(
+            infoUser({
+              email,
+              username: data.user.username,
+              isOwnerDog: data.user.isOwnerdog,
+              isProfessional: data.user.isProfessional,
+              city: data.user.city,
+              token: data.user.token,
+              userID:data.user.userID,
+              isConnect: true,
+            })
+          ); 
           setEmail("");
           setPassword("");
           navigation.navigate("TabNavigator");

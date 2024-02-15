@@ -1,4 +1,4 @@
-// RegisterWebServices.js
+// dogs_webSrv.js
 
 export const viewDog_webSrv = (dogData) => {
   console.log("Dogs_webSrv, reception viewDog_webSrv dogData ", dogData);

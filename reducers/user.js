@@ -12,6 +12,7 @@ export const userSlice = createSlice({
     
     infoUser: (state, action) => {
       state.value.token = action.payload.token; // KB : bonne pratique sécurité préférer le seesion storage
+      state.value.userID = action.payload._id;
       state.value.isConnect = action.payload.isConnect;
       state.value.firstname = action.payload.firstname;
       state.value.email = action.payload.email;
@@ -21,19 +22,20 @@ export const userSlice = createSlice({
     },
 
     logout: (state) => {
-     state.value.token = "";
+     state.value.token = ""; // KB : bonne pratique sécurité préférer le seesion storage
+     state.value.userID = "";
      state.value.isConnect = false;
      state.value.firstname = "";
      state.value.email = "";
-     state.value.isOwnerDog = true;
+     state.value.isOwnerDog = false;
      state.value.isProfessional = false;
-     state.value.city = ""; 
+     state.value.city = "";
     
     },
   },
 });
 
-export const { infoUser, logout } = userSlice.actions;
+export const { infoUser, login,  logout } = userSlice.actions;
 export default userSlice.reducer;
 // const initialState = {
 //  value: {nickname: null},
