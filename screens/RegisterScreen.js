@@ -21,6 +21,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 //CP : import pour la gestion des échanges avec le backend
 import { registerUser_webSrv } from "../webservices/Register_webSrv.js"; 
+import { infoUser } from "../reducers/user.js";
 
 //CP :  import feuille de style globale
 const globalCSS = require("../styles/global.js");
@@ -41,7 +42,7 @@ export default function RegisterScreen({ navigation }) {
   
 
 // fct btn connect via backend
-  const handleRegister = () => { // KB :voir si async est nécessaire risque pb aleatoire
+  const handleRegister = async () => { // KB :voir si async est nécessaire risque pb aleatoire
     const userData = {
       username: username,
       email: email,
@@ -50,8 +51,8 @@ export default function RegisterScreen({ navigation }) {
       isProfessional: isProfessional,
       city:city,
     };
-    console.log(userData);
-    registerUser_webSrv(userData).then((data) => {
+    
+    const data = await  registerUser_webSrv(userData)
       console.log("data in screen", data);
       if (data.result) {
         dispatch(
@@ -70,12 +71,12 @@ export default function RegisterScreen({ navigation }) {
         setIsProfessional(false);
         setPassword("");
         setCity("");
-        setDescription("");
+        
         navigation.navigate("TabNavigator");
       } else {
         Alert.alert("Oups !", `un pb est survenu : ${data.error}`);
       }
-    });
+   
         
   };
 

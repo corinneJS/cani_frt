@@ -1,6 +1,6 @@
 // DogProfilScreen : Profil d'un 4pattes avec galerie photo, visu caractéristiques races
 // Auteur : CP
-//
+// 
 // --------------------------------------------------
 // import des composants
 import {
@@ -19,65 +19,113 @@ import { DatePickerModal } from "react-native-paper-dates";
 import { LinearGradient } from "expo-linear-gradient";
 import {  MaterialIcons} from "@expo/vector-icons";
 // import pour gestion states
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-//CP : import pour la gestion des échanges avec le backend
-import { viewDog_webSrv } from "../webservices/dogs_webSrv.js";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { infoDog } from "../reducers/dog";
+
 
 //CP :  import feuille de style globale
 const globalCSS = require("../styles/global.js");
 
+//
+// COMPOSANT DogProfilScreen
+//
 export default function DogProfilScreen({ navigation }) {
   const dispatch = useDispatch();
 
-  // Variables Form
-  const [dogName, setDogName] = useState("");
-  const [description, setDescription] = useState("");
-  const [birthdate, setBirthdate] = useState(new Date()); // CP A faire DatePicker
-  const [isFemale, setIsFemale] = useState(Boolean); 
-  const toggleSwitchIsFemale = () =>
-    setIsFemale((previewsState) => !previewsState);
-  const [isSterilized, setIsSterilized] = useState(false);
-  const toggleSwitchIsSterilized = () =>
-    setIsSterilized((previewsState) => !previewsState);
-  const [trait, setTrait] = useState(""); // CP : A faire : proposer liste déroulante choix multiple
-  const [activity, setActivity] = useState("");
-  const [dateCreated, setDateCreated] = useState("");
-  const [dateModified, setDateModified] = useState("");
-  const [userID, setUserID] = useState(""); // CP : A faire : init avec user connecté
-  const [breedID, setBreedID] = useState("");
+  // Init state local dogInfo
+  const [dogInfo, setDogInfo] = useState({
+    dogName: "",
+    userID: "",
+    isFemale: false,
+    isSterilized: false,
+    traitID: [{}],
+    activityID: [{}],
+    dateCreated: new Date(),
+    dogPhotos: [{}],
+    dateModified: new Date(),
+    breedID: "",
+  });
+  console.log("dogInfo (init state local)", dogInfo);
 
-// variables UX
-const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
+  // useSelector pour récupération des données du store Redux
+  const dogData = useSelector((state) => state.dog.value);
+  console.log("dogData (info redux)",dogData);
+
+  // useEffect pour initialiser le state dogInfo avec les données du store Redux lors du montage du composant
+  // et à chaque MAJ de dogData
+  useEffect(() => {
+    if (dogData) {
+      setDogInfo(dogData);
+      console.log("dogInfo (Chargement Screen et chaque modif de dogData (le store) : state local MAJ avec dogData)", dogInfo);
+    }
+  }, [dogData]);
+
+  // A chaque modif d'un champ, mise à jour du state local (avec fieldname en param)
+  const handleFieldChange = (name, value) => {
+    
+        setDogInfo((prevState) => ({
+          ...prevState,
+          [name]: value,
+        }));
+      console.log(
+        "dogInfo (A chaque changement de valeur d'un champ : state local MAJ avec saisie et fieldname en param)",
+        dogInfo
+      );
 
 
+   
+    };
+ 
+  // A chaque onBlur (sortie d'un champ), mise à jour du store infoDog avec le state local dogInfo 
+  const handleUpdateDogInfo = (name) => {
+    dispatch(
+      infoDog({
+        ...dogInfo,
+        [name]: dogInfo[name],
+        
+      })
+      
+
+    );
+ console.log(
+        "infoDog (A chaque sortie de champ : Store redux MAJ state local dogInfo avec fieldname en param)",
+        infoDog
+      );
+     };
+
+  
+  
+  
+  // variables UX
+  const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
 
   //
   // FONCTIONS UX
 
-  // Gestion Picker Date
-  // Fonction pour ouvrir le modal
-  const showDatePicker = () => {
-    setIsDatePickerVisible(true);
-  };
+        // Gestion Picker Date
+        // Fonction pour ouvrir le modal
+        const showDatePicker = () => {
+          setIsDatePickerVisible(true);
+        };
 
-  // Fonction pour gérer la confirmation de la date
-  const onConfirm = (date) => {
-    setBirthdate(date);
-    setIsDatePickerVisible(false); // Fermer le modal après la sélection
-  };
+        // Fonction pour gérer la confirmation de la date
+        const onConfirm = (date) => {
+          setBirthdate(date);
+          setIsDatePickerVisible(false); // Fermer le modal après la sélection
+        };
 
-  // Fonction pour gérer l'annulation
-  const onCancel = () => {
-    setIsDatePickerVisible(false);
-  };
-//
-// FONCTIONS CRUD
-// 
-// Afficher le 4pattes
+        // Fonction pour gérer l'annulation
+        const onCancel = () => {
+          setIsDatePickerVisible(false);
+        };
+  //
+  // FONCTIONS CRUD
+  //
 
-// Ajouter un nouveau 4pattes
-const handle_ADD = async () => {
+  
+  // Ajouter un nouveau 4pattes
+  /* const handle_ADD = async () => {
     const dogData = {
       dogName: dogName,
       description: description,
@@ -102,77 +150,16 @@ const handle_ADD = async () => {
             isSterilized,
           })
         );
-        Alert.alert("Profil 4 pattes", `le profil de ${dogName} est enregistré !`);
-      } else {
-        Alert.alert("Oups !", `un pb est survenu : ${data.error}`);
-      }
-    });
-  };
-
-  // 
-  // Use Effect : afficher le profil du 4 pattes
-  //
-/*   useEffect(() => {
-    (async () => {
-
-
-
-
-viewDog_webSrv(userData).then((data) => {
-      console.log("data in screen", data);
-      if (data.result) {
-        dispatch(
-          infoUser({
-            username,
-            email,
-            isDogOwner,
-            isProfessional,
-            city,
-            token: data.token,
-          })
+        Alert.alert(
+          "Profil 4 pattes",
+          `le profil de ${dogName} est enregistré !`
         );
-        setUsername("");
-        setEmail("");
-        setIsDogOwner(true);
-        setIsProfessional(false);
-        setPassword("");
-        setCity("");
-        setDescription("");
-        navigation.navigate("TabNavigator");
       } else {
         Alert.alert("Oups !", `un pb est survenu : ${data.error}`);
       }
     });
-        
-  };
+  }; */
 
-
-
-
-
-      
-      if () {
-        
-      }
-    })();
-    fetch(
-      `http://192.168.1.198:3000/places/${encodeURIComponent(user.nickname)}`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.result) {
-          dispatch(importPlaces(data.places));
-          setPlaces(data.places);
-        }
-      });
-  }, []); */
-  
-  
-  
-  
-  
-  
-  
   //
   // RETURN DU COMPOSANT
   //
@@ -187,9 +174,11 @@ viewDog_webSrv(userData).then((data) => {
       >
         <View style={styles.formContent}>
           <TextInput
-            placeholder="nom du 4 pattes"
-            onChangeText={(value) => setDogName(value)}
-            value={dogName}
+            placeholder="Entrez le nom du 4 pattes"
+            onChangeText={(value) => handleFieldChange("dogName", value)}
+            value={dogInfo.dogName}
+            /// ATT A verifier
+            onBlur={() => handleUpdateDogInfo("dogName")}
             style={globalCSS.input}
           />
 
