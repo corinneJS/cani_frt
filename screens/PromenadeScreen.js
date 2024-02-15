@@ -29,9 +29,9 @@ export default function PromenadeScreen() {
   const [name, setName] = useState("");
   const [environment, setEnvironment] = useState("");
   const [rythme, setRythme] = useState("");
-  const [distance, setDistance] = useState(0);
+  const [distance, setDistance] = useState();
   const [description, setDescription] = useState("");
-  const [duration, setDuration] = useState(0);
+  const [duration, setDuration] = useState();
   const [itinerary, setItinerary] = useState([]);
   
   useEffect(() => {
