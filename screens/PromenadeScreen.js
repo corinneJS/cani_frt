@@ -60,7 +60,7 @@ export default function PromenadeScreen() {
 
   const handleLongPress = (e) => {
     let coord = e.nativeEvent.coordinate;
-    setTempCoordinates(...tempCoordinates, {latitude: coord.latitude , longitude: coord.longitude });
+    setTempCoordinates({latitude: coord.latitude , longitude: coord.longitude });
   };
 
   /* const markers = user.places.map((data, i) => {
@@ -82,14 +82,12 @@ export default function PromenadeScreen() {
         duration : duration,
         dateCreated: new Date,
         dateModified: null,
-        itinerary: [{"lat": tempCoordinates.latitude,"lon": tempCoordinates.longitude}],
+        itinerary: [{"lat": 48.86,"lon": 2.33}],
       }),
     }).then((response) => response.json())
       .then((data) => {
-        console.log(data)
         // Dispatch in Redux store if the new place have been registered in database
         if (data.result) {
-          console.log("tout est ok")
           dispatch(addWalk({
             name: name, 
             environment: environment, 
@@ -100,7 +98,7 @@ export default function PromenadeScreen() {
           }))
           dispatch(addItinerary(tempCoordinates));
 
-          console.log("reducer walk:", walk)
+          console.log("reducer walk:", walk.walks)
           console.log("reducer walk/itineraries:", walk.itineraries)
           setName('');
           setEnvironment('');

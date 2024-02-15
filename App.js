@@ -162,7 +162,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <PersistGate persistor={persistor}>
+      {/* <PersistGate persistor={persistor}> */}
         <NavigationContainer>
           <Stack.Navigator
             screenOptions={({ navigation }) => ({
@@ -206,7 +206,7 @@ export default function App() {
             />
           </Stack.Navigator>
         </NavigationContainer>
-      </PersistGate>
+      {/* </PersistGate> */}
     </Provider>
   );
 }
