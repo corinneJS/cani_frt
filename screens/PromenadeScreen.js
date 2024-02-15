@@ -60,7 +60,7 @@ export default function PromenadeScreen() {
 
   const handleLongPress = (e) => {
     let coord = e.nativeEvent.coordinate;
-    setTempCoordinates([...tempCoordinates, {latitude: coord.latitude , longitude: coord.longitude }]);
+    setTempCoordinates(...tempCoordinates, {latitude: coord.latitude , longitude: coord.longitude });
   };
 
   /* const markers = user.places.map((data, i) => {
@@ -113,9 +113,9 @@ export default function PromenadeScreen() {
       });
   };
 
-  const markers = walk.itineraries.map((data, i) => {
+  /* const markers = walk.itineraries.map((data, i) => {
     return <Marker key={i} coordinate={{ latitude: data.latitude, longitude: data.longitude }} />;
-  });
+  }); */
 
   return (
     <LinearGradient
@@ -125,7 +125,7 @@ export default function PromenadeScreen() {
       <Text>Welcome to caniconnect PromenadeScreen !</Text>
       <MapView onLongPress={(e) => handleLongPress(e)} mapType="standard" style={styles.map}>
         {currentPosition && <Marker coordinate={currentPosition} title="My position" pinColor="#fecb2d" />}
-        {markers}
+        {/* {markers} */}
       </MapView>
       <View style={styles.formContent}>
         <TextInput placeholder="Nom de la promenade" onChangeText={(value) => setName(value)} value={name} style={globalCSS.input} />
