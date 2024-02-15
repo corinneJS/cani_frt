@@ -63,10 +63,6 @@ export default function PromenadeScreen() {
     setTempCoordinates([...tempCoordinates, {latitude: coord.latitude , longitude: coord.longitude }]);
   };
 
-  /* const markers = user.places.map((data, i) => {
-    return <Marker key={i} coordinate={{ latitude: data.latitude, longitude: data.longitude }} title={data.name} />;
-  }); */
-
   const handleNewWalk= () => {
     // Send new walk to backend to register it in database
     fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/walks/create`, {
@@ -82,7 +78,7 @@ export default function PromenadeScreen() {
         duration : duration,
         dateCreated: new Date,
         dateModified: null,
-        itinerary: [{"lat": 48.86,"lon": 2.33}],
+        itinerary: tempCoordinates,
       }),
     }).then((response) => response.json())
       .then((data) => {
@@ -99,6 +95,7 @@ export default function PromenadeScreen() {
           dispatch(addItinerary(tempCoordinates));
 
           console.log("reducer walk:", walk.walks)
+          console.log("tempCoordinates:", tempCoordinates)
           console.log("reducer walk/itineraries:", walk.itineraries)
           setName('');
           setEnvironment('');
@@ -111,9 +108,9 @@ export default function PromenadeScreen() {
       });
   };
 
-  /* const markers = walk.itineraries.map((data, i) => {
+  const markers = tempCoordinates.map((data, i) => {
     return <Marker key={i} coordinate={{ latitude: data.latitude, longitude: data.longitude }} />;
-  }); */
+  });
 
   return (
     <LinearGradient
@@ -123,7 +120,7 @@ export default function PromenadeScreen() {
       <Text>Welcome to caniconnect PromenadeScreen !</Text>
       <MapView onLongPress={(e) => handleLongPress(e)} mapType="standard" style={styles.map}>
         {currentPosition && <Marker coordinate={currentPosition} title="My position" pinColor="#fecb2d" />}
-        {/* {markers} */}
+        {markers}
       </MapView>
       <View style={styles.formContent}>
         <TextInput placeholder="Nom de la promenade" onChangeText={(value) => setName(value)} value={name} style={globalCSS.input} />
