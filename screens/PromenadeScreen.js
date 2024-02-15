@@ -60,7 +60,7 @@ export default function PromenadeScreen() {
 
   const handleLongPress = (e) => {
     let coord = e.nativeEvent.coordinate;
-    setTempCoordinates([...tempCoordinates, {latitude: coord.latitude , longitude: coord.longitude }]);
+    setTempCoordinates([...tempCoordinates, {lat: coord.latitude , long: coord.longitude }]);
   };
 
   const handleNewWalk= () => {
@@ -109,7 +109,7 @@ export default function PromenadeScreen() {
   };
 
   const markers = tempCoordinates.map((data, i) => {
-    return <Marker key={i} coordinate={{ latitude: data.latitude, longitude: data.longitude }} />;
+    return <Marker key={i} coordinate={{ latitude: data.lat, longitude: data.lon }} />;
   });
 
   return (
