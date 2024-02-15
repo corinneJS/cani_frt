@@ -60,7 +60,7 @@ export default function PromenadeScreen() {
 
   const handleLongPress = (e) => {
     let coord = e.nativeEvent.coordinate;
-    setTempCoordinates({latitude: coord.latitude , longitude: coord.longitude });
+    setTempCoordinates([...tempCoordinates, {latitude: coord.latitude , longitude: coord.longitude }]);
   };
 
   /* const markers = user.places.map((data, i) => {

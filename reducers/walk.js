@@ -18,7 +18,7 @@ export const walkSlice = createSlice({
       state.value.itineraries = action.payload;
     },
     addItinerary: (state, action) => {
-        state.value.itineraries.push(action.payload);
+        state.value.itineraries = action.payload;
       },
     /* removeitineraries: (state, action) => {
         state.value.itineraries = state.value.itineraries.filter(e => e.name !== action.payload);
