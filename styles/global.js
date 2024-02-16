@@ -24,13 +24,14 @@ module.exports = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
-    height: "100%",
-    justifyContent: "center",
+    justifyContent:"flex-end",
     alignItems: "center",
   },
   divider: {
     borderBottomColor: "#F2B872",
     borderBottomWidth: 1,
+    height: 1,
+    width: "100%",
   },
   /* body: {
     fontFamily: "Lato_400Regular",
@@ -48,11 +49,10 @@ module.exports = StyleSheet.create({
     fontSize: 18,
     color: "black",
   },
-  text:{
+  text: {
     fontFamily: "Lato_400Regular",
     fontSize: 12,
     color: "black",
-
   },
   button: {
     alignItems: "center",

@@ -23,6 +23,11 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { infoDog } from "../reducers/dog";
 
+// import gestion date
+import moment from "moment";
+
+// import composants internes
+import { EditIconBar } from "../components/EditIconBar.js";
 
 //CP :  import feuille de style globale
 const globalCSS = require("../styles/global.js");
@@ -36,7 +41,9 @@ export default function DogProfilScreen({ navigation }) {
   // Init state local dogInfo
   const [dogInfo, setDogInfo] = useState({
     dogName: "",
+    description:"",
     userID: "",
+    birthdate: new Date(),
     isFemale: false,
     isSterilized: false,
     traitID: [{}],
@@ -111,7 +118,10 @@ export default function DogProfilScreen({ navigation }) {
 
         // Fonction pour gérer la confirmation de la date
         const onConfirm = (date) => {
-          setBirthdate(date);
+          setDogInfo((prevState) => ({
+            ...prevState,
+            birthdate: date,
+          }));
           setIsDatePickerVisible(false); // Fermer le modal après la sélection
         };
 
@@ -119,47 +129,25 @@ export default function DogProfilScreen({ navigation }) {
         const onCancel = () => {
           setIsDatePickerVisible(false);
         };
+
+        // gestion des Switchs
+        const toggleSwitchIsFemale = (value) =>
+          setDogInfo((prevState) => ({
+          ...prevState,
+          isFemale: value,
+          
+        }));
+        const toggleSwitchIsSterilized = (value) =>
+          setDogInfo((prevState) => ({
+            ...prevState,
+            isSterilized: value,
+          }));
   //
   // FONCTIONS CRUD
   //
 
   
-  // Ajouter un nouveau 4pattes
-  /* const handle_ADD = async () => {
-    const dogData = {
-      dogName: dogName,
-      description: description,
-      birthdate: birthdate,
-      isFemale: isFemale,
-      isSterilized: isSterilized,
-      trait: trait,
-      activity: activity,
-      dateCreated: dateCreated,
-      dateModified: dateModified,
-      //userID
-      //breedID
-    };
-    console.log("dog_data en partance vers ws:", dogData);
-    dogs_webSrv(dogData).then((data) => {
-      console.log("data in screen", data);
-      if (data.result) {
-        dispatch(
-          infoDog({
-            dogName,
-            isFemale,
-            isSterilized,
-          })
-        );
-        Alert.alert(
-          "Profil 4 pattes",
-          `le profil de ${dogName} est enregistré !`
-        );
-      } else {
-        Alert.alert("Oups !", `un pb est survenu : ${data.error}`);
-      }
-    });
-  }; */
-
+ 
   //
   // RETURN DU COMPOSANT
   //
@@ -177,27 +165,26 @@ export default function DogProfilScreen({ navigation }) {
             placeholder="Entrez le nom du 4 pattes"
             onChangeText={(value) => handleFieldChange("dogName", value)}
             value={dogInfo.dogName}
-            /// ATT A verifier
             onBlur={() => handleUpdateDogInfo("dogName")}
             style={globalCSS.input}
           />
 
           <View style={styles.listSwitchContainer}>
             <View style={styles.switchContainer}>
-              <Text>{isFemale ? "Femelle" : "Mâle"}</Text>
+              <Text>{dogInfo.isFemale ? "Femelle" : "Mâle"}</Text>
               <Switch
-                value={isFemale}
-                onValueChange={toggleSwitchIsFemale}
-                color={isFemale ? "#E91E63" : "#3F51B5"}
+                value={dogInfo.isFemale}
+                onValueChange={(value) => toggleSwitchIsFemale(value)}
+                color={dogInfo.isFemale ? "#E91E63" : "#3F51B5"}
               />
             </View>
 
             <View style={styles.switchContainer}>
               <Switch
                 trackColor={{ false: "#B39C81", true: "#F2B872" }}
-                thumbColor={isSterilized ? "#F2B872" : "#B39C81"}
-                onValueChange={toggleSwitchIsSterilized}
-                value={isSterilized}
+                thumbColor={dogInfo.isSterilized ? "#F2B872" : "#B39C81"}
+                onValueChange={(value) => toggleSwitchIsSterilized(value)}
+                value={dogInfo.isSterilized}
               />
               <Text>Stérilisé ?</Text>
             </View>
@@ -206,8 +193,12 @@ export default function DogProfilScreen({ navigation }) {
           <View style={styles.dateContainer}>
             <TextInput
               placeholder="date de naissance"
-              onChangeText={(value) => setBirthdate(value)}
-              value={birthdate}
+              onChangeText={(value) => handleFieldChange("birthdate", value)}
+              value={
+                dogInfo.birthdate
+                  ? moment(dogInfo.birthdate).format("DD/MM/YYYY")
+                  : ""
+              }
               style={globalCSS.input}
             />
             <TouchableOpacity onPress={showDatePicker}>
@@ -219,7 +210,7 @@ export default function DogProfilScreen({ navigation }) {
               // Propriété pour rendre le modal visible ou non
               visible={isDatePickerVisible}
               // La date actuellement sélectionnée à afficher
-              date={birthdate}
+              date={dogInfo.birthdate}
               // Fonction appelée lorsque l'utilisateur confirme la sélection
               onConfirm={onConfirm}
               // Fonction appelée lorsque l'utilisateur annule la sélection
@@ -230,12 +221,12 @@ export default function DogProfilScreen({ navigation }) {
           </View>
           <TextInput
             placeholder="Je suis un 4pattes ..."
-            onChangeText={(value) => setDescription(value)}
-            value={description}
+            onChangeText={(value) => handleFieldChange("description", value)}
+            value={dogInfo.description}
             style={globalCSS.input}
           />
 
-          <TextInput
+          {/* <TextInput
             placeholder="traits de caractère"
             onChangeText={(value) => setTrait(value)}
             value={trait}
@@ -247,18 +238,10 @@ export default function DogProfilScreen({ navigation }) {
             value={activity}
             style={globalCSS.input}
           />
-          <TextInput
-            placeholder="créé le"
-            onChangeText={(value) => setDateCreated(value)}
-            value={dateCreated}
-            style={globalCSS.input}
-          />
-          <TextInput
-            placeholder="Modifié le"
-            onChangeText={(value) => setDateModified(value)}
-            value={dateModified}
-            style={globalCSS.input}
-          />
+          */}
+       {/*    <EditIconBar navigation={navigation} reducerName="infoDog" /> */}
+          <Text>"Modifié le : " {infoDog.dateModified}</Text>
+          <Text>"Crée le : " {infoDog.dateCreated}</Text>
         </View>
       </KeyboardAvoidingView>
     </LinearGradient>
