@@ -60,7 +60,7 @@ export default function PromenadeScreen() {
 
   const handleLongPress = (e) => {
     let coord = e.nativeEvent.coordinate;
-    setTempCoordinates([...tempCoordinates, {lat: coord.latitude , lon: coord.longitude }]);
+    setItinerary([...itinerary, {lat: coord.latitude , lon: coord.longitude }]);
   };
 
   const handleNewWalk= () => {
@@ -78,7 +78,7 @@ export default function PromenadeScreen() {
         duration : duration,
         dateCreated: new Date,
         dateModified: null,
-        itinerary: tempCoordinates,
+        itinerary: itinerary,
       }),
     }).then((response) => response.json())
       .then((data) => {
@@ -92,10 +92,10 @@ export default function PromenadeScreen() {
             description: description,
             duration : duration,
           }))
-          dispatch(addItinerary(tempCoordinates));
+          dispatch(addItinerary(itinerary));
 
           console.log("reducer walk:", walk.walks)
-          console.log("tempCoordinates:", tempCoordinates)
+          console.log("itinerary:", itinerary)
           console.log("reducer walk/itineraries:", walk.itineraries)
           setName('');
           setEnvironment('');
@@ -108,7 +108,7 @@ export default function PromenadeScreen() {
       });
   };
 
-  const markers = tempCoordinates.map((data, i) => {
+  const markers = itinerary.map((data, i) => {
     return <Marker key={i} coordinate={{ latitude: data.lat, longitude: data.lon }} />;
   });
 
