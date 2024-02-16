@@ -24,7 +24,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import WelcomeScreen from "./screens/WelcomeScreen";
+import ProfilScreen from "./screens/ProfilScreen";
 import DogProfilScreen from "./screens/DogProfilScreen";
+import UserProfilScreen from "./screens/UserProfilScreen";
 import PromenadeScreen from "./screens/PromenadeScreen";
 import FavorisScreen from "./screens/FavorisScreen";
 import RegisterScreen from "./screens/RegisterScreen";
@@ -137,7 +139,7 @@ const TabNavigator = () => {
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Promenade" component={PromenadeScreen} />
       <Tab.Screen name="Favoris" component={FavorisScreen} />
-      <Tab.Screen name="Profil" component={DogProfilScreen} />
+      <Tab.Screen name="Profil" component={ProfilScreen} />
     </Tab.Navigator>
   );
 };
@@ -190,6 +192,18 @@ export default function App() {
               name="Login"
               options={{ title: "caniConnect" }}
               component={LoginScreen}
+              /* options={{ headerShown: false }} */
+            />
+            <Stack.Screen
+              name="DogProfil"
+              options={{ title: "caniConnect" }}
+              component={DogProfilScreen}
+              /* options={{ headerShown: false }} */
+            />
+            <Stack.Screen
+              name="UserProfil"
+              options={{ title: "caniConnect" }}
+              component={UserProfilScreen}
               /* options={{ headerShown: false }} */
             />
             <Stack.Screen
