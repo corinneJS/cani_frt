@@ -36,7 +36,7 @@ import DevMenu from "./components/DevMenu";
 
 
 
-import {Alert,StyleSheet,View} from "react-native";
+import {Alert,StyleSheet,View,TouchableOpacity} from "react-native";
 
 // import font & Icons
 import {
@@ -143,6 +143,57 @@ const TabNavigator = () => {
     </Tab.Navigator>
   );
 };
+function CustomHeaderRight({ navigation, screenName }) {
+  switch (screenName) {
+            case 'DogProfil':
+              return (
+                <View style={{ flexDirection: 'row' }}>
+                  <TouchableOpacity onPress={() => console.log('Ajouter')}>
+                    <MaterialIcons name="add" size={24} color="black" />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => console.log('Enregistrer')}>
+                    <MaterialIcons name="save" size={24} color="black" />
+                  </TouchableOpacity>
+                </View>
+              );
+            default:
+              return (
+                <View style={{ flexDirection: "row" }}>
+                  <MaterialIcons
+                    name="location-off" // "location-on" CP : Changez le nom de l'icône en fonction du statut
+                    size={24}
+                    onPress={() => {
+                      // Logique pour basculer/afficher le statut de géolocalisation
+                    }}
+                  />
+                  <MaterialIcons
+                    name="menu"
+                    size={24}
+                    onPress={() => handleMenu()}
+                    // onPress={() => navigation.navigate("UserMenu")} // Naviguez vers un écran de menu ou ouvrez un menu contextuel
+                  />
+                </View>
+              );
+  }
+
+  
+}
+
+
+
+
+
+
+
+
+                
+            
+
+
+
+
+
+
 
 export default function App() {
   // utilisation font google
@@ -165,61 +216,73 @@ export default function App() {
   return (
     <Provider store={store}>
       {/* <PersistGate persistor={persistor}> */}
-        <NavigationContainer>
-          <Stack.Navigator
-            screenOptions={({ navigation }) => ({
-              headerTransparent: true,
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={({ navigation }) => ({
+            headerTransparent: true,
+            hearderRight: () => {
+              <View style={{ flexDirection: "row" }}>
+                <MaterialIcons
+                  name="location-off" // "location-on" CP : Changez le nom de l'icône en fonction du statut
+                  size={24}
+                  onPress={() => {
+                    // Logique pour basculer/afficher le statut de géolocalisation
+                  }}
+                />
+                <MaterialCommunityIcons
+                  name="sign-direction"
+                  size={24}
+                  onPress={() => {}} //
+                />
+                <MaterialIcons
+                  name="menu"
+                  size={24}
+                  onPress={() => handleMenu()}
+                  // onPress={() => navigation.navigate("UserMenu")}
+                />
+              </View>;
+            }, 
+          })}
+        >
+          <Stack.Screen
+            name="Login"
+            options={{ title: "🐾 caniConnect" }}
+            component={LoginScreen}
+            /* options={{ headerShown: false }} */
+          />
+          <Stack.Screen
+            name="DogProfil"
+            component={DogProfilScreen}
+            options={({ navigation }) => ({
+              title: "🐾 Profil 4 pattes",
               headerRight: () => (
-                <View style={{ flexDirection: "row" }}>
-                  <MaterialIcons
-                    name="location-off" // "location-on" CP : Changez le nom de l'icône en fonction du statut
-                    size={24}
-                    onPress={() => {
-                      // Logique pour basculer/afficher le statut de géolocalisation
-                    }}
-                  />
-                  <MaterialIcons
-                    name="menu"
-                    size={24}
-                    onPress={() => handleMenu()}
-                    // onPress={() => navigation.navigate("UserMenu")} // Naviguez vers un écran de menu ou ouvrez un menu contextuel
-                  />
-                </View>
+                <CustomHeaderRight
+                  navigation={navigation}
+                  screenName="DogProfil"
+                />
               ),
             })}
-          >
-            <Stack.Screen
-              name="Login"
-              options={{ title: "caniConnect" }}
-              component={LoginScreen}
-              /* options={{ headerShown: false }} */
-            />
-            <Stack.Screen
-              name="DogProfil"
-              options={{ title: "caniConnect" }}
-              component={DogProfilScreen}
-              /* options={{ headerShown: false }} */
-            />
-            <Stack.Screen
-              name="UserProfil"
-              options={{ title: "caniConnect" }}
-              component={UserProfilScreen}
-              /* options={{ headerShown: false }} */
-            />
-            <Stack.Screen
-              name="Register"
-              component={RegisterScreen}
-              options={{ title: "🐾 S'inscrire" }}
-              /* options={{ headerShown: false }} */
-            />
-            {/*  <Stack.Screen name="UserMenu" component={UserMenu} /> */}
-            <Stack.Screen
-              name="TabNavigator"
-              component={TabNavigator}
-              options={{ title: "caniConnect" }}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
+          />
+          <Stack.Screen
+            name="UserProfil"
+            options={{ title: "caniConnect" }}
+            component={UserProfilScreen}
+            /* options={{ headerShown: false }} */
+          />
+          <Stack.Screen
+            name="Register"
+            component={RegisterScreen}
+            options={{ title: "🐾 S'inscrire" }}
+            /* options={{ headerShown: false }} */
+          />
+          {/*  <Stack.Screen name="UserMenu" component={UserMenu} /> */}
+          <Stack.Screen
+            name="TabNavigator"
+            component={TabNavigator}
+            options={{ title: "caniConnect" }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
       {/* </PersistGate> */}
     </Provider>
   );
