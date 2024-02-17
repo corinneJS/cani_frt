@@ -42,6 +42,7 @@ export default function LoginScreen({ navigation }) {
   const [password, setPassword] = useState("");
   const [isConnect, setIsConnect] = useState(false);
   const reduxInfoUser = useSelector((state) => state.user.value);
+  const reduxInfoDog = useSelector((state) => state.dog.value);
 
 /* // fct pour btn connect avec ggle  CP : A FAIRE A LA FIN
   const handleGoogle = () => {
@@ -83,7 +84,7 @@ export default function LoginScreen({ navigation }) {
                 // MAJ Store infoDog
                 dispatch(infoDog(dogData.dog));
               } else {
-              Alert.alert("Oups !", `un pb est survenu : ${data.error}`);
+              Alert.alert("Oups !", `un pb est survenu : ${dogData.error}`);
               }
             }  
             // on vide les states locaux 
