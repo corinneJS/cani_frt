@@ -27,6 +27,7 @@ import DogProfilScreen from "./screens/DogProfilScreen";
 import PromenadeScreen from "./screens/PromenadeScreen";
 import FavorisScreen from "./screens/FavorisScreen";
 import RegisterScreen from "./screens/RegisterScreen";
+import UserProfilScreen from "./screens/UserProfilScreen"
 
 // import Component
 import DevMenu from "./components/DevMenu";
