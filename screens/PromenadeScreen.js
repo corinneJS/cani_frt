@@ -56,6 +56,7 @@ export default function PromenadeScreen() {
       }
     })();
 
+    console.log("currentPosition:", currentPosition);
   /*   fetch(`${BACKEND_ADDRESS}/places/${user.nickname}`)
       .then((response) => response.json())
       .then((data) => {
@@ -131,7 +132,10 @@ export default function PromenadeScreen() {
       style={globalCSS.backgrdContainer}
     >
       <Text>Welcome to caniconnect PromenadeScreen !</Text>
-      <MapView onLongPress={(e) => handleLongPress(e)} mapType="standard" style={styles.map}>
+      <MapView onLongPress={(e) => handleLongPress(e)} mapType="standard" style={styles.map} initialRegion={{
+        latitude: currentPosition.latitude,
+        longitude: currentPosition.longitude,
+      }}>
         {currentPosition && <Marker coordinate={currentPosition} title="My position" pinColor="#fecb2d" />}
         {markers}
       </MapView>
