@@ -144,8 +144,8 @@ export default function PromenadeScreen() {
         <View style={styles.walkEventInputs}>
           <TextInput placeholder="Nom de l'événement" onChangeText={(value) => setEventName(value)} value={eventName} style={styles.input} />
           <View style={styles.dateTime}>
-            <TextInput placeholder="Date de l'événement" onChangeText={(value) => setEventDate(value)} value={eventDate} style={styles.input} />
-            <TextInput placeholder="Heure de l'événement" onChangeText={(value) => setEventTime(value)} value={eventTime} style={styles.input} />
+            <TextInput placeholder="Date" onChangeText={(value) => setEventDate(value)} value={eventDate} style={styles.input} />
+            <TextInput placeholder="Heure" onChangeText={(value) => setEventTime(value)} value={eventTime} style={styles.input} />
           </View>
           <TextInput placeholder="Ville" onChangeText={(value) => setEventCity(value)} value={eventCity} style={styles.input} />       
         </View>
@@ -184,7 +184,8 @@ const styles = StyleSheet.create({
       fontSize: 18,
     },
     walkInputs: {
-   
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     envRythme: {
       flexDirection: 'row',
@@ -197,7 +198,8 @@ const styles = StyleSheet.create({
       alignItems: "center",
     },
     walkEventInputs: {
-   
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     dateTime: {
       flexDirection: 'row',
