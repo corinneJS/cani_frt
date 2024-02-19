@@ -84,6 +84,10 @@ export default function PromenadeScreen() {
         dateCreated: new Date,
         dateModified: null,
         itinerary: itinerary,
+        eventName: eventName,
+        eventDate: eventDate,
+        eventTime: eventTime,
+        eventCity: eventCity,
       }),
     }).then((response) => response.json())
       .then((data) => {
@@ -109,6 +113,10 @@ export default function PromenadeScreen() {
           setDescription('');
           setDuration();
           setItinerary([]);
+          setEventName('');
+          setEventDate('');
+          setEventTime('');
+          setEventCity('');
         }
       });
   };
