@@ -129,25 +129,25 @@ export default function PromenadeScreen() {
       </MapView>
       <View style={styles.formContent}>
         <View style={styles.walkInputs}>
-          <TextInput placeholder="Nom de la promenade" onChangeText={(value) => setName(value)} value={name} style={globalCSS.input} />
+          <TextInput placeholder="Nom de la promenade" onChangeText={(value) => setName(value)} value={name} style={styles.input} />
           <View style={styles.envRythme}>
-            <TextInput placeholder="Environnement" onChangeText={(value) => setEnvironment(value)} value={environment} style={globalCSS.input} />
-            <TextInput placeholder="Rythme" onChangeText={(value) => setRythme(value)} value={rythme} style={globalCSS.input} />
+            <TextInput placeholder="Environnement" onChangeText={(value) => setEnvironment(value)} value={environment} style={styles.input} />
+            <TextInput placeholder="Rythme" onChangeText={(value) => setRythme(value)} value={rythme} style={styles.input} />
           </View>
           <View style={styles.distDuree}>
-            <TextInput placeholder="Distance" onChangeText={(value) => setDistance(value)} value={distance} style={globalCSS.input} />
-            <TextInput placeholder="Durée" onChangeText={(value) => setDuration(value)} value={duration} style={globalCSS.input} />
+            <TextInput placeholder="Distance" onChangeText={(value) => setDistance(value)} value={distance} style={styles.input} />
+            <TextInput placeholder="Durée" onChangeText={(value) => setDuration(value)} value={duration} style={styles.input} />
           </View>
-          <TextInput placeholder="Description" onChangeText={(value) => setDescription(value)} value={description} style={globalCSS.input} />
+          <TextInput placeholder="Description" onChangeText={(value) => setDescription(value)} value={description} style={styles.input} />
         </View>
 
         <View style={styles.walkEventInputs}>
-          <TextInput placeholder="Nom de l'événement" onChangeText={(value) => setEventName(value)} value={eventName} style={globalCSS.input} />
+          <TextInput placeholder="Nom de l'événement" onChangeText={(value) => setEventName(value)} value={eventName} style={styles.input} />
           <View style={styles.dateTime}>
-            <TextInput placeholder="Date de l'événement" onChangeText={(value) => setEventDate(value)} value={eventDate} style={globalCSS.input} />
-            <TextInput placeholder="Heure de l'événement" onChangeText={(value) => setEventTime(value)} value={eventTime} style={globalCSS.input} />
+            <TextInput placeholder="Date de l'événement" onChangeText={(value) => setEventDate(value)} value={eventDate} style={styles.input} />
+            <TextInput placeholder="Heure de l'événement" onChangeText={(value) => setEventTime(value)} value={eventTime} style={styles.input} />
           </View>
-          <TextInput placeholder="Ville" onChangeText={(value) => setEventCity(value)} value={eventCity} style={globalCSS.input} />       
+          <TextInput placeholder="Ville" onChangeText={(value) => setEventCity(value)} value={eventCity} style={styles.input} />       
         </View>
 
         <TouchableOpacity onPress={() => handleNewWalk()} style={globalCSS.button} activeOpacity={0.8}>
@@ -175,6 +175,13 @@ const styles = StyleSheet.create({
       width: "100%",
       justifyContent: "center",
       alignItems: "center",
+    },
+    input: {
+      width: "40%",
+      marginTop: 25,
+      borderBottomColor: "#f2B872",
+      borderBottomWidth: 1,
+      fontSize: 18,
     },
     walkInputs: {
    
