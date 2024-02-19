@@ -188,12 +188,12 @@ const styles = StyleSheet.create({
     },
     envRythme: {
       flexDirection: 'row',
-      justifyContent: "center",
+      justifyContent: "space-between",
       alignItems: "center",
     },
     distDuree: {
       flexDirection: 'row',
-      justifyContent: "center",
+      justifyContent: "space-around",
       alignItems: "center",
     },
     walkEventInputs: {
