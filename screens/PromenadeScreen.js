@@ -135,6 +135,8 @@ export default function PromenadeScreen() {
       <MapView onLongPress={(e) => handleLongPress(e)} mapType="standard" style={styles.map} initialRegion={{
         latitude: currentPosition.latitude,
         longitude: currentPosition.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
       }}>
         {currentPosition && <Marker coordinate={currentPosition} title="My position" pinColor="#fecb2d" />}
         {markers}
