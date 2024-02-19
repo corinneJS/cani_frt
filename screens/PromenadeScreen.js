@@ -28,7 +28,6 @@ export default function PromenadeScreen() {
   const dispatch = useDispatch();
   const walk = useSelector((state) => state.walk.value);
 
-
   const [currentPosition, setCurrentPosition] = useState(null);
   const [name, setName] = useState("");
   const [environment, setEnvironment] = useState("");
@@ -38,6 +37,12 @@ export default function PromenadeScreen() {
   const [duration, setDuration] = useState();
   const [itinerary, setItinerary] = useState([]);
   const [tempCoordinates, setTempCoordinates] = useState([]);
+
+  // State variables for walkEvent inputs
+  const [eventName, setEventName] = useState("");
+  const [eventDate, setEventDate] = useState("");
+  const [eventTime, setEventTime] = useState("");
+  const [eventCity, setEventCity] = useState();
   
   useEffect(() => {
     (async () => {
@@ -123,16 +128,30 @@ export default function PromenadeScreen() {
         {markers}
       </MapView>
       <View style={styles.formContent}>
-        <TextInput placeholder="Nom de la promenade" onChangeText={(value) => setName(value)} value={name} style={globalCSS.input} />
-        <TextInput placeholder="Environnement" onChangeText={(value) => setEnvironment(value)} value={environment} style={globalCSS.input} />
-        <TextInput placeholder="Rythme" onChangeText={(value) => setRythme(value)} value={rythme} style={globalCSS.input} />
-        <TextInput placeholder="Distance" onChangeText={(value) => setDistance(value)} value={distance} style={globalCSS.input} />
-        <TextInput placeholder="Description" onChangeText={(value) => setDescription(value)} value={description} style={globalCSS.input} />
-        <TextInput placeholder="Durée" onChangeText={(value) => setDuration(value)} value={duration} style={globalCSS.input} />
-       
+        <View style={styles.walkInputs}>
+          <TextInput placeholder="Nom de la promenade" onChangeText={(value) => setName(value)} value={name} style={globalCSS.input} />
+          <View style={styles.envRythme}>
+            <TextInput placeholder="Environnement" onChangeText={(value) => setEnvironment(value)} value={environment} style={globalCSS.input} />
+            <TextInput placeholder="Rythme" onChangeText={(value) => setRythme(value)} value={rythme} style={globalCSS.input} />
+          </View>
+          <View style={styles.distDuree}>
+            <TextInput placeholder="Distance" onChangeText={(value) => setDistance(value)} value={distance} style={globalCSS.input} />
+            <TextInput placeholder="Durée" onChangeText={(value) => setDuration(value)} value={duration} style={globalCSS.input} />
+          </View>
+          <TextInput placeholder="Description" onChangeText={(value) => setDescription(value)} value={description} style={globalCSS.input} />
+        </View>
+
+        <View style={styles.walkEventInputs}>
+          <TextInput placeholder="Nom de l'événement" onChangeText={(value) => setEventName(value)} value={eventName} style={globalCSS.input} />
+          <View style={styles.dateTime}>
+            <TextInput placeholder="Date de l'événement" onChangeText={(value) => setEventDate(value)} value={eventDate} style={globalCSS.input} />
+            <TextInput placeholder="Heure de l'événement" onChangeText={(value) => setEventTime(value)} value={eventTime} style={globalCSS.input} />
+          </View>
+          <TextInput placeholder="Ville" onChangeText={(value) => setEventCity(value)} value={eventCity} style={globalCSS.input} />       
+        </View>
 
         <TouchableOpacity onPress={() => handleNewWalk()} style={globalCSS.button} activeOpacity={0.8}>
-            <Text style={styles.textButton}>Valider</Text>
+            <Text style={globalCSS.textButton}>Valider</Text>
         </TouchableOpacity>
         
       </View>
@@ -157,33 +176,26 @@ const styles = StyleSheet.create({
       justifyContent: "center",
       alignItems: "center",
     },
-    text:{
-      fontFamily: "Lato_400Regular",
-      fontSize: 12,
-      color: "black",
-  
+    walkInputs: {
+   
     },
-    button: {
+    envRythme: {
+      flexDirection: 'row',
+      justifyContent: "center",
       alignItems: "center",
-      paddingTop: 8,
-      width: "80%",
-      marginTop: 30,
-      backgroundColor: "#f2B872",
-      borderRadius: 10,
-      marginBottom: 80,
     },
-    textButton: {
-      color: "#ffffff",
-      height: 30,
-      fontWeight: "600",
-      fontSize: 16,
+    distDuree: {
+      flexDirection: 'row',
+      justifyContent: "center",
+      alignItems: "center",
     },
-    input: {
-      width: "80%",
-      marginTop: 25,
-      borderBottomColor: "#f2B872",
-      borderBottomWidth: 1,
-      fontSize: 18,
+    walkEventInputs: {
+   
+    },
+    dateTime: {
+      flexDirection: 'row',
+      justifyContent: "center",
+      alignItems: "center",
     },
   });
   
