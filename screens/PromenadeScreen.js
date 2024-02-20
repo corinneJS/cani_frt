@@ -48,9 +48,6 @@ export default function PromenadeScreen() {
   const [latCentered, setLatCentered] = useState(37.4220936);
   const [lonCentered, setLonCentered] = useState(-122.083922);
 
-  currentPosition && setLatCentered(currentPosition.latitude);
-  currentPosition && setLonCentered(currentPosition.longitude);
-
   useEffect(() => {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -59,6 +56,8 @@ export default function PromenadeScreen() {
         Location.watchPositionAsync({ distanceInterval: 10 },
           (location) => {
             setCurrentPosition(location.coords);
+            currentPosition && setLatCentered(currentPosition.latitude);
+            currentPosition && setLonCentered(currentPosition.longitude);
           });
       }
     })();
@@ -140,7 +139,14 @@ export default function PromenadeScreen() {
       style={globalCSS.backgrdContainer}
     >
       <Text>Welcome to caniconnect PromenadeScreen !</Text>
-      <MapView onLongPress={(e) => handleLongPress(e)} mapType="standard" style={styles.map} >
+      <MapView onLongPress={(e) => handleLongPress(e)} mapType="standard" style={styles.map} 
+         initialRegion={{
+          latitude: latCentered,
+          longitude: lonCentered,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+      >
         {currentPosition && <Marker coordinate={currentPosition} title="My position" pinColor="#fecb2d" />}
         {markers}
       </MapView>
