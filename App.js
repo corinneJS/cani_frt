@@ -4,6 +4,7 @@
 // MAJ 08/02, CP : ajout écrans supplémentaires, TabNavigation et Stack, 
 // gestion fontGoogle MaterialCommunityIcons, suppression des imports et fonctions inutilisées
 // MAJ 15/02, CP :  ajout reducer dog, modif du Menu right header du Stack.navigator : DevMenu 
+// MAJ 15/02/, KB : ajout reducer walk
 // --------------------------------------------------
 
 import { NavigationContainer } from "@react-navigation/native";
@@ -23,7 +24,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import WelcomeScreen from "./screens/WelcomeScreen";
+import ProfilScreen from "./screens/ProfilScreen";
 import DogProfilScreen from "./screens/DogProfilScreen";
+import UserProfilScreen from "./screens/UserProfilScreen";
 import PromenadeScreen from "./screens/PromenadeScreen";
 import FavorisScreen from "./screens/FavorisScreen";
 import RegisterScreen from "./screens/RegisterScreen";
@@ -50,7 +53,9 @@ import { MaterialCommunityIcons, MaterialIcons, AntDesign } from "@expo/vector-i
 // import of reducers
 import user, { logout } from "./reducers/user";
 import dog from "./reducers/dog";
-const reducers = combineReducers({ user, dog });
+import walk from "./reducers/walk";
+
+const reducers = combineReducers({ user, dog, walk });
 const persistConfig = { key: "caniconnect", storage: AsyncStorage }; //ici le storage de react est remplacé par "storage: AsyncStorage" de react-native
 
 const store = configureStore({
@@ -135,7 +140,7 @@ const TabNavigator = () => {
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Promenade" component={PromenadeScreen} />
       <Tab.Screen name="Favoris" component={FavorisScreen} />
-      <Tab.Screen name="Profil" component={DogProfilScreen} />
+      <Tab.Screen name="Profil" component={ProfilScreen} />
     </Tab.Navigator>
   );
 };
@@ -160,7 +165,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <PersistGate persistor={persistor}>
+      {/* <PersistGate persistor={persistor}> */}
         <NavigationContainer>
           <Stack.Navigator
             screenOptions={({ navigation }) => ({
@@ -191,6 +196,18 @@ export default function App() {
               /* options={{ headerShown: false }} */
             />
             <Stack.Screen
+              name="DogProfil"
+              options={{ title: "caniConnect" }}
+              component={DogProfilScreen}
+              /* options={{ headerShown: false }} */
+            />
+            <Stack.Screen
+              name="UserProfil"
+              options={{ title: "caniConnect" }}
+              component={UserProfilScreen}
+              /* options={{ headerShown: false }} */
+            />
+            <Stack.Screen
               name="Register"
               component={RegisterScreen}
               options={{ title: "🐾 S'inscrire" }}
@@ -204,7 +221,7 @@ export default function App() {
             />
           </Stack.Navigator>
         </NavigationContainer>
-      </PersistGate>
+      {/* </PersistGate> */}
     </Provider>
   );
 }

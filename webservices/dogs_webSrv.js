@@ -1,41 +1,14 @@
-// dogs_webSrv.js
 
-export const viewDog_webSrv = (dogData) => {
-  console.log("Dogs_webSrv, reception viewDog_webSrv dogData ", dogData);
+export const findDogsByUserID_webSrv = async (userID) => {
+  console.log("findDogsByUserID_webSrv, reception userId ", userID);
 
-/*   fetch(`${process.env.EXPO_PUBLIC_BASE_URL}dogs/add`, {
-   
-   
-    body: JSON.stringify(dogData),
-  })
-    .then((response) => {
-      console.log(response);
-      return response.json();
-    })
-
-    .then((data) => {
-      console.log("Dogs_webSrv, retour viewDog_webSrv", data);
-      return data;
-    }); */
+  const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}dogs/first_fromuser/${userID}`)
+  
+   console.log("retour response /firstDog dans le webSrv", response);
+     
+    const data = await response.json();
+  console.log("data retourné par FindDog_Srv", data);
+  return data;
+ 
 };
 
-export const dogs_webSrv = (dogData) => {
-  console.log("dogs_webSrv, reception dogData ", dogData);
-
-  fetch(`${process.env.EXPO_PUBLIC_BASE_URL}dogs/add`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(dogData),
-  })
-    .then((response) => {
-      console.log(response);
-      return response.json();
-    })
-
-    .then((data) => {
-      console.log("dog_webSrv, retour data ", data);  
-      return data;
-    });
-};

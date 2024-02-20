@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // userProfilScreen : profil des utilisateurs
 // Auteur : JZ
 // 
@@ -258,7 +259,4 @@ const [password, setPassword]=("");
     dateContainer: {
       flexDirection: "row",
       justifyContent: "flex-start",
-      alignItems: "center",
-    },
-  });
-  
+      alignItems: "center",}

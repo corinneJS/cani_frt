@@ -4,7 +4,9 @@
 // par la saisie d'un mot de passe ou via la connexion google.
 // possibilité de choisir de s'inscrire
 // Contributions :
-// CP 08/02/24 : ajout styles, ajout lien vers inscription, ajout commentaires ;-)
+// CP 08/02/24 : ajout styles, ajout lien vers inscription, ajout commentaires
+// CP 15/02/24 : gestion fetch dans fichier /webservices
+// Init redux store infoUser et InfoDog (si existe)
 // --------------------------------------------------------------------------------
 // import des composants
 import {
@@ -21,16 +23,25 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 // import pour gestion des States et 
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { infoUser } from "../reducers/user";
+import { infoDog } from "../reducers/dog";
 //CP :  import feuille de style globale & init globalCSS 
 const globalCSS = require("../styles/global.js");
+import{findDogsByUserID_webSrv} from "../webservices/dogs_webSrv.js"
+import { loginUser_webSrv } from "../webservices/Login_webSrv.js"
+
+
+////
+/////
+
 
 export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("");
-  const [isConnected, setIsConnected] = useState(false);
+  const [isConnect, setIsConnect] = useState(false);
+  const reduxInfoUser = useSelector((state) => state.user.value);
 
 /* // fct pour btn connect avec ggle  CP : A FAIRE A LA FIN
   const handleGoogle = () => {
@@ -61,46 +72,49 @@ export default function LoginScreen({ navigation }) {
 
 
 // fct btn connect via backend
-  const handleConnect = () => {
-    /* 'https://backend-one-nu-35.vercel.app/' */
-       fetch(`${process.env.EXPO_PUBLIC_BASE_URL}users/signin`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    })
-      .then((response) => {
-        
-       return response.json()})
-      .then((data) => {
-        console.log('data en retour du fetch login ', data)
-        // CP : ajout isConnect? et gestion Msg Erreur
-        if (data.result) {
-                     
-          dispatch(
-            infoUser({
-              email,
-              username: data.user.username,
-              isOwnerDog: data.user.isOwnerdog,
-              isProfessional: data.user.isProfessional,
-              city: data.user.city,
-              token: data.user.token,
-              userID:data.user.userID,
-              isConnect: true,
-            })
-          ); 
-          setEmail("");
-          setPassword("");
-          navigation.navigate("TabNavigator");
-        } else {
-          Alert.alert("Oups !", data.error);
-          setPassword("");
-        }
-      });
-      /* // A supprimer quand OK pour connect Backend
-      dispatch(infoUser({ email, token: "data.token - TEST ByPASS LOGIN", isConnect: true }));
-      setEmail("");
-      setPassword("");
-      navigation.navigate("TabNavigator"); */
+  const handleConnect = async () => {
+    const userData = {
+          email: email,
+          password: password
+        };
+    // vérif login en bdd
+    const data = await loginUser_webSrv(userData);
+
+      console.log("data USER in screen Login", data);
+      if (data.result) {
+            // MAJ Store infoUser
+            dispatch(infoUser({
+                email,
+                username: data.user.username,
+                isDogOwner: data.user.isDogOwner,
+                isProfessional: data.user.isProfessional,
+                city: data.user.city,
+                token: data.user.token,
+                userID:data.user.userID,
+                isConnect: true,
+            }));
+            
+           
+            // Si proprietaire d'un 4pattes alors MAJ store redux Dog
+            if (data.user.isDogOwner) {
+              // recherche du 1er chien possédé et mise à jour infoDog
+              console.log(data.user.userID);          
+              const dogData = await findDogsByUserID_webSrv(data.user.userID); 
+              console.log("dogData dans le screen", dogData)
+              if (dogData.result) {
+                // MAJ Store infoDog
+                dispatch(infoDog(dogData.dog));
+              } else {
+              Alert.alert("Oups !", `un pb est survenu : ${data.error}`);
+              }
+            }  
+            // on vide les states locaux 
+            setEmail("");
+            setPassword("");
+            console.log("infoUser enregistré dans le store ", reduxInfoUser);
+            navigation.navigate("TabNavigator");
+        };
+      
   }; // Fin HandleConnect
   
   

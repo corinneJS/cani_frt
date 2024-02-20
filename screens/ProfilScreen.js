@@ -1,35 +1,76 @@
-import { useState } from 'react';
+import { useState } from "react";
 import {
-    Image,
-    KeyboardAvoidingView,
-    Platform,
-    StyleSheet,
-    View,
-    StatusBar,
-    Text,
-    TextInput,
-    TouchableOpacity,
-  } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { updateNickname } from '../reducers/user';
-
-export default function ProfilScreen() {
+  Image,
   
+  StyleSheet,
+  View,
+  StatusBar,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import {
+  MaterialCommunityIcons
+} from "@expo/vector-icons";
+//feuille de style global
+const globalCSS = require("../styles/global.js");
+
+
+import { useSelector } from "react-redux";
+
+
+
+// variables pour gestion hauteur du container principal
+const screenHeight = Dimensions.get("window").height;
+const headerHeight = 60;
+
+export default function ProfilScreen({navigation}) {
+// Import des profils
+const reduxInfoUser = useSelector((state) => state.user.value);
+const reduxInfoDog = useSelector((state) => state.dog.value);
+
+
 
   return (
-    <View style={styles.container}>
-    <Text>Welcome to caniconnect ProfilScreen !</Text>
-    <StatusBar style="auto" />
-  </View>
-  )
+    <LinearGradient
+      colors={["#F2B872", "#FFFFFF"]}
+      style={globalCSS.backgrdContainer}
+    >
+      <View style={[globalCSS.container,{height: screenHeight - headerHeight}]}>
+        <Text style={globalCSS.title}>Choisissez un profil</Text>
+        <View style={styles.iconsContainer}>
+          <TouchableOpacity
+            style={styles.profileContainer}
+            onPress={() => navigation.navigate("UserProfil")}
+          >
+            <MaterialCommunityIcons
+              name="account-cog-outline"
+              size={50}
+              color="#F2B872"
+            />
+            <Text style={globalCSS.stitle}>{reduxInfoUser.username}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.profileContainer}
+            onPress={() => navigation.navigate("DogProfil")}
+          >
+            <MaterialCommunityIcons name="dog" size={50} color="#F2B872" />
+            <Text style={globalCSS.stitle}>{reduxInfoDog.dogName}</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      <StatusBar style="auto" />
+    </LinearGradient>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#ADD8E6',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  });
-  
+  iconsContainer: {
+    flex: 1,
+    flexDirection: "row",
+    width:"50%",
+    alignItems:"center",
+    justifyContent:"space-around"
+  },
+});

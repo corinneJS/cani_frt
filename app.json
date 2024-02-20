@@ -26,11 +26,6 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "extra": {
-      "eas": {
-        "projectId": "51276322-0b74-4b57-893c-ffc527bd4606"
-      }
-    },
     "runtimeVersion": {
       "policy": "appVersion"
     },
@@ -39,7 +34,12 @@
     },
     "plugins": [
       "expo-font"
-    ]
-  
+    ],
+    "owner": "caniconnect",
+    "extra": {
+      "eas": {
+        "projectId": "51276322-0b74-4b57-893c-ffc527bd4606"
+      }
+    }
   }
 }

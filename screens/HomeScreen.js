@@ -16,7 +16,7 @@ const globalCSS = require("../styles/global.js");
 
 
 import { useDispatch } from 'react-redux';
-import { updateNickname } from '../reducers/user';
+
 
 export default function HomeScreen() {
   
