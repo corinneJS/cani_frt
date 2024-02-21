@@ -57,7 +57,7 @@ export default function PromenadeRechercheScreen ({ navigation }) {
         <Text>Welcome to caniconnect PromenadeRechercheScreen !</Text>
         <View style={styles.searchBar}>
           <TextInput placeholder="Ville" onChangeText={(value) => setEventName(value)} value={eventCity} style={styles.input} />
-          <TouchableOpacity onPress={() => handleSearch()} style={globalCSS.button} activeOpacity={0.8}>
+          <TouchableOpacity onPress={() => handleSearch()} style={styles.button} activeOpacity={0.8}>
               <Text style={globalCSS.textButton}>Valider</Text>
           </TouchableOpacity>
         </View>
@@ -89,12 +89,26 @@ export default function PromenadeRechercheScreen ({ navigation }) {
         alignItems: 'center',
         justifyContent: 'center',
       },
+      searchBar: {
+        flexDirection: 'row',
+        justifyContent: "space-around",
+        alignItems: "center",
+      },
       input: {
-        width: "40%",
+        width: "80%",
         marginTop: 25,
         borderBottomColor: "#f2B872",
         borderBottomWidth: 1,
         fontSize: 18,
+      },
+      button: {
+        alignItems: "center",
+        paddingTop: 8,
+        width: "80%",
+        marginTop: 30,
+        backgroundColor: "#f2B872",
+        borderRadius: 10,
+        marginBottom: 80,
       },
       walkInfo: {
         borderColor: '#f2B872',
