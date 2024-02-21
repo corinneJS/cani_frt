@@ -5,6 +5,7 @@
 // gestion fontGoogle MaterialCommunityIcons, suppression des imports et fonctions inutilisées
 // MAJ 15/02, CP :  ajout reducer dog, modif du Menu right header du Stack.navigator : DevMenu 
 // MAJ 15/02, KB : ajout reducer walk
+// MAJ 21/02, KB : ajout des écrans PromenadeCreationScreen, PromenadeInscriptionScreen, PromenadeRechercheScreen
 // --------------------------------------------------
 
 import { NavigationContainer } from "@react-navigation/native";
@@ -29,9 +30,14 @@ import WelcomeScreen from "./screens/WelcomeScreen";
 import ProfilScreen from "./screens/ProfilScreen";
 import DogProfilScreen from "./screens/DogProfilScreen";
 import UserProfilScreen from "./screens/UserProfilScreen";
-import PromenadeScreen from "./screens/PromenadeScreen";
 import FavorisScreen from "./screens/FavorisScreen";
 import RegisterScreen from "./screens/RegisterScreen";
+
+// import of screens related to Promenade
+import PromenadeScreen from "./screens/PromenadeScreen";
+import PromenadeCreationScreen from "./screens/PromenadeCreationScreen";
+import PromenadeInscriptionScreen from "./screens/PromenadeInscriptionScreen";
+import PromenadeRechercheScreen from "./screens/PromenadeRechercheScreen";
 
 // import Component
 import DevMenu from "./components/DevMenu";
