@@ -44,6 +44,9 @@ export default function PromenadeCreationScreen ({ navigation }) {
   const [eventTime, setEventTime] = useState("");
   const [eventCity, setEventCity] = useState();
 
+  const [latCentered, setLatCentered] = useState(-16.5);
+  const [lonCentered, setLonCentered] = useState(-151.74);
+
   useEffect(() => {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -55,14 +58,13 @@ export default function PromenadeCreationScreen ({ navigation }) {
           });
       }
     })();
-
     console.log("currentPosition:", currentPosition);
-  /*   fetch(`${BACKEND_ADDRESS}/places/${user.nickname}`)
-      .then((response) => response.json())
-      .then((data) => {
-        data.result && dispatch(importPlaces(data.places));
-      }); */
   }, []);
+
+    useEffect(() => {
+        currentPosition && setLatCentered(currentPosition.latitude);
+        currentPosition && setLonCentered(currentPosition.longitude);
+     }, [currentPosition]);
 
   const handleLongPress = (e) => {
     let coord = e.nativeEvent.coordinate;
@@ -133,7 +135,14 @@ export default function PromenadeCreationScreen ({ navigation }) {
       style={globalCSS.backgrdContainer}
     >
       <Text>Welcome to caniconnect PromenadeCreationScreen !</Text>
-      <MapView onLongPress={(e) => handleLongPress(e)} mapType="standard" style={styles.map} >
+      <MapView onLongPress={(e) => handleLongPress(e)} mapType="standard" style={styles.map} 
+        initialRegion={{
+            latitude: latCentered,
+            longitude: lonCentered,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+      >
         {currentPosition && <Marker coordinate={currentPosition} title="My position" pinColor="#fecb2d" />}
         {markers}
       </MapView>
