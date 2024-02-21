@@ -7,8 +7,8 @@ const initialState = {
   birthdate: new Date,
   isFemale: false,
   isSterilized: false,
-  traitID: [{}],
-  activityID: [{}],
+  traitID: [],
+  activityID: [],
   dateCreated: new Date,
   dateModified: new Date,
   dogPhotos: [
@@ -20,13 +20,14 @@ const initialState = {
 };
 
 
-export const userSlice = createSlice({
+export const dogSlice = createSlice({
   name: "dog",
   initialState,
   reducers: {
     resetDogStore: () => initialState,
     infoDog: (state, action) => {
-      state.value.dogName = action.payload.dogName; // KB : bonne pratique sécurité préférer le session storage
+      state.value.dogID = action.payload._id;
+      state.value.dogName = action.payload.dogName;
       state.value.description = action.payload.description;
       state.value.birthdate = action.payload.birthdate;
       state.value.userID = action.payload.userID;
@@ -42,5 +43,5 @@ export const userSlice = createSlice({
   },
 });
 
-export const { infoDog, resetDogStore } = userSlice.actions;
-export default userSlice.reducer;
+export const { infoDog, resetDogStore } = dogSlice.actions;
+export default dogSlice.reducer;

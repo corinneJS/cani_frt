@@ -42,6 +42,7 @@ export default function LoginScreen({ navigation }) {
   const [password, setPassword] = useState("");
   const [isConnect, setIsConnect] = useState(false);
   const reduxInfoUser = useSelector((state) => state.user.value);
+  const reduxInfoDog = useSelector((state) => state.dog.value);
 
 /* // fct pour btn connect avec ggle  CP : A FAIRE A LA FIN
   const handleGoogle = () => {
@@ -82,15 +83,24 @@ export default function LoginScreen({ navigation }) {
               if (dogData.result) {
                 // MAJ Store infoDog
                 dispatch(infoDog(dogData.dog));
+                console.log(
+                  "infoUser enregistré dans le store ",
+                  reduxInfoUser
+                );
+                console.log(
+                  "infoDog enregistré dans le store ",
+                  reduxInfoDog
+                );
               } else {
-              Alert.alert("Oups !", `un pb est survenu : ${data.error}`);
+                Alert.alert("Oups !", `Vous êtes propriétaire mais je ne trouve pas votre 4pattes. Erreur : ${dogData.error}`);
               }
             }  
             // on vide les states locaux 
             setEmail("");
             setPassword("");
-            console.log("infoUser enregistré dans le store ", reduxInfoUser);
             navigation.navigate("TabNavigator");
+        }else{
+          Alert.alert("Oups !", data.error)
         };
       
   }; // Fin HandleConnect
