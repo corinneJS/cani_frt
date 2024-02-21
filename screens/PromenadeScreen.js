@@ -31,14 +31,14 @@ export default function PromenadeScreen({ navigation }) {
       colors={["#F2B872", "#FFFFFF"]}
       style={globalCSS.backgrdContainer}
     >
-      <Text>Welcome to caniconnect PromenadeScreen !</Text>
+      <Text> Crée ou recherche une promenade !</Text>
      
       <View style={styles.formContent}>
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate('PromenadeCreation')} style={globalCSS.button} activeOpacity={0.8}>
+          <TouchableOpacity onPress={() => navigation.navigate('PromenadeCreation')} style={styles.button} activeOpacity={0.8}>
               <Text style={globalCSS.textButton}>Créer</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('PromenadeRecherche')} style={globalCSS.button} activeOpacity={0.8}>
+          <TouchableOpacity onPress={() => navigation.navigate('PromenadeRecherche')} style={styles.button} activeOpacity={0.8}>
             <Text style={globalCSS.textButton}>Chercher</Text>
           </TouchableOpacity>
         </View>     
@@ -56,8 +56,18 @@ const styles = StyleSheet.create({
     },
     buttonsContainer: {
       flexDirection: 'row',
-      justifyContent: "space-around",
+      justifyContent: "space-between",
       alignItems: "center",
+    },
+    button: {
+      alignItems: "center",
+      paddingTop: 8,
+      width: "30%",
+      marginTop: 30,
+      marginLeft: 20,
+      backgroundColor: "#f2B872",
+      borderRadius: 10,
+      marginBottom: 80,
     },
   });
   

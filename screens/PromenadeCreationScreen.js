@@ -28,7 +28,7 @@ export default function PromenadeCreationScreen ({ navigation }) {
   const dispatch = useDispatch();
   const walk = useSelector((state) => state.walk.value);
 
-  const [currentPosition, setCurrentPosition] = useState(null);
+  const [currentPosition, setCurrentPosition] = useState({latitude: -16.5, longitude: -151.74});
   const [name, setName] = useState("");
   const [environment, setEnvironment] = useState("");
   const [rythme, setRythme] = useState("");
@@ -44,9 +44,6 @@ export default function PromenadeCreationScreen ({ navigation }) {
   const [eventTime, setEventTime] = useState("");
   const [eventCity, setEventCity] = useState();
 
-  const [latCentered, setLatCentered] = useState(-16.5);
-  const [lonCentered, setLonCentered] = useState(-151.74);
-
   useEffect(() => {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -61,11 +58,7 @@ export default function PromenadeCreationScreen ({ navigation }) {
     console.log("currentPosition:", currentPosition);
   }, []);
 
-    useEffect(() => {
-        currentPosition && setLatCentered(currentPosition.latitude);
-        currentPosition && setLonCentered(currentPosition.longitude);
-     }, [currentPosition]);
-
+   
   const handleLongPress = (e) => {
     let coord = e.nativeEvent.coordinate;
     console.log("coord", coord)
@@ -136,9 +129,9 @@ export default function PromenadeCreationScreen ({ navigation }) {
     >
       <Text>Welcome to caniconnect PromenadeCreationScreen !</Text>
       <MapView onLongPress={(e) => handleLongPress(e)} mapType="standard" style={styles.map} 
-        initialRegion={{
-            latitude: latCentered,
-            longitude: lonCentered,
+        region={{
+            latitude: currentPosition.latitude,
+            longitude: currentPosition.longitude,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
