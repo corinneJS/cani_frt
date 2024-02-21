@@ -28,7 +28,6 @@ export default function PromenadeScreen() {
   const dispatch = useDispatch();
   const walk = useSelector((state) => state.walk.value);
 
-
   const [currentPosition, setCurrentPosition] = useState(null);
   const [name, setName] = useState("");
   const [environment, setEnvironment] = useState("");
@@ -38,7 +37,13 @@ export default function PromenadeScreen() {
   const [duration, setDuration] = useState();
   const [itinerary, setItinerary] = useState([]);
   const [tempCoordinates, setTempCoordinates] = useState([]);
-  
+
+  // State variables for walkEvent inputs
+  const [eventName, setEventName] = useState("");
+  const [eventDate, setEventDate] = useState("");
+  const [eventTime, setEventTime] = useState("");
+  const [eventCity, setEventCity] = useState();
+
   useEffect(() => {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -51,6 +56,7 @@ export default function PromenadeScreen() {
       }
     })();
 
+    console.log("currentPosition:", currentPosition);
   /*   fetch(`${BACKEND_ADDRESS}/places/${user.nickname}`)
       .then((response) => response.json())
       .then((data) => {
@@ -60,6 +66,7 @@ export default function PromenadeScreen() {
 
   const handleLongPress = (e) => {
     let coord = e.nativeEvent.coordinate;
+    console.log("coord", coord)
     setItinerary([...itinerary, {lat: coord.latitude , lon: coord.longitude }]);
   };
 
@@ -79,6 +86,10 @@ export default function PromenadeScreen() {
         dateCreated: new Date,
         dateModified: null,
         itinerary: itinerary,
+        eventName: eventName,
+        eventDate: eventDate,
+        eventTime: eventTime,
+        eventCity: eventCity,
       }),
     }).then((response) => response.json())
       .then((data) => {
@@ -104,6 +115,10 @@ export default function PromenadeScreen() {
           setDescription('');
           setDuration();
           setItinerary([]);
+          setEventName('');
+          setEventDate('');
+          setEventTime('');
+          setEventCity('');
         }
       });
   };
@@ -118,21 +133,35 @@ export default function PromenadeScreen() {
       style={globalCSS.backgrdContainer}
     >
       <Text>Welcome to caniconnect PromenadeScreen !</Text>
-      <MapView onLongPress={(e) => handleLongPress(e)} mapType="standard" style={styles.map}>
+      <MapView onLongPress={(e) => handleLongPress(e)} mapType="standard" style={styles.map} >
         {currentPosition && <Marker coordinate={currentPosition} title="My position" pinColor="#fecb2d" />}
         {markers}
       </MapView>
       <View style={styles.formContent}>
-        <TextInput placeholder="Nom de la promenade" onChangeText={(value) => setName(value)} value={name} style={globalCSS.input} />
-        <TextInput placeholder="Environnement" onChangeText={(value) => setEnvironment(value)} value={environment} style={globalCSS.input} />
-        <TextInput placeholder="Rythme" onChangeText={(value) => setRythme(value)} value={rythme} style={globalCSS.input} />
-        <TextInput placeholder="Distance" onChangeText={(value) => setDistance(value)} value={distance} style={globalCSS.input} />
-        <TextInput placeholder="Description" onChangeText={(value) => setDescription(value)} value={description} style={globalCSS.input} />
-        <TextInput placeholder="Durée" onChangeText={(value) => setDuration(value)} value={duration} style={globalCSS.input} />
-       
+        <View style={styles.walkInputs}>
+          <TextInput placeholder="Nom de la promenade" onChangeText={(value) => setName(value)} value={name} style={styles.input} />
+          <View style={styles.envRythme}>
+            <TextInput placeholder="Environnement" onChangeText={(value) => setEnvironment(value)} value={environment} style={styles.input} />
+            <TextInput placeholder="Rythme" onChangeText={(value) => setRythme(value)} value={rythme} style={styles.input} />
+          </View>
+          <View style={styles.distDuree}>
+            <TextInput placeholder="Distance" onChangeText={(value) => setDistance(value)} value={distance} style={styles.input} />
+            <TextInput placeholder="Durée" onChangeText={(value) => setDuration(value)} value={duration} style={styles.input} />
+          </View>
+          <TextInput placeholder="Description" onChangeText={(value) => setDescription(value)} value={description} style={styles.input} />
+        </View>
+
+        <View style={styles.walkEventInputs}>
+          <TextInput placeholder="Nom de l'événement" onChangeText={(value) => setEventName(value)} value={eventName} style={styles.input} />
+          <View style={styles.dateTime}>
+            <TextInput placeholder="Date" onChangeText={(value) => setEventDate(value)} value={eventDate} style={styles.input} />
+            <TextInput placeholder="Heure" onChangeText={(value) => setEventTime(value)} value={eventTime} style={styles.input} />
+          </View>
+          <TextInput placeholder="Ville" onChangeText={(value) => setEventCity(value)} value={eventCity} style={styles.input} />       
+        </View>
 
         <TouchableOpacity onPress={() => handleNewWalk()} style={globalCSS.button} activeOpacity={0.8}>
-            <Text style={styles.textButton}>Valider</Text>
+            <Text style={globalCSS.textButton}>Valider</Text>
         </TouchableOpacity>
         
       </View>
@@ -157,33 +186,35 @@ const styles = StyleSheet.create({
       justifyContent: "center",
       alignItems: "center",
     },
-    text:{
-      fontFamily: "Lato_400Regular",
-      fontSize: 12,
-      color: "black",
-  
-    },
-    button: {
-      alignItems: "center",
-      paddingTop: 8,
-      width: "80%",
-      marginTop: 30,
-      backgroundColor: "#f2B872",
-      borderRadius: 10,
-      marginBottom: 80,
-    },
-    textButton: {
-      color: "#ffffff",
-      height: 30,
-      fontWeight: "600",
-      fontSize: 16,
-    },
     input: {
-      width: "80%",
+      width: "40%",
       marginTop: 25,
       borderBottomColor: "#f2B872",
       borderBottomWidth: 1,
       fontSize: 18,
+    },
+    walkInputs: {
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    envRythme: {
+      flexDirection: 'row',
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
+    distDuree: {
+      flexDirection: 'row',
+      justifyContent: "space-around",
+      alignItems: "center",
+    },
+    walkEventInputs: {
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    dateTime: {
+      flexDirection: 'row',
+      justifyContent: "center",
+      alignItems: "center",
     },
   });
   
