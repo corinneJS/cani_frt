@@ -145,7 +145,8 @@ const TabNavigator = () => {
     </Tab.Navigator>
   );
 };
-function CustomHeaderRight({ navigation, screenName }) {
+// Fonction ci-dessous non fonctionnel
+/* function CustomHeaderRight({ navigation, screenName }) {
   switch (screenName) {
             case 'DogProfil':
               return (
@@ -177,25 +178,7 @@ function CustomHeaderRight({ navigation, screenName }) {
                 </View>
               );
   }
-
-  
-}
-
-
-
-
-
-
-
-
-                
-            
-
-
-
-
-
-
+} */
 
 export default function App() {
   // utilisation font google
@@ -222,7 +205,7 @@ export default function App() {
         <Stack.Navigator
           screenOptions={({ navigation }) => ({
             headerTransparent: true,
-            hearderRight: () => {
+            headerRight: () => {
               <View style={{ flexDirection: "row" }}>
                 <MaterialIcons
                   name="location-off" // "location-on" CP : Changez le nom de l'icône en fonction du statut
@@ -282,6 +265,18 @@ export default function App() {
             name="TabNavigator"
             component={TabNavigator}
             options={{ title: "caniConnect" }}
+          />
+          <Stack.Screen
+            name="PromenadeCreation"
+            component={PromenadeCreationScreen}
+          />
+           <Stack.Screen
+            name="PromenadeRecherche"
+            component={PromenadeRechercheScreen}
+          />
+          <Stack.Screen
+            name="PromenadeInscription"
+            component={PromenadeInscriptionScreen}
           />
         </Stack.Navigator>
       </NavigationContainer>

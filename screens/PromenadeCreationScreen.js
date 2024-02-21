@@ -1,5 +1,5 @@
 // Auteur : KB
-// Date : Mercredi 14 Février
+// Date : Mercredi 21 Février
 // Ecran pour créer une promenade
 import { useEffect, useState } from 'react';
 import {
@@ -64,7 +64,7 @@ export default function PromenadeScreen() {
       }); */
   }, []);
 
-  const handleCreateWalk = (e) => {
+  const handleLongPress = (e) => {
     let coord = e.nativeEvent.coordinate;
     console.log("coord", coord)
     setItinerary([...itinerary, {lat: coord.latitude , lon: coord.longitude }]);
@@ -133,16 +133,37 @@ export default function PromenadeScreen() {
       style={globalCSS.backgrdContainer}
     >
       <Text>Welcome to caniconnect PromenadeScreen !</Text>
-     
+      <MapView onLongPress={(e) => handleLongPress(e)} mapType="standard" style={styles.map} >
+        {currentPosition && <Marker coordinate={currentPosition} title="My position" pinColor="#fecb2d" />}
+        {markers}
+      </MapView>
       <View style={styles.formContent}>
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity onPress={() => handleCreateWalk()} style={globalCSS.button} activeOpacity={0.8}>
-              <Text style={globalCSS.textButton}>Créer</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleSearchWalk()} style={globalCSS.button} activeOpacity={0.8}>
-            <Text style={globalCSS.textButton}>Chercher</Text>
-          </TouchableOpacity>
-        </View>     
+        <View style={styles.walkInputs}>
+          <TextInput placeholder="Nom de la promenade" onChangeText={(value) => setName(value)} value={name} style={styles.input} />
+          <View style={styles.envRythme}>
+            <TextInput placeholder="Environnement" onChangeText={(value) => setEnvironment(value)} value={environment} style={styles.input} />
+            <TextInput placeholder="Rythme" onChangeText={(value) => setRythme(value)} value={rythme} style={styles.input} />
+          </View>
+          <View style={styles.distDuree}>
+            <TextInput placeholder="Distance" onChangeText={(value) => setDistance(value)} value={distance} style={styles.input} />
+            <TextInput placeholder="Durée" onChangeText={(value) => setDuration(value)} value={duration} style={styles.input} />
+          </View>
+          <TextInput placeholder="Description" onChangeText={(value) => setDescription(value)} value={description} style={styles.input} />
+        </View>
+
+        <View style={styles.walkEventInputs}>
+          <TextInput placeholder="Nom de l'événement" onChangeText={(value) => setEventName(value)} value={eventName} style={styles.input} />
+          <View style={styles.dateTime}>
+            <TextInput placeholder="Date" onChangeText={(value) => setEventDate(value)} value={eventDate} style={styles.input} />
+            <TextInput placeholder="Heure" onChangeText={(value) => setEventTime(value)} value={eventTime} style={styles.input} />
+          </View>
+          <TextInput placeholder="Ville" onChangeText={(value) => setEventCity(value)} value={eventCity} style={styles.input} />       
+        </View>
+
+        <TouchableOpacity onPress={() => handleNewWalk()} style={globalCSS.button} activeOpacity={0.8}>
+            <Text style={globalCSS.textButton}>Valider</Text>
+        </TouchableOpacity>
+        
       </View>
       <StatusBar style="auto" />
     </LinearGradient>
@@ -181,7 +202,7 @@ const styles = StyleSheet.create({
       justifyContent: "space-between",
       alignItems: "center",
     },
-    buttonsContainer: {
+    distDuree: {
       flexDirection: 'row',
       justifyContent: "space-around",
       alignItems: "center",
