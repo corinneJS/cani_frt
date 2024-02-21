@@ -23,3 +23,28 @@ import * as Location from 'expo-location';
 
 //feuille de style global
 const globalCSS = require("../styles/global.js");
+
+
+export default function PromenadeInscriptionScreen ({ navigation }) {
+  
+
+    return (
+      <LinearGradient
+        colors={["#F2B872", "#FFFFFF"]}
+        style={globalCSS.backgrdContainer}
+      >
+        <Text>Welcome to caniconnect PromenadeInscriptionScreen !</Text>
+        <StatusBar style="auto" />
+      </LinearGradient>
+    );
+  }
+  
+  const styles = StyleSheet.create({
+      container: {
+        flex: 1,
+        backgroundColor: '#f2B872',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+    });
+    

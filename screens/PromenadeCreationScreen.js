@@ -24,7 +24,7 @@ import * as Location from 'expo-location';
 //feuille de style global
 const globalCSS = require("../styles/global.js");
 
-export default function PromenadeScreen() {
+export default function PromenadeCreationScreen ({ navigation }) {
   const dispatch = useDispatch();
   const walk = useSelector((state) => state.walk.value);
 
@@ -132,7 +132,7 @@ export default function PromenadeScreen() {
       colors={["#F2B872", "#FFFFFF"]}
       style={globalCSS.backgrdContainer}
     >
-      <Text>Welcome to caniconnect PromenadeScreen !</Text>
+      <Text>Welcome to caniconnect PromenadeCreationScreen !</Text>
       <MapView onLongPress={(e) => handleLongPress(e)} mapType="standard" style={styles.map} >
         {currentPosition && <Marker coordinate={currentPosition} title="My position" pinColor="#fecb2d" />}
         {markers}
