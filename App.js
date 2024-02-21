@@ -4,7 +4,7 @@
 // MAJ 08/02, CP : ajout écrans supplémentaires, TabNavigation et Stack, 
 // gestion fontGoogle MaterialCommunityIcons, suppression des imports et fonctions inutilisées
 // MAJ 15/02, CP :  ajout reducer dog, modif du Menu right header du Stack.navigator : DevMenu 
-// MAJ 15/02/, KB : ajout reducer walk
+// MAJ 15/02, KB : ajout reducer walk
 // --------------------------------------------------
 
 import { NavigationContainer } from "@react-navigation/native";
@@ -23,6 +23,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
+import BreedsScreen from "./screens/BreedsScreen";
+
 import WelcomeScreen from "./screens/WelcomeScreen";
 import ProfilScreen from "./screens/ProfilScreen";
 import DogProfilScreen from "./screens/DogProfilScreen";
@@ -91,7 +93,7 @@ const TabNavigator = () => {
               iconLib = "MCI";
               iconName = "paw-outline";
               break;
-            case "Favoris":
+            case "Races":
               iconLib = "AD";
               iconName = "idcard"
               break;
@@ -138,7 +140,7 @@ const TabNavigator = () => {
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Promenade" component={PromenadeScreen} />
-      <Tab.Screen name="Favoris" component={FavorisScreen} />
+      <Tab.Screen name="Race" component={BreedsScreen} />
       <Tab.Screen name="Profil" component={ProfilScreen} />
     </Tab.Navigator>
   );
