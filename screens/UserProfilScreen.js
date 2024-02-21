@@ -232,6 +232,7 @@ const [password, setPassword]=("");
         </KeyboardAvoidingView>
       </LinearGradient>
     );
+    
   }
   
   const styles = StyleSheet.create({
