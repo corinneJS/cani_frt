@@ -85,17 +85,19 @@ export default function DogProfilScreen({ navigation }) {
  */
   // use effect pour gerer la navigation (si on sort on enregistre en bdd)
   useEffect(() => {
-    const unsubscribe = navigation.addListener("beforeRemove", (e) => {
-      // Vérifier si l'utilisateur quitte la page actuelle
-      if (!e.data.action.payload || !e.data.action.payload.action) {
-        // L'utilisateur quitte la page actuelle
-        //CP : A faire on fetch le store redux vers BDD
-        Alert.alert("Attention", "Vous quittez la page en cours.", [
-          { text: "OK", onPress: () => console.log("OK Pressed") },
-        ]);
-        //e.preventDefault(); // Annuler la navigation par défaut
-      }
-    });
+    const unsubscribe = navigation.addListener(
+      "beforeRemove",
+      (e) => {
+        // Vérifier si l'utilisateur quitte la page actuelle
+        if (!e.data.action.payload || !e.data.action.payload.action) {
+          // L'utilisateur quitte la page actuelle
+          //CP : A faire on fetch le store redux vers BDD
+          Alert.alert("Attention", "Vous quittez la page en cours.", [
+            { text: "OK", onPress: () => console.log("OK Pressed") },
+          ]);
+          //e.preventDefault(); // Annuler la navigation par défaut
+        }
+      },[]);
     // Ajouter un écouteur d'événement pour le bouton matériel de retour
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
@@ -141,29 +143,34 @@ export default function DogProfilScreen({ navigation }) {
   };
   let lovTraits = [];
   // Chargement de la Liste de Valeur traitsDog Fonction exécutée
-  (async () => {
-    // Recup liste de tous les traits de caractère en BDD
-    const data = await AllTraits_webSrv();
-    console.log("data en retour du fetch AllTraits", data);
-    //setTraitsData(data);
-    // MAJ de la liste des traits de caractère avec sélection des traits
-    // du chien constenu dans traitsDogData
+  useEffect(() => {
+    (async () => {
+      // Recup liste de tous les traits de caractère en BDD
+      const data = await AllTraits_webSrv();
+      console.log("data en retour du fetch AllTraits", data);
+      //setTraitsData(data);
+      // MAJ de la liste des traits de caractère avec sélection des traits
+      // du chien constenu dans traitsDogData
 
-    lovTraits = data.traits.map((item) => {
-      // Vérifie si l'item actuel correspond à un élément dans `traitsDogData`
-      console.log('traitDogData avec Some', traitsDogData)
-      const haveTraits = traitsDogData.some((trait) => trait.id === item._id);
-      if (haveTraits) {
-        return { key: item._id, value: item.trait, isSelected: true };
-      }
-      // Sinon, retourne l'item sans sélection
-      return { key: item._id, value: item.trait, isSelected: false };
-    });
-    console.log("lovtraits", lovTraits);
-    setTraitsData(lovTraits); // init lov Traits avec selected traits de dog
-    console.log("traitsData avec les traits du chien sélectionnés", traitsData);
-  })();
-
+      lovTraits = data.traits.map((item) => {
+        // Vérifie si l'item actuel correspond à un élément dans `traitsDogData`
+        console.log("traitDogData avec Some", traitsDogData);
+        const haveTraits = traitsDogData.some((trait) => trait.id === item._id);
+        if (haveTraits) {
+          return { key: item._id, value: item.trait, isSelected: true };
+        }
+        // Sinon, retourne l'item sans sélection
+        return { key: item._id, value: item.trait, isSelected: false };
+      });
+      console.log("lovtraits", lovTraits);
+      setTraitsData(lovTraits); // init lov Traits avec selected traits de dog
+      console.log(
+        "traitsData avec les traits du chien sélectionnés",
+        traitsData
+      );
+    })();
+  },[])
+ 
   //---------------------------------------------------------------------------------------------------------------------------------------//
   // Gestion
 
