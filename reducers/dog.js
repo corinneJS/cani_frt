@@ -2,21 +2,25 @@ import { createSlice } from '@reduxjs/toolkit';
 
 
 const initialState = {
-  dogName: "",
-  description: "",
-  birthdate: new Date,
-  isFemale: false,
-  isSterilized: false,
-  traitID: [],
-  activityID: [],
-  dateCreated: new Date,
-  dateModified: new Date,
-  dogPhotos: [
-    {uri: String,
-  dogPhotoName: String,
-  isProfilPhoto: Boolean}],
-  userID: "",
-  breedID: ""
+  value : {
+    dogName: "",
+    description: "",
+    birthdate: new Date,
+    isFemale: false,
+    isSterilized: false,
+    traitID: [],
+    activityID: [],
+    dateCreated: new Date,
+    dateModified: new Date,
+    dogPhotos: [
+      {uri: String,
+    dogPhotoName: String,
+    isProfilPhoto: Boolean}],
+    userID: "",
+    breedID: "",
+    dogID: "",
+  }
+  
 };
 
 
@@ -26,7 +30,7 @@ export const dogSlice = createSlice({
   reducers: {
     resetDogStore: () => initialState,
     infoDog: (state, action) => {
-      state.value.dogID = action.payload._id;
+      /* state.value.dogID = action.payload._id; */
       state.value.dogName = action.payload.dogName;
       state.value.description = action.payload.description;
       state.value.birthdate = action.payload.birthdate;

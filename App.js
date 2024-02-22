@@ -62,16 +62,17 @@ import user, { logout } from "./reducers/user";
 import dog from "./reducers/dog";
 import walk from "./reducers/walk";
 
-const reducers = combineReducers({ user, dog, walk });
+/* const reducers = combineReducers({ user, dog, walk });
 const persistConfig = { key: "caniconnect", storage: AsyncStorage }; //ici le storage de react est remplacé par "storage: AsyncStorage" de react-native
-
+ */
 const store = configureStore({
-  reducer: persistReducer(persistConfig, reducers),
+  reducer: { user, dog, walk },/* persistReducer(persistConfig, reducers), */
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }),
+  
 });
 
-const persistor = persistStore(store);
+/* const persistor = persistStore(store); */
 
 
 
