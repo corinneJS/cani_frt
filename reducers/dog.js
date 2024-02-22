@@ -1,25 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 
-const initialState = {value:
-  {
-   dogName: "",
-  description: "",
-  birthdate: new Date,
-  isFemale: false,
-  isSterilized: false,
-  traitID: [],
-  activityID: [],
-  dateCreated: new Date,
-  dateModified: new Date,
-  dogPhotos: [
-    {uri: String,
-  dogPhotoName: String,
-  isProfilPhoto: Boolean}],
-  userID: "",
-  breedID: "",
-  dogID:""
-}};
+const initialState = {
+  value: {
+    dogName: "",
+    description: "",
+    birthdate: new Date,
+    isFemale: false,
+    isSterilized: false,
+    traitID: [],
+    activityID: [],
+    dateCreated: new Date,
+    dateModified: new Date,
+    dogPhotos: [
+      {uri: String,
+    dogPhotoName: String,
+    isProfilPhoto: Boolean}],
+    userID: "",
+    breedID: "",
+    dogID:"",
+  }
+};
 
 
 export const dogSlice = createSlice({
