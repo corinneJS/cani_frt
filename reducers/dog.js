@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 
-const initialState = {
-  dogName: "",
+const initialState = {value:
+  {dogName: "",
   description: "",
   birthdate: new Date,
   isFemale: false,
@@ -17,7 +17,7 @@ const initialState = {
   isProfilPhoto: Boolean}],
   userID: "",
   breedID: ""
-};
+}};
 
 
 export const dogSlice = createSlice({
