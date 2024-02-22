@@ -3,84 +3,66 @@
 //
 // --------------------------------------------------
 // import des composants
-import {
-  KeyboardAvoidingView,
-  Platform,
-  View,
-  StyleSheet,
-  Image,
-  Text,
-  TextInput,
-  Switch,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
+import {KeyboardAvoidingView,Platform,View,StyleSheet,Text,TextInput,Switch,TouchableOpacity} from "react-native";
 import { DatePickerModal } from "react-native-paper-dates";
 import { LinearGradient } from "expo-linear-gradient";
-import { AntDesign,MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 // import pour gestion states
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { infoDog } from "../reducers/dog";
 // import pour fetch sur Lov traits
-import {
-  AllTraits_webSrv,
-  findTraitsByDogID_webSrv,
-} from "../webservices/traits_webSrv.js";
+import {AllTraits_webSrv} from "../webservices/traits_webSrv.js";
 
 // import gestion date
 import moment from "moment";
 
 // import dropdown
-import {
-  SelectList,
-  MultipleSelectList,
-} from "react-native-dropdown-select-list";
-
-
-
+import {SelectList,MultipleSelectList} from "react-native-dropdown-select-list";
 
 // import feuille de style globale
 const globalCSS = require("../styles/global.js");
 
 
-//---------------------------------//
+//---------------------------------------------------------------------------------------------------------------------------------------//
 // COMPOSANT DogProfilScreen
-//---------------------------------//
+//---------------------------------------------------------------------------------------------------------------------------------------//
+//---------------------------------------------------------------------------------------------------------------------------------------//
 export default function DogProfilScreen({ navigation }) {
   const dispatch = useDispatch();
 
+  //---------------------------------------------------------------------------------------------------------------------------------------//
   // MECANISMEs CRUD
   // Init state local dogInfo
-  // 1. state dogInfo
+  // 1. state local dogInfo
   const [dogInfo, setDogInfo] = useState({
     dogID: "",
     dogName: "",
     description: "",
     userID: "",
-    birthdate: new Date(),
+    birthdate: new Date().toString(),
     isFemale: false,
     isSterilized: false,
     traitID: [],
     activityID: [],
-    dateCreated: new Date(),
+    dateCreated: new Date().toString(),
     dogPhotos: [{}],
-    dateModified: new Date(),
+    dateModified: new Date().toString(),
     breedID: "",
   });
   console.log("dogInfo (init state local)", dogInfo);
 
-  // useSelector pour récupération des données du store Redux
+  // 2. useSelector pour récupération des données du store Redux (initialisé lors du login)
   const dogData = useSelector((state) => state.dog.value);
   console.log("dogData (info redux)", dogData);
 
-  // useEffect pour initialiser le state dogInfo avec les données du store Redux lors du montage du composant
+  // 3. useEffect pour initialiser le state dogInfo avec les données du store Redux lors du montage du composant
   // et à chaque MAJ de dogData
   useEffect(() => {
     if (dogData) {
       setDogInfo(dogData);
       console.log(
-        "dogInfo (Chargement Screen et chaque modif de dogData (le store) : state local MAJ avec dogData)",
+        "dogInfo state local MAJ avec dogData Redux)",
         dogInfo
       );
     }
@@ -111,9 +93,15 @@ export default function DogProfilScreen({ navigation }) {
       infoDog
     );
   };
-  //CP : à faire sur sortie de la page : fetch en bdd 
+  //CP : à faire sur sortie de la page : fetch en bdd
 
-  //
+
+
+
+
+
+
+  //---------------------------------------------------------------------------------------------------------------------------------------//
   // INIT MODULES UX
   //
   // Init LoV traits
@@ -121,40 +109,42 @@ export default function DogProfilScreen({ navigation }) {
   // 1. useEffect pour chargement liste des traits de caractères avec ceux du chien
   //---------------------------------
   const [traitsDogData, setTraitsDogData] = useState(dogInfo.traitID);
-  console.log("TRAITS : traitsDogData depuis le state dogInfo", traitsDogData);
+  console.log("TRAITS : traitsDogData depuis le state", traitsDogData);
   const [traitsData, setTraitsData] = useState([]);
   const [selected, setSelected] = useState([]);
-  useEffect(() =>  {
+ /*  useEffect(() => { */
     // Chargement de la Liste de Valeur traitsDog
-    async function UpdateTraitsDogLov(){
+      (async () => {
       // Recup liste de tous les traits de caractère en BDD
-      const data = await AllTraits_webSrv(); 
+      const data = await AllTraits_webSrv();
       console.log("data en retour du fetch AllTraits", data);
-      setTraitsData(data);
+      //setTraitsData(data);
       // MAJ de la liste des traits de caractère avec sélection des traits
-      // du chien constenu dans traitsDogData 
-      
-      const lovTraits = traitsData.map((item) => {
+      // du chien constenu dans traitsDogData
+
+      const lovTraits = data.traits.map((item) => {
         // Vérifie si l'item actuel correspond à un élément dans `traitsDogData`
         const haveTraits = traitsDogData.some((trait) => trait.id === item._id);
         if (haveTraits) {
-          return { key:item._id,value:item.trait, isSelected: true };
+          return { key: item._id, value: item.trait, isSelected: true };
         }
         // Sinon, retourne l'item sans sélection
-        return { key:item._id,value:item.trait, isSelected: false};
+        return { key: item._id, value: item.trait, isSelected: false };
       });
+      console.log ("lovtraits", lovTraits)
       setTraitsData(lovTraits); // init lov Traits avec selected traits de dog
-      console.log("TraitsData avec les traits du chien sélectionnés", traitsData)
-    }
+      console.log(
+        "TraitsData avec les traits du chien sélectionnés",
+        traitsData
+      );
+    })();
     
-    
-  }),[traitsData]; 
-
-      
-      console.log("state traitsData enregistré ", traitsData);
-      console.log("state traitsDogData enregistré ", traitsDogData);
-   
-
+/*   }); */
+  console.log("state traitsData enregistré ", traitsData);
+ 
+  console.log("state traitsData enregistré ", traitsData);
+  console.log("state traitsDogData enregistré ", traitsDogData);
+  //---------------------------------------------------------------------------------------------------------------------------------------//
   // Gestion Picker Date
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
   // Fonction pour ouvrir le modal
@@ -175,7 +165,7 @@ export default function DogProfilScreen({ navigation }) {
   const onCancel = () => {
     setIsDatePickerVisible(false);
   };
-
+  //---------------------------------------------------------------------------------------------------------------------------------------//
   // gestion des Switchs
   const toggleSwitchIsFemale = (value) =>
     setDogInfo((prevState) => ({
@@ -187,13 +177,10 @@ export default function DogProfilScreen({ navigation }) {
       ...prevState,
       isSterilized: value,
     }));
-  //
-  // FONCTIONS CRUD
-  //
 
-  //
+  //---------------------------------------------------------------------------------------------------------------------------------------//
   // RETURN DU COMPOSANT
-  //
+  //---------------------------------------------------------------------------------------------------------------------------------------//
   return (
     <LinearGradient
       colors={["#F2B872", "#FFFFFF"]}
@@ -234,7 +221,7 @@ export default function DogProfilScreen({ navigation }) {
             </View>
           </View>
 
-          <View style={styles.dateContainer}>
+         <View style={styles.dateContainer}>
             <TextInput
               placeholder="date de naissance"
               onChangeText={(value) => handleFieldChange("birthdate", value)}
@@ -265,23 +252,21 @@ export default function DogProfilScreen({ navigation }) {
             style={globalCSS.input}
           />
           <View style={{ paddingHorizontal: 15, marginTop: 15 }}>
-            
-            <MultipleSelectList
+           <MultipleSelectList
               setSelected={(val) => setSelected(val)}
               data={traitsData}
               save="trait"
               label="Traits de Caractère"
               boxStyles={{ marginTop: 25 }}
             />
-
             <View style={{ marginTop: 50 }}>
               <Text>Traits de caractères : </Text>
-            {/*   {traitsData.map((item) => {
+              {/*   {traitsData.map((item) => {
                 return (<Text key={item} style={{ marginTop: 10, color: "#F2B872" }}>{item}</Text>);
               })} */}
             </View>
           </View>
-          
+
           <Text>Modifié le : {dogInfo.dateModified}</Text>
           <Text>Crée le : {dogInfo.dateCreated}</Text>
         </View>
