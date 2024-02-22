@@ -38,14 +38,15 @@ export default function PromenadeRechercheScreen ({ navigation }) {
   const [description, setDescription] = useState("");
 
   const handleSearch = () => {
-    fetch(`${process.env.EXPO_PUBLIC_BASE_URL}walks/allwalkevents`, {
+    let walkEvents = [];
+    fetch(`${process.env.EXPO_PUBLIC_BASE_URL}walks/walkevent/${eventCity}`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
-      //body: JSON.stringify({ city: city }),
     }).then(response => response.json())
       .then(data => {
-        console.log(data)
-        //data.result && dispatch(removePlace(placeName));
+        console.log(data.walkEvents)
+        walkEvents = data.walkEvents;
+        console.log(walkEvents)
       });
   };
 
