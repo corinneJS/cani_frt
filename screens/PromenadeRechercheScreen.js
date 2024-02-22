@@ -44,10 +44,10 @@ export default function PromenadeRechercheScreen ({ navigation }) {
       headers: { 'Content-Type': 'application/json' },
     }).then(response => response.json())
       .then(data => {
-        console.log(data.walkEvents)
         walkEvents = data.walkEvents;
-        console.log(walkEvents)
+        //console.log("walkEvents", walkEvents)
       });
+      console.log("walkEvents", walkEvents)
   };
 
     return (
@@ -57,9 +57,9 @@ export default function PromenadeRechercheScreen ({ navigation }) {
       >
         <Text>Welcome to caniconnect PromenadeRechercheScreen !</Text>
         <View style={styles.searchBar}>
-          <TextInput placeholder="Ville" onChangeText={(value) => setEventName(value)} value={eventCity} style={styles.input} />
+          <TextInput placeholder="Ville" onChangeText={(value) => setEventCity(value)} value={eventCity} style={styles.input} />
           <TouchableOpacity onPress={() => handleSearch()} style={styles.button} activeOpacity={0.8}>
-              <Text style={globalCSS.textButton}>Valider</Text>
+              <Text style={styles.textButton}>Valider</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.walkInfo}>
@@ -91,9 +91,9 @@ export default function PromenadeRechercheScreen ({ navigation }) {
         justifyContent: 'center',
       },
       searchBar: {
-        flexDirection: 'row',
+        /* flexDirection: 'column',
         justifyContent: "space-around",
-        alignItems: "center",
+        alignItems: "center", */
       },
       input: {
         width: "80%",
@@ -110,6 +110,12 @@ export default function PromenadeRechercheScreen ({ navigation }) {
         backgroundColor: "#f2B872",
         borderRadius: 10,
         marginBottom: 80,
+      },
+      textButton: {
+        color: "#ffffff",
+        height: 30,
+        fontWeight: "600",
+        fontSize: 16,
       },
       walkInfo: {
         borderColor: '#f2B872',
