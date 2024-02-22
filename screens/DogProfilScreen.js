@@ -8,83 +8,117 @@ import {
   Platform,
   View,
   StyleSheet,
-  Image,
   Text,
   TextInput,
   Switch,
-  TouchableOpacity,
+  ScrollView,
+  SafeAreaView, TouchableOpacity,
   Alert,
+  BackHandler,
+  Image,
 } from "react-native";
 import { DatePickerModal } from "react-native-paper-dates";
 import { LinearGradient } from "expo-linear-gradient";
-import { AntDesign,MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
+import {MultipleSelectList} from "react-native-dropdown-select-list";
 // import pour gestion states
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { infoDog } from "../reducers/dog";
+import { infoUser } from "../reducers/user";
 // import pour fetch sur Lov traits
-import {
-  AllTraits_webSrv,
-  findTraitsByDogID_webSrv,
-} from "../webservices/traits_webSrv.js";
-
+import {AllTraits_webSrv} from "../webservices/traits_webSrv.js";
+// import feuille de style globale
+const globalCSS = require("../styles/global.js");
 // import gestion date
 import moment from "moment";
 
-// import dropdown
-import {
-  SelectList,
-  MultipleSelectList,
-} from "react-native-dropdown-select-list";
-
-
-
-
-// import feuille de style globale
-const globalCSS = require("../styles/global.js");
-
-
-//---------------------------------//
+//---------------------------------------------------------------------------------------------------------------------------------------//
 // COMPOSANT DogProfilScreen
-//---------------------------------//
+//---------------------------------------------------------------------------------------------------------------------------------------//
+//---------------------------------------------------------------------------------------------------------------------------------------//
 export default function DogProfilScreen({ navigation }) {
   const dispatch = useDispatch();
-
-  // MECANISMEs CRUD
-  // Init state local dogInfo
-  // 1. state dogInfo
+  // Préparation des données du State Local dogInfo
   const [dogInfo, setDogInfo] = useState({
     dogID: "",
     dogName: "",
     description: "",
     userID: "",
-    birthdate: new Date(),
+    birthdate: new Date().toString(),
     isFemale: false,
     isSterilized: false,
     traitID: [],
     activityID: [],
-    dateCreated: new Date(),
+    dateCreated: new Date().toString(),
     dogPhotos: [{}],
-    dateModified: new Date(),
+    dateModified: new Date().toString(),
     breedID: "",
   });
   console.log("dogInfo (init state local)", dogInfo);
 
-  // useSelector pour récupération des données du store Redux
+  // Récupération des données du store Redux (initialisé lors du login)
   const dogData = useSelector((state) => state.dog.value);
   console.log("dogData (info redux)", dogData);
+  const [traitsDogData, setTraitsDogData] = useState(useSelector((state) => state.dog.value.traitID));
+  console.log("TRAITS : traitsDogData depuis dogData", traitsDogData);
+  const [traitsData, setTraitsData] = useState([]);
+  const [selected, setSelected] = useState([]);
 
-  // useEffect pour initialiser le state dogInfo avec les données du store Redux lors du montage du composant
+  // Gestion visibilité DatePicker
+  const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
+
+  // ----------------------------------------------------------------------//
+  // USE EFFECT
+  // ----------------------------------------------------------------------//
+
+  //---------------------------------------------------------------------------------------------------------------------------------------//
+  // USE EFFECT pour initialiser le state dogInfo
+  // avec les données du store Redux lors du montage du composant
   // et à chaque MAJ de dogData
-  useEffect(() => {
+  /* useEffect(() => {
     if (dogData) {
       setDogInfo(dogData);
-      console.log(
-        "dogInfo (Chargement Screen et chaque modif de dogData (le store) : state local MAJ avec dogData)",
-        dogInfo
-      );
+      console.log("dogInfo state local MAJ avec dogData Redux)", dogInfo);
     }
-  }, [dogData]);
+  }, []);
+ */
+  // use effect pour gerer la navigation (si on sort on enregistre en bdd)
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("beforeRemove", (e) => {
+      // Vérifier si l'utilisateur quitte la page actuelle
+      if (!e.data.action.payload || !e.data.action.payload.action) {
+        // L'utilisateur quitte la page actuelle
+        //CP : A faire on fetch le store redux vers BDD
+        Alert.alert("Attention", "Vous quittez la page en cours.", [
+          { text: "OK", onPress: () => console.log("OK Pressed") },
+        ]);
+        //e.preventDefault(); // Annuler la navigation par défaut
+      }
+    });
+    // Ajouter un écouteur d'événement pour le bouton matériel de retour
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        // L'utilisateur a appuyé sur le bouton retour pour quitter la "page"
+        Alert.alert("Attention", "Vous quittez la page en cours.", [
+          { text: "OK", onPress: () => console.log("OK Pressed") },
+        ]);
+        //CP : A faire on fetch le store redux vers BDD
+        // Retourne true pour empêcher la navigation par défaut (quitter la "page")
+        // return true;
+      }
+    );
+
+    // Nettoyer les écouteurs d'événement lorsque le composant est démonté
+    return () => {
+      unsubscribe();
+      backHandler.remove();
+    };
+  }, [navigation]); // Fin useEffect Detect sortie de page
+
+  // -----------------------------------------------------------------------------------------------------------
+  // FONCTIONS
 
   // A chaque modif d'un champ, mise à jour du state local (avec fieldname en param)
   const handleFieldChange = (name, value) => {
@@ -92,10 +126,7 @@ export default function DogProfilScreen({ navigation }) {
       ...prevState,
       [name]: value,
     }));
-    console.log(
-      "dogInfo (A chaque changement de valeur d'un champ : state local MAJ avec saisie et fieldname en param)",
-      dogInfo
-    );
+    console.log(`dogInfo MAJ du champ : ${name} avec : ${value}`);
   };
 
   // A chaque onBlur (sortie d'un champ), mise à jour du store infoDog avec le state local dogInfo
@@ -106,58 +137,37 @@ export default function DogProfilScreen({ navigation }) {
         [name]: dogInfo[name],
       })
     );
-    console.log(
-      "infoDog (A chaque sortie de champ : Store redux MAJ state local dogInfo avec fieldname en param)",
-      infoDog
-    );
+    console.log(`MAJ infoDog Redux`, useSelector(infoDog));
   };
-  //CP : à faire sur sortie de la page : fetch en bdd 
+  let lovTraits = [];
+  // Chargement de la Liste de Valeur traitsDog Fonction exécutée
+  (async () => {
+    // Recup liste de tous les traits de caractère en BDD
+    const data = await AllTraits_webSrv();
+    console.log("data en retour du fetch AllTraits", data);
+    //setTraitsData(data);
+    // MAJ de la liste des traits de caractère avec sélection des traits
+    // du chien constenu dans traitsDogData
 
-  //
-  // INIT MODULES UX
-  //
-  // Init LoV traits
-  //
-  // 1. useEffect pour chargement liste des traits de caractères avec ceux du chien
-  //---------------------------------
-  const [traitsDogData, setTraitsDogData] = useState(dogInfo.traitID);
-  console.log("TRAITS : traitsDogData depuis le state dogInfo", traitsDogData);
-  const [traitsData, setTraitsData] = useState([]);
-  const [selected, setSelected] = useState([]);
-  useEffect(() =>  {
-    // Chargement de la Liste de Valeur traitsDog
-    async function UpdateTraitsDogLov(){
-      // Recup liste de tous les traits de caractère en BDD
-      const data = await AllTraits_webSrv(); 
-      console.log("data en retour du fetch AllTraits", data);
-      setTraitsData(data);
-      // MAJ de la liste des traits de caractère avec sélection des traits
-      // du chien constenu dans traitsDogData 
-      
-      const lovTraits = traitsData.map((item) => {
-        // Vérifie si l'item actuel correspond à un élément dans `traitsDogData`
-        const haveTraits = traitsDogData.some((trait) => trait.id === item._id);
-        if (haveTraits) {
-          return { key:item._id,value:item.trait, isSelected: true };
-        }
-        // Sinon, retourne l'item sans sélection
-        return { key:item._id,value:item.trait, isSelected: false};
-      });
-      setTraitsData(lovTraits); // init lov Traits avec selected traits de dog
-      console.log("TraitsData avec les traits du chien sélectionnés", traitsData)
-    }
-    
-    
-  }),[traitsData]; 
+    lovTraits = data.traits.map((item) => {
+      // Vérifie si l'item actuel correspond à un élément dans `traitsDogData`
+      console.log('traitDogData avec Some', traitsDogData)
+      const haveTraits = traitsDogData.some((trait) => trait.id === item._id);
+      if (haveTraits) {
+        return { key: item._id, value: item.trait, isSelected: true };
+      }
+      // Sinon, retourne l'item sans sélection
+      return { key: item._id, value: item.trait, isSelected: false };
+    });
+    console.log("lovtraits", lovTraits);
+    setTraitsData(lovTraits); // init lov Traits avec selected traits de dog
+    console.log("traitsData avec les traits du chien sélectionnés", traitsData);
+  })();
 
-      
-      console.log("state traitsData enregistré ", traitsData);
-      console.log("state traitsDogData enregistré ", traitsDogData);
-   
+  //---------------------------------------------------------------------------------------------------------------------------------------//
+  // Gestion
 
-  // Gestion Picker Date
-  const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
-  // Fonction pour ouvrir le modal
+  // Fonction pour ouvrir le modal du DatePicker
   const showDatePicker = () => {
     setIsDatePickerVisible(true);
   };
@@ -175,7 +185,7 @@ export default function DogProfilScreen({ navigation }) {
   const onCancel = () => {
     setIsDatePickerVisible(false);
   };
-
+  //---------------------------------------------------------------------------------------------------------------------------------------//
   // gestion des Switchs
   const toggleSwitchIsFemale = (value) =>
     setDogInfo((prevState) => ({
@@ -187,65 +197,71 @@ export default function DogProfilScreen({ navigation }) {
       ...prevState,
       isSterilized: value,
     }));
-  //
-  // FONCTIONS CRUD
-  //
 
-  //
+  //---------------------------------------------------------------------------------------------------------------------------------------//
   // RETURN DU COMPOSANT
-  //
+  //---------------------------------------------------------------------------------------------------------------------------------------//
   return (
     <LinearGradient
       colors={["#F2B872", "#FFFFFF"]}
       style={globalCSS.backgrdContainer}
     >
-      <KeyboardAvoidingView
-        style={globalCSS.container}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-      >
-        <View style={styles.formContent}>
-          <TextInput
-            placeholder="Entrez le nom du 4 pattes"
-            onChangeText={(value) => handleFieldChange("dogName", value)}
-            value={dogInfo.dogName}
-            onBlur={() => handleUpdateDogInfo("dogName")}
-            style={globalCSS.input}
-          />
-
-          <View style={styles.listSwitchContainer}>
-            <View style={styles.switchContainer}>
-              <Switch
-                trackColor={{ false: "#B39C81", true: "#F2B872" }}
-                thumbColor={dogInfo.isSterilized ? "#F2B872" : "#B39C81"}
-                value={dogInfo.isFemale}
-                onValueChange={(value) => toggleSwitchIsFemale(value)}
+      <SafeAreaView>
+        <ScrollView style={styles.scrollView}>
+          <KeyboardAvoidingView
+            style={globalCSS.container}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+          >
+            <View style={styles.formContent}>
+              <Image
+                style={styles.image}
+                source={require("../assets/olea_verte.jpg")}
               />
-              <Text>{dogInfo.isFemale ? "Femelle" : "Mâle"}</Text>
-            </View>
 
-            <View style={styles.switchContainer}>
-              <Switch
-                trackColor={{ false: "#B39C81", true: "#F2B872" }}
-                thumbColor={dogInfo.isSterilized ? "#F2B872" : "#B39C81"}
-                onValueChange={(value) => toggleSwitchIsSterilized(value)}
-                value={dogInfo.isSterilized}
+              <TextInput
+                placeholder="Entrez le nom du 4 pattes"
+                onChangeText={(value) => handleFieldChange("dogName", value)}
+                value={dogInfo.dogName}
+                onBlur={() => handleUpdateDogInfo("dogName")}
+                style={globalCSS.input}
               />
-              <Text>Stérilisé ?</Text>
-            </View>
-          </View>
 
-          <View style={styles.dateContainer}>
-            <TextInput
-              placeholder="date de naissance"
-              onChangeText={(value) => handleFieldChange("birthdate", value)}
-              value={
-                dogInfo.birthdate
-                  ? moment(dogInfo.birthdate).format("DD/MM/YYYY")
-                  : ""
-              }
-              style={globalCSS.input}
-            />
-            <TouchableOpacity onPress={showDatePicker}>
+              <View style={styles.listSwitchContainer}>
+                <View style={styles.switchContainer}>
+                  <Switch
+                    trackColor={{ false: "#B39C81", true: "#F2B872" }}
+                    thumbColor={dogInfo.isSterilized ? "#F2B872" : "#B39C81"}
+                    value={dogInfo.isFemale}
+                    onValueChange={(value) => toggleSwitchIsFemale(value)}
+                  />
+                  <Text>{dogInfo.isFemale ? "Femelle" : "Mâle"}</Text>
+                </View>
+
+                <View style={styles.switchContainer}>
+                  <Switch
+                    trackColor={{ false: "#B39C81", true: "#F2B872" }}
+                    thumbColor={dogInfo.isSterilized ? "#F2B872" : "#B39C81"}
+                    onValueChange={(value) => toggleSwitchIsSterilized(value)}
+                    value={dogInfo.isSterilized}
+                  />
+                  <Text>Stérilisé ?</Text>
+                </View>
+              </View>
+
+              <View style={styles.dateContainer}>
+                <TextInput
+                  placeholder="date de naissance"
+                  onChangeText={(value) =>
+                    handleFieldChange("birthdate", value)
+                  }
+                  value={
+                    dogInfo.birthdate
+                      ? moment(dogInfo.birthdate).format("DD/MM/YYYY")
+                      : ""
+                  }
+                  style={globalCSS.input}
+                />
+                {/*  <TouchableOpacity onPress={showDatePicker}>
               <MaterialIcons name="calendar-month" size={24} color="black" />
             </TouchableOpacity>
 
@@ -256,44 +272,48 @@ export default function DogProfilScreen({ navigation }) {
               onConfirm={onConfirm}
               onCancel={onCancel}
               mode="single"
-            />
-          </View>
-          <TextInput
-            placeholder="Je suis un 4pattes ..."
-            onChangeText={(value) => handleFieldChange("description", value)}
-            value={dogInfo.description}
-            style={globalCSS.input}
-          />
-          <View style={{ paddingHorizontal: 15, marginTop: 15 }}>
-            
-            <MultipleSelectList
-              setSelected={(val) => setSelected(val)}
-              data={traitsData}
-              save="trait"
-              label="Traits de Caractère"
-              boxStyles={{ marginTop: 25 }}
-            />
-
-            <View style={{ marginTop: 50 }}>
-              <Text>Traits de caractères : </Text>
-            {/*   {traitsData.map((item) => {
-                return (<Text key={item} style={{ marginTop: 10, color: "#F2B872" }}>{item}</Text>);
-              })} */}
+            /> */}
+              </View>
+              <TextInput
+                placeholder="Je suis un 4pattes ..."
+                onChangeText={(value) =>
+                  handleFieldChange("description", value)
+                }
+                value={dogInfo.description}
+                style={globalCSS.input}
+              />
+              <View>
+                <MultipleSelectList
+                  setSelected={(val) => setSelected(val)}
+                  data={traitsData}
+                  save="trait"
+                  label="Traits de Caractère"
+                  boxStyles={{ marginTop: 25 }}
+                />
+              </View>
+              <Text>
+                Mon Humain :{useSelector((state) => state.user.value.username)}
+              </Text>
+              <Text>
+                Modifié le :{moment(dogInfo.dateModified).format("DD/MM/YYYY")}
+              </Text>
+              <Text>
+                Crée le :{moment(dogInfo.dateCreated).format("DD/MM/YYYY")}
+              </Text>
             </View>
-          </View>
-          
-          <Text>Modifié le : {dogInfo.dateModified}</Text>
-          <Text>Crée le : {dogInfo.dateCreated}</Text>
-        </View>
-      </KeyboardAvoidingView>
+          </KeyboardAvoidingView>
+        </ScrollView>
+      </SafeAreaView>
     </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
+  scrollView: {
+    marginHorizontal: 20,
+  },
   image: {
-    width: "90%",
-
+    width: "80%",
     resizeMode: "contain",
   },
   formContent: {
