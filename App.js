@@ -232,7 +232,7 @@ export default function App() {
                   // onPress={() => navigation.navigate("UserMenu")}
                 />
               </View>;
-            }, 
+            },
           })}
         >
           <Stack.Screen
@@ -246,12 +246,12 @@ export default function App() {
             component={DogProfilScreen}
             options={({ navigation }) => ({
               title: "🐾 Profil 4 pattes",
-              headerRight: () => (
+              /* headerRight: () => (
                 <CustomHeaderRight
                   navigation={navigation}
                   screenName="DogProfil"
                 />
-              ),
+              ), */
             })}
           />
           <Stack.Screen
@@ -270,7 +270,7 @@ export default function App() {
           <Stack.Screen
             name="TabNavigator"
             component={TabNavigator}
-            options={{ title: "caniConnect" }}
+            options={{ title: "🐾 caniConnect" }}
           />
           <Stack.Screen
             name="PromenadeCreation"
