@@ -28,6 +28,7 @@ import { infoDog } from "../reducers/dog";
 import { infoUser } from "../reducers/user";
 // import pour fetch sur Lov traits
 import {AllTraits_webSrv} from "../webservices/traits_webSrv.js";
+import { updateDog_webSrv } from "../webservices/dogs_webSrv.js";
 // import feuille de style globale
 const globalCSS = require("../styles/global.js");
 // import gestion date
@@ -37,10 +38,13 @@ import moment from "moment";
 // COMPOSANT DogProfilScreen
 //---------------------------------------------------------------------------------------------------------------------------------------//
 //---------------------------------------------------------------------------------------------------------------------------------------//
-export default function DogProfilScreen({ navigation }) {
+export default function DogProfilScreen({ route, navigation }) {
   const dispatch = useDispatch();
+  const dogID = route.params.dogID;
+  console.log("dogID route : ", dogID);
+
   // Préparation des données du State Local dogInfo
-  const [dogInfo, setDogInfo] = useState({
+  const initialStateDogInfo = {
     dogID: "",
     dogName: "",
     description: "",
@@ -54,19 +58,17 @@ export default function DogProfilScreen({ navigation }) {
     dogPhotos: [{}],
     dateModified: new Date().toString(),
     breedID: "",
-  });
-  console.log("dogInfo (init state local)", dogInfo);
-
-  // Récupération des données du store Redux (initialisé lors du login)
-  const dogData = useSelector((state) => state.dog.value);
-  console.log("dogData (info redux)", dogData);
-  const [traitsDogData, setTraitsDogData] = useState(useSelector((state) => state.dog.value.traitID));
-  console.log("TRAITS : traitsDogData depuis dogData", traitsDogData);
+  };
+  const [dogInfo, setDogInfo] = useState("");
+  const [traitsDogData, setTraitsDogData] = useState([]);
+  // Preparation Listes de Valeurs
   const [traitsData, setTraitsData] = useState([]);
   const [selected, setSelected] = useState([]);
-
   // Gestion visibilité DatePicker
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
+  
+
+  
 
   // ----------------------------------------------------------------------//
   // USE EFFECT
@@ -75,44 +77,94 @@ export default function DogProfilScreen({ navigation }) {
   //---------------------------------------------------------------------------------------------------------------------------------------//
   // USE EFFECT pour initialiser le state dogInfo
   // avec les données du store Redux lors du montage du composant
-  // et à chaque MAJ de dogData
-  /* useEffect(() => {
-    if (dogData) {
-      setDogInfo(dogData);
-      console.log("dogInfo state local MAJ avec dogData Redux)", dogInfo);
-    }
-  }, []);
- */
-  // use effect pour gerer la navigation (si on sort on enregistre en bdd)
+  // si le dogID est renseigné on initialise
   useEffect(() => {
+    (async () => {
+    if (dogID) {
+      setDogInfo(useSelector((state) => state.dog.value));
+      setTraitsDogData(dogInfo.traitID);
+      console.log("dogInfo du toutou : ", dogInfo);
+      //setActivitiesDogData(dogInfo.activityID);
+      //setPhotosDogData(dogInfo.photosDog);
+    }else{
+      setDogInfo(initialStateDogInfo);
+    }
+    })();
+  }, [])
+ 
+  let lovTraits = [];
+  // Chargement de la Liste de Valeur traitsDog Fonction exécutée
+  useEffect(() => {
+    (async () => {
+      // Recup liste de tous les traits de caractère en BDD
+      const data = await AllTraits_webSrv();
+      console.log("data en retour du fetch AllTraits", data);
+      // MAJ de la liste des traits de caractère avec sélection des traits
+      // du chien constenu dans traitsDogData
+
+      lovTraits = data.traits.map((item) => {
+        // Vérifie si l'item actuel correspond à un élément dans `traitsDogData`
+        console.log("traitDogData avec Some", traitsDogData);
+        const haveTraits = traitsDogData.some((trait) => trait.id === item._id);
+        if (haveTraits) {
+          return { key: item._id, value: item.trait, isSelected: true };
+        }
+        // Sinon, retourne l'item sans sélection
+        return { key: item._id, value: item.trait, isSelected: false };
+      });
+      console.log("lovtraits", lovTraits);
+      setTraitsData(lovTraits); // init lov Traits avec selected traits de dog
+      console.log(
+        "traitsData avec les traits du chien sélectionnés",
+        traitsData
+      );
+    })();
+  }, []);  
+
+  // use effect pour gerer la navigation (si on sort on enregistre en bdd)
+  const handleSave = async () => {
+    const data = await updateDog_webSrv(dogInfo.dogID);
+    if (data.result) {
+      dispatch(infoDog(data.dog));
+    } else {
+      Alert.alert("Oups !", `erreur dans update dog ${data.error}`);
+    }
+  };
+
+   useEffect(() => {
+    
     const unsubscribe = navigation.addListener(
       "beforeRemove",
       (e) => {
         // Vérifier si l'utilisateur quitte la page actuelle
         if (!e.data.action.payload || !e.data.action.payload.action) {
           // L'utilisateur quitte la page actuelle
-          //CP : A faire on fetch le store redux vers BDD
-          Alert.alert("Attention", "Vous quittez la page en cours.", [
-            { text: "OK", onPress: () => console.log("OK Pressed") },
-          ]);
-          //e.preventDefault(); // Annuler la navigation par défaut
+          
+          Alert.alert(
+            "caniConnect",
+            "Vous quittez la page, voulez-vous enregistrer vos modifications ?",
+            [{ text: "annuler", style: "cancel" },
+              { text: "enregistrer", onPress: () => handleSave() }],
+            { cancelable: true, onDismiss: () => e.preventDefault() }); // Annuler la navigation par défaut
         }
       },[]);
     // Ajouter un écouteur d'événement pour le bouton matériel de retour
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
       () => {
-        // L'utilisateur a appuyé sur le bouton retour pour quitter la "page"
-        Alert.alert("Attention", "Vous quittez la page en cours.", [
-          { text: "OK", onPress: () => console.log("OK Pressed") },
-        ]);
-        //CP : A faire on fetch le store redux vers BDD
-        // Retourne true pour empêcher la navigation par défaut (quitter la "page")
-        // return true;
+        Alert.alert(
+          "caniConnect",
+          "Vous quittez la page, voulez-vous enregistrer vos modifications ?",
+          [
+            { text: "annuler", style: "cancel" },
+            { text: "enregistrer", onPress: () => handleSave() },
+          ],
+          { cancelable: true, onDismiss: () => e.preventDefault() }
+        ); // Annuler la navigation par défaut
       }
     );
 
-    // Nettoyer les écouteurs d'événement lorsque le composant est démonté
+    // 
     return () => {
       unsubscribe();
       backHandler.remove();
@@ -139,38 +191,9 @@ export default function DogProfilScreen({ navigation }) {
         [name]: dogInfo[name],
       })
     );
-    console.log(`MAJ infoDog Redux`, useSelector(infoDog));
+    console.log(`MAJ infoDog Redux`, useSelector((state)=> state.dog.value));
   };
-  let lovTraits = [];
-  // Chargement de la Liste de Valeur traitsDog Fonction exécutée
-  useEffect(() => {
-    (async () => {
-      // Recup liste de tous les traits de caractère en BDD
-      const data = await AllTraits_webSrv();
-      console.log("data en retour du fetch AllTraits", data);
-      //setTraitsData(data);
-      // MAJ de la liste des traits de caractère avec sélection des traits
-      // du chien constenu dans traitsDogData
 
-      lovTraits = data.traits.map((item) => {
-        // Vérifie si l'item actuel correspond à un élément dans `traitsDogData`
-        console.log("traitDogData avec Some", traitsDogData);
-        const haveTraits = traitsDogData.some((trait) => trait.id === item._id);
-        if (haveTraits) {
-          return { key: item._id, value: item.trait, isSelected: true };
-        }
-        // Sinon, retourne l'item sans sélection
-        return { key: item._id, value: item.trait, isSelected: false };
-      });
-      console.log("lovtraits", lovTraits);
-      setTraitsData(lovTraits); // init lov Traits avec selected traits de dog
-      console.log(
-        "traitsData avec les traits du chien sélectionnés",
-        traitsData
-      );
-    })();
-  },[])
- 
   //---------------------------------------------------------------------------------------------------------------------------------------//
   // Gestion
 

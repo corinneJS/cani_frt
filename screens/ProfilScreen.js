@@ -29,7 +29,7 @@ export default function ProfilScreen({navigation}) {
 // Import des profils
 const reduxInfoUser = useSelector((state) => state.user.value);
 const reduxInfoDog = useSelector((state) => state.dog.value);
-
+console.log(reduxInfoDog);
 
 
   return (
@@ -37,7 +37,9 @@ const reduxInfoDog = useSelector((state) => state.dog.value);
       colors={["#F2B872", "#FFFFFF"]}
       style={globalCSS.backgrdContainer}
     >
-      <View style={[globalCSS.container,{height: screenHeight - headerHeight}]}>
+      <View
+        style={[globalCSS.container, { height: screenHeight - headerHeight }]}
+      >
         <Text style={globalCSS.title}>Choisissez un profil</Text>
         <View style={styles.iconsContainer}>
           <TouchableOpacity
@@ -53,10 +55,19 @@ const reduxInfoDog = useSelector((state) => state.dog.value);
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.profileContainer}
-            onPress={() => navigation.navigate("DogProfil")}
+            onPress={() =>
+              navigation.navigate("DogProfil", { dogID: reduxInfoDog.dogID })
+            }
           >
             <MaterialCommunityIcons name="dog" size={50} color="#F2B872" />
             <Text style={globalCSS.stitle}>{reduxInfoDog.dogName}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.profileContainer}
+            onPress={() => navigation.navigate("DogProfil", { dogID: null })}
+          >
+            <MaterialCommunityIcons name="dog" size={50} color="#F2B872" />
+            <Text style={globalCSS.stitle}>Ajouter...</Text>
           </TouchableOpacity>
         </View>
       </View>

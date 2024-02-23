@@ -80,17 +80,15 @@ export default function LoginScreen({ navigation }) {
               console.log(data.user.userID);          
               const dogData = await findDogsByUserID_webSrv(data.user.userID); 
               console.log("dogData dans le screen", dogData)
-              if (dogData.result) {
+              if (dogData) {
                 // MAJ Store infoDog
                 dispatch(infoDog(dogData.dog));
-                console.log(
-                  "infoUser enregistré dans le store ",
-                  reduxInfoUser
-                );
+                /* console.log("infoUser enregistré dans le store ",useSelector((state) => state.user.value));
                 console.log(
                   "infoDog enregistré dans le store ",
-                  reduxInfoDog
-                );
+                  useSelector((state) => state.dog.value)
+                ); */
+                
               } else {
                 Alert.alert("Oups !", `Vous êtes propriétaire mais je ne trouve pas votre 4pattes. Erreur : ${dogData.error}`);
               }
