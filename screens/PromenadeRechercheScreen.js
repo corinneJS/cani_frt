@@ -44,6 +44,7 @@ export default function PromenadeRechercheScreen ({ navigation }) {
   const [distance, setDistance] = useState("");
   const [description, setDescription] = useState("");
   const [isSeachBarVisible, setIsSeachBarVisible] = useState(true);
+  const [positionCentered, setPositionCentered] = useState({latitude: -16.5, longitude: -151.74});
   const [currentPosition, setCurrentPosition] = useState({latitude: -16.5, longitude: -151.74});
   const [scrollerData, setScrollerData] = useState([]);
   /* const [markers, setMarkers] = useState([]); */
@@ -62,6 +63,20 @@ export default function PromenadeRechercheScreen ({ navigation }) {
       console.log("walkEvents", walkEvents)
   }; */
 
+  useEffect(() => {
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+
+      if (status === 'granted') {
+        Location.watchPositionAsync({ distanceInterval: 10 },
+          (location) => {
+            setCurrentPosition(location.coords);
+          });
+      }
+    })();
+    console.log("currentPosition:", currentPosition);
+  }, []);
+
   const handleSearch = async() => {
     const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}walks/walkevent/${eventCity}`, {
       method: 'GET',
@@ -78,9 +93,10 @@ export default function PromenadeRechercheScreen ({ navigation }) {
       setScrollerData(data.walkEvents);
             
       data.walkEvents.forEach((event, i) => {
-          let tempCoord = (event.walkID.itinerary.map((cood, j) => {
-            return  <Marker key={i-j} coordinate={{ latitude: cood.lat, longitude: cood.lon }} />;
+          let tempCoord = (event.walkID.itinerary.map((coord, j) => {
+            return  <Marker key={i-j} coordinate={{ latitude: coord.lat, longitude: coord.lon }} />;
           }));
+          setPositionCentered({latitude: coord.lat, longitude: coord.lon})
           dispatch(addMarkers(tempCoord));
          /*  setMarkers(...markers, tempCoord) */
       });
@@ -88,7 +104,8 @@ export default function PromenadeRechercheScreen ({ navigation }) {
     }
   }; // fin de la fct handleSearch
   
-  let markers = walk.value.markers;r
+  console.log(walk);
+  let markers = walk.markers;
   console.log("markers", markers);
   /* markers = itineraryData.map((data, i) => {
     return <Marker key={i} coordinate={{ latitude: data.lat, longitude: data.lon }} />;
@@ -108,10 +125,10 @@ export default function PromenadeRechercheScreen ({ navigation }) {
           { !isSeachBarVisible &&
             <MapView /* onLongPress={(e) => handleLongPress(e)} */ mapType="standard" style={styles.map} 
             region={{
-                latitude: currentPosition.latitude,
-                longitude: currentPosition.longitude,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
+                latitude: positionCentered.latitude,
+                longitude: positionCentered.longitude,
+                latitudeDelta: 0.15,
+                longitudeDelta: 0.065,
               }}
           >
             {currentPosition && <Marker coordinate={currentPosition} title="My position" pinColor="#fecb2d" />}

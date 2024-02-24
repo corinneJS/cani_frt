@@ -21,7 +21,7 @@ export const walkSlice = createSlice({
         state.value.itineraries = action.payload;
       },
     addMarkers: (state, action) => {
-        state.value.markers.push = action.payload;
+        state.value.markers.push(action.payload);
     },
 
   },
