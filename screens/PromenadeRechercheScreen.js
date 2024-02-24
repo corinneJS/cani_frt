@@ -24,7 +24,6 @@ import { infoUser } from '../reducers/user';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import WalkEventSearchCard from '../components/walkEventSearchCard';
-import { useDispatch, useSelector } from 'react-redux';
 
 //feuille de style global
 const globalCSS = require("../styles/global.js");
