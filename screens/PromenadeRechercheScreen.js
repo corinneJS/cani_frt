@@ -24,12 +24,17 @@ import { infoUser } from '../reducers/user';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import WalkEventSearchCard from '../components/walkEventSearchCard';
+import { addWalk, removeWalk, importWalks, addItinerary, addMarkers  } from '../reducers/walk';
+import { useDispatch, useSelector } from 'react-redux';
 
 //feuille de style global
 const globalCSS = require("../styles/global.js");
 
 
 export default function PromenadeRechercheScreen ({ navigation }) {
+  const dispatch = useDispatch();
+  const walk = useSelector((state) => state.walk.value);
+
   const [eventName, setEventName] = useState("");
   const [eventDate, setEventDate] = useState("");
   const [eventTime, setEventTime] = useState("");
@@ -43,9 +48,9 @@ export default function PromenadeRechercheScreen ({ navigation }) {
   const [isSeachBarVisible, setIsSeachBarVisible] = useState(true);
   const [currentPosition, setCurrentPosition] = useState({latitude: -16.5, longitude: -151.74});
   const [scrollerData, setScrollerData] = useState([]);
-  const [itineraryData, setItineraryData] = useState([]);
+  /* const [markers, setMarkers] = useState([]); */
 
-  let markers="";
+  
 /*   const handleSearch = () => {
     let walkEvents = [];
     fetch(`${process.env.EXPO_PUBLIC_BASE_URL}walks/walkevent/${eventCity}`, {
@@ -75,14 +80,17 @@ export default function PromenadeRechercheScreen ({ navigation }) {
       setScrollerData(data.walkEvents);
             
       data.walkEvents.forEach((event, i) => {
-          markers.push(event.walkID.itinerary.map((cood, j) => {
-            return <Marker key={i-j} coordinate={{ latitude: cood.lat, longitude: cood.lon }} />;
-          }))
+          let tempCoord = (event.walkID.itinerary.map((cood, j) => {
+            return  <Marker key={i-j} coordinate={{ latitude: cood.lat, longitude: cood.lon }} />;
+          }));
+          dispatch(addMarkers(tempCoord));
+         /*  setMarkers(...markers, tempCoord) */
       });
       
     }
   }; // fin de la fct handleSearch
   
+  let markers = walk.value.markers;
   console.log("markers", markers);
   /* markers = itineraryData.map((data, i) => {
     return <Marker key={i} coordinate={{ latitude: data.lat, longitude: data.lon }} />;

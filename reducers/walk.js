@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  value: { walks: [], itineraries: [] },
+  value: { walks: [], itineraries: [], markers:[] },
 };
 
 export const walkSlice = createSlice({
@@ -20,15 +20,12 @@ export const walkSlice = createSlice({
     addItinerary: (state, action) => {
         state.value.itineraries = action.payload;
       },
-    /* removeitineraries: (state, action) => {
-        state.value.itineraries = state.value.itineraries.filter(e => e.name !== action.payload);
-      },
-    importitineraries: (state, action) => {
-        state.value.itineraries = action.payload;
-      }, */
+    addMarkers: (state, action) => {
+        state.value.markers.push = action.payload;
+    },
 
   },
 });
 
-export const { addWalk, removeWalk, importWalks, addItinerary } = walkSlice.actions;
+export const { addWalk, removeWalk, importWalks, addItinerary, addMarkers } = walkSlice.actions;
 export default walkSlice.reducer;
