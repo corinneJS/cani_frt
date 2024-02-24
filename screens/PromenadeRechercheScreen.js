@@ -28,6 +28,20 @@ import WalkEventSearchCard from '../components/walkEventSearchCard';
 //feuille de style global
 const globalCSS = require("../styles/global.js");
 
+/* color available for marker :
+red (default)
+tomato
+orange
+yellow
+gold
+wheat
+tan
+linen
+green
+blue / navy
+aqua / teal / turquoise
+violet / purple / plum
+indigo */
 
 export default function PromenadeRechercheScreen ({ navigation }) {
   const dispatch = useDispatch();
@@ -93,14 +107,61 @@ export default function PromenadeRechercheScreen ({ navigation }) {
       setScrollerData(data.walkEvents);
             
       data.walkEvents.forEach((event, i) => {
+        let color = red;
+        switch (i%13) {
+          case 0:
+            color = "tomato";
+            break;
+          case 1:
+            color = "orange";
+            break;  
+          case 2:
+            color = "yellow";
+            break;
+          case 3:
+            color = "violet";
+            break;
+          case 4:
+            color = "indigo";
+            break;  
+          case 5:
+            color = "wheat";
+            break;
+          case 6:
+            color = "orange";
+            break;  
+          case 7:
+            color = "yellow";
+            break;
+          case 8:
+            color = "wheat";
+            break;
+          case 9:
+            color = "tan";
+            break; 
+          case 10:
+            color = "linen";
+            break;  
+          case 11:
+            color = "green";
+            break;
+          case 12:
+            color = "blue";
+            break;   
+          default:
+            color = "red";
+      }   
           let tempCoord = (event.walkID.itinerary.map((coord, j) => {
-            setMarkers(...markers, tempCoord)
-            return  <Marker key={i-j} coordinate={{ latitude: coord.lat, longitude: coord.lon }} />;
+            setMarkers(...markers, tempCoord);
+            setPositionCentered({latitude: coord.lat, longitude: coord.lon});
+            return  <Marker 
+                      key={i-j} 
+                      coordinate={{ latitude: coord.lat, longitude: coord.lon }} 
+                      pinColor = {color}
+                    />;
           }));
           /* dispatch(addMarkers(tempCoord)); */
-          dispatch(addMapPositionCentered({latitude: coord.lat, longitude: coord.lon}));
-         /*  setMarkers(...markers, tempCoord) */
-         /* setPositionCentered({latitude: coord.lat, longitude: coord.lon}) */
+          /* dispatch(addMapPositionCentered({latitude: coord.lat, longitude: coord.lon})); */
       });
       
     }
@@ -109,10 +170,7 @@ export default function PromenadeRechercheScreen ({ navigation }) {
   console.log(walk);
   /* let markers = walk.markers; */
   console.log("markers", markers);
-  /* markers = itineraryData.map((data, i) => {
-    return <Marker key={i} coordinate={{ latitude: data.lat, longitude: data.lon }} />;
-  }); */
-
+ 
     return (
       <View style={styles.container}>
           { isSeachBarVisible &&
