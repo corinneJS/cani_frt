@@ -44,8 +44,8 @@ violet / purple / plum
 indigo */
 
 export default function PromenadeRechercheScreen ({ navigation }) {
-  const dispatch = useDispatch();
-  const walk = useSelector((state) => state.walk.value);
+  /* const dispatch = useDispatch();
+  const walk = useSelector((state) => state.walk.value); */
 
   const [eventName, setEventName] = useState("");
   const [eventDate, setEventDate] = useState("");
@@ -150,15 +150,15 @@ export default function PromenadeRechercheScreen ({ navigation }) {
             break;   
           default:
             color = "red";
-      }   
-          let tempCoord = (event.walkID.itinerary.map((coord, j) => {
-            setMarkers(...markers, tempCoord);
-            setPositionCentered({latitude: coord.lat, longitude: coord.lon});
-            return  <Marker 
-                      key={i-j} 
-                      coordinate={{ latitude: coord.lat, longitude: coord.lon }} 
-                      pinColor = {color}
-                    />;
+        }   
+        let tempCoord = (event.walkID.itinerary.map((coord, j) => {
+          setMarkers(...markers, tempCoord);
+          setPositionCentered({latitude: coord.lat, longitude: coord.lon});
+          return  <Marker 
+                    key={i-j} 
+                    coordinate={{ latitude: coord.lat, longitude: coord.lon }} 
+                    pinColor = {color}
+                  />;
           }));
           /* dispatch(addMarkers(tempCoord)); */
           /* dispatch(addMapPositionCentered({latitude: coord.lat, longitude: coord.lon})); */
