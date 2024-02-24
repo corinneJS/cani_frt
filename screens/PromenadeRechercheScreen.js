@@ -6,6 +6,7 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
+  SafeAreaView,
   StyleSheet,
   View,
   StatusBar,
@@ -14,6 +15,7 @@ import {
   TouchableOpacity,
   Modal,
   ScrollView,
+  FlatList,
 } from 'react-native';
 import { LinearGradient } from "expo-linear-gradient"; 
 import { useDispatch, useSelector } from 'react-redux';
@@ -40,6 +42,7 @@ export default function PromenadeRechercheScreen ({ navigation }) {
   const [description, setDescription] = useState("");
   const [isSeachBarVisible, setIsSeachBarVisible] = useState(true);
   const [currentPosition, setCurrentPosition] = useState({latitude: -16.5, longitude: -151.74});
+  const [scrollerData, setScrollerData] = useState([]);
 
 /*   const handleSearch = () => {
     let walkEvents = [];
@@ -67,7 +70,10 @@ export default function PromenadeRechercheScreen ({ navigation }) {
       setEventCity("");
       setIsSeachBarVisible(false);
       console.log("walkEvents", data.walkEvents);
-      return { result: true, walkEvents: data.walkEvents };
+      setScrollerData(data.walkEvents);
+      /* return { result: true, walkEvents: data.walkEvents }; */
+      
+
     }
   };
   
@@ -81,42 +87,45 @@ export default function PromenadeRechercheScreen ({ navigation }) {
         colors={["#F2B872", "#FFFFFF"]}
         style={globalCSS.backgrdContainer}
       >
-        { isSeachBarVisible &&
-          <View style={styles.searchBar}>
-            <Text style={styles.textButton}>Saisissez une ville pour y trouver des promenades</Text>
-            <TextInput placeholder="Ville" onChangeText={(value) => setEventCity(value)} value={eventCity} style={styles.input} />
-            <TouchableOpacity onPress={() => handleSearch()} style={styles.button} activeOpacity={0.8}>
-              <Text style={styles.textButton}>Valider</Text>
-            </TouchableOpacity>
-          </View>
-        }
-        { !isSeachBarVisible &&
-          <MapView /* onLongPress={(e) => handleLongPress(e)} */ mapType="standard" style={styles.map} 
-          region={{
-              latitude: currentPosition.latitude,
-              longitude: currentPosition.longitude,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}
-        >
-          {currentPosition && <Marker coordinate={currentPosition} title="My position" pinColor="#fecb2d" />}
-          {/* {markers} */}
-        </MapView>
-        }
-        { !isSeachBarVisible &&
-          <ScrollView style={styles.scrollView}>
-            <Text style={styles.resultatsText}>Resultats </Text>
-            <WalkEventSearchCard 
-              key="1" 
-              name="Promenade n°1" 
-              duration="60" 
-              distance="5"
-              urlToEnvironmentImage={require("../assets/favicon.png")}
+          { isSeachBarVisible &&
+            <View style={styles.searchBar}>
+              <Text style={styles.textButton}>Saisissez une ville pour y trouver des promenades</Text>
+              <TextInput placeholder="Ville" onChangeText={(value) => setEventCity(value)} value={eventCity} style={styles.input} />
+              <TouchableOpacity onPress={() => handleSearch()} style={styles.button} activeOpacity={0.8}>
+                <Text style={styles.textButton}>Valider</Text>
+              </TouchableOpacity>
+            </View>
+          }
+          { !isSeachBarVisible &&
+            <MapView /* onLongPress={(e) => handleLongPress(e)} */ mapType="standard" style={styles.map} 
+            region={{
+                latitude: currentPosition.latitude,
+                longitude: currentPosition.longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}
+          >
+            {currentPosition && <Marker coordinate={currentPosition} title="My position" pinColor="#fecb2d" />}
+            {/* {markers} */}
+          </MapView>
+          }
+         {!isSeachBarVisible &&
+            <FlatList
+              data={scrollerData}
+              renderItem={({item}) => 
+                <WalkEventSearchCard 
+                  name={item.eventName} 
+                  duration={item.walkID.duration} 
+                  distance={item.walkID.distance}
+                  date={item.eventDate}
+                  time={item.eventTime}
+                  environment={item.walkID.environment}
+                />
+              }
+              keyExtractor={item => item._id}
             />
-          </ScrollView>
-        
-        }
-        <StatusBar style="auto" />
+          } 
+          <StatusBar style="auto" />
       </LinearGradient>
     );
   }
@@ -174,3 +183,27 @@ export default function PromenadeRechercheScreen ({ navigation }) {
       },
     });
     
+   {/* <ScrollView style={styles.scrollView}>
+              <Text style={styles.resultatsText}>Resultats </Text>
+                <WalkEventSearchCard 
+                  key="1" 
+                  name="Promenade n°1" 
+                  duration="60" 
+                  distance="5"
+                  urlToEnvironmentImage={require("../assets/favicon.png")}
+                />
+                <WalkEventSearchCard 
+                  key="2" 
+                  name="Promenade n°2" 
+                  duration="60" 
+                  distance="5"
+                  urlToEnvironmentImage={require("../assets/favicon.png")}
+                />
+                <WalkEventSearchCard 
+                  key="3" 
+                  name="Promenade n°3" 
+                  duration="60" 
+                  distance="5"
+                  urlToEnvironmentImage={require("../assets/favicon.png")}
+                />
+            </ScrollView> */}
