@@ -26,7 +26,7 @@ export default function WalkEventSearchCard (props) {
             iconLib = "F5";
             iconName ="home";
             break;
-        case "Forêt":
+        case "forêt":
                 urlToEnvironmentImage="../assets/favicon.png";
                 iconLib = "MCI";
                 iconName ="forest";
@@ -39,7 +39,7 @@ export default function WalkEventSearchCard (props) {
         case "Plage":
             urlToEnvironmentImage="../assets/favicon.png";
             iconLib = "F5";
-            iconName ="beach";
+            iconName ="umbrella-beach";
             break;
         case "Ville":
             urlToEnvironmentImage="../assets/favicon.png";
@@ -47,30 +47,29 @@ export default function WalkEventSearchCard (props) {
             iconName ="city";
             break;
         default:
-          return iconLib = "F5", iconName ="mountain";
+          iconLib = "F5", iconName ="city";
     }   
 
+    let environmentPicto = "";
     switch (iconLib) {
         case "F5":
-          return <FontAwesome5 name="mountain" size={24} color="black" />;
-          break;
+            environmentPicto= <FontAwesome5 name={iconName} size={24} color="black" />;
+            break;
         case "MCI":
-          return <MaterialCommunityIcons name={iconName} size={24} color="black"/>;
-          break;
+            environmentPicto= <MaterialCommunityIcons name={iconName} size={24} color="black" />;
+             break;
         case "AD":
-          return <AntDesign name={iconName} size={24} color="black" />;
-          break;
+            environmentPicto= <AntDesign name={iconName} size={24} color="black" />;
+            break;
         default:
-          return <FontAwesome5 name="mountain" size={24} color="black" />;
-          break;
+            environmentPicto= <FontAwesome5 name={iconName} size={24} color="black" />;
+            break;
       }
 
     return (
         <View style={styles.card}>
             <View style={styles.environmentPicture}>
-                {/* <Image source={{uri:urlToEnvironmentImage}} alt={props.title} width={0.5} height={0.5} /> */}
-                {(iconLib = "F5") && <FontAwesome5 name={iconName} size={24} color="black" />}
-                {(iconLib = "MCI") && <MaterialCommunityIcons name={iconName} size={24} color="black" />}
+                {environmentPicto}
             </View>
             <View style={styles.centralTexts}>
                 <Text style={styles.text}> {props.name}                           </Text>

@@ -83,10 +83,7 @@ export default function PromenadeRechercheScreen ({ navigation }) {
   }); */
 
     return (
-      <LinearGradient
-        colors={["#F2B872", "#FFFFFF"]}
-        style={globalCSS.backgrdContainer}
-      >
+      <View style={styles.container}>
           { isSeachBarVisible &&
             <View style={styles.searchBar}>
               <Text style={styles.textButton}>Saisissez une ville pour y trouver des promenades</Text>
@@ -126,14 +123,14 @@ export default function PromenadeRechercheScreen ({ navigation }) {
             />
           } 
           <StatusBar style="auto" />
-      </LinearGradient>
+      </View>
     );
   }
   
   const styles = StyleSheet.create({
       container: {
         flex: 1,
-        backgroundColor: '#f2B872',
+        backgroundColor: '#f4d8b7',
         alignItems: 'center',
         justifyContent: 'center',
       },
