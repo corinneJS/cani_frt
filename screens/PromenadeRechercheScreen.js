@@ -47,36 +47,11 @@ export default function PromenadeRechercheScreen ({ navigation }) {
   const dispatch = useDispatch();
   const walk = useSelector((state) => state.walk.value);
 
-  const [eventName, setEventName] = useState("");
-  const [eventDate, setEventDate] = useState("");
-  const [eventTime, setEventTime] = useState("");
   const [eventCity, setEventCity] = useState("");
-  const [name, setName] = useState("");
-  const [environment, setEnvironment] = useState("");
-  const [rythme, setRythme] = useState("");
-  const [duration, setDuration] = useState("");
-  const [distance, setDistance] = useState("");
-  const [description, setDescription] = useState("");
   const [isSeachBarVisible, setIsSeachBarVisible] = useState(true);
-  /* const [positionCentered, setPositionCentered] = useState({latitude: -16.5, longitude: -151.74}); */
   const [currentPosition, setCurrentPosition] = useState({latitude: -16.5, longitude: -151.74});
   const [scrollerData, setScrollerData] = useState([]);
-  /* const [markers, setMarkers] = useState([]); */
-
-  
-/*   const handleSearch = () => {
-    let walkEvents = [];
-    fetch(`${process.env.EXPO_PUBLIC_BASE_URL}walks/walkevent/${eventCity}`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    }).then(response => response.json())
-      .then(data => {
-        walkEvents = data.walkEvents;
-        //console.log("walkEvents", walkEvents)
-      });
-      console.log("walkEvents", walkEvents)
-  }; */
-
+ 
   useEffect(() => {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -103,7 +78,6 @@ export default function PromenadeRechercheScreen ({ navigation }) {
     } else {
       setEventCity("");
       setIsSeachBarVisible(false);
-      //console.log("walkEvents", data.walkEvents);
       setScrollerData(data.walkEvents);
             
       data.walkEvents.forEach((event, i) => {
@@ -160,18 +134,16 @@ export default function PromenadeRechercheScreen ({ navigation }) {
                   />;
           }));
           dispatch(addMarkers(tempCoord));
-          /* setMarkers(...markers, tempCoord);
-          setPositionCentered({latitude: coord.lat, longitude: coord.lon}); */
       });
       
     }
   }; // fin de la fct handleSearch
   
-  console.log(walk);
   let markers = walk.markers;
   let positionCentered = walk.mapPositionCentered;
   console.log("markers", markers);
- 
+  console.log("positionCentered", positionCentered);
+
     return (
       <View style={styles.container}>
           { isSeachBarVisible &&
