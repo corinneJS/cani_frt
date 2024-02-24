@@ -160,8 +160,8 @@ export default function PromenadeRechercheScreen ({ navigation }) {
             region={{
                 latitude: positionCentered.latitude,
                 longitude: positionCentered.longitude,
-                latitudeDelta: 0.15,
-                longitudeDelta: 0.065,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
               }}
           >
             {currentPosition && <Marker coordinate={currentPosition} title="My position" pinColor="#fecb2d" />}
