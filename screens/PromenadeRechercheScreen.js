@@ -19,12 +19,11 @@ import {
 } from 'react-native';
 import { LinearGradient } from "expo-linear-gradient"; 
 import { useDispatch, useSelector } from 'react-redux';
-import { addWalk, removeWalk, importWalks, addItinerary } from '../reducers/walk';
+import { addWalk, removeWalk, importWalks, addItinerary, addMarkers  } from '../reducers/walk';
 import { infoUser } from '../reducers/user';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import WalkEventSearchCard from '../components/walkEventSearchCard';
-import { addWalk, removeWalk, importWalks, addItinerary, addMarkers  } from '../reducers/walk';
 import { useDispatch, useSelector } from 'react-redux';
 
 //feuille de style global
@@ -90,7 +89,7 @@ export default function PromenadeRechercheScreen ({ navigation }) {
     }
   }; // fin de la fct handleSearch
   
-  let markers = walk.value.markers;
+  let markers = walk.value.markers;r
   console.log("markers", markers);
   /* markers = itineraryData.map((data, i) => {
     return <Marker key={i} coordinate={{ latitude: data.lat, longitude: data.lon }} />;
