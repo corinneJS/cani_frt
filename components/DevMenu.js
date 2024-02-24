@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, Alert } from "react-native";
+import { Alert } from "react-native";
 import { useSelector } from "react-redux";
 
 

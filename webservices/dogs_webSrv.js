@@ -22,11 +22,15 @@ export const findDogsByUserID_webSrv = async (userID) => {
 };
 // Update d'un 4pattes
 //-------------------------------------------
-export const updateDog_webSrv = async (dogID) => {
-  console.log("updateDog_webSrv, reception dogId ", dogID);
+export const updateDog_webSrv = async (infoDog) => {
+ 
+  console.log("updateDog_webSrv, reception infoDog ", infoDog);
   
-  const infoDog = useSelector((state) => state.dog.value);
-  console.log("updateDog_webSrv, InfoDog ", infoDog);
+  // supprime dogID de infoDog pour update
+  const { dogID, ...rest } = infoDog;
+ console.log("updateDog_webSrv, reception dogId ", dogID);
+
+  console.log("updateDog_webSrv,  rest", rest);
   
   const response = await fetch(
     `${process.env.EXPO_PUBLIC_BASE_URL}dogs/updateDog/${dogID}`,

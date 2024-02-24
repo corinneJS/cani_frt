@@ -29,7 +29,7 @@ export const dogSlice = createSlice({
   reducers: {
     resetDogStore: () => initialState,
     infoDog: (state, action) => {
-      state.value.dogID = action.payload._id;
+      state.value.dogID = action.payload.dogID;
       state.value.dogName = action.payload.dogName;
       state.value.description = action.payload.description;
       state.value.birthdate = action.payload.birthdate;

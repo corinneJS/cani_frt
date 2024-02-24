@@ -1,0 +1,48 @@
+import { useState } from 'react';
+import {
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  View,
+  StatusBar,
+  Text,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
+import { LinearGradient } from "expo-linear-gradient"; 
+//feuille de style global
+const globalCSS = require("../styles/global.js");
+import Galerie from "../components/Galerie.js";
+
+
+
+import { useDispatch } from 'react-redux';
+
+
+export default function GalerieScreen() {
+  
+
+  return (
+    <LinearGradient
+      colors={["#F2B872", "#FFFFFF"]}
+      style={globalCSS.backgrdContainer}
+    >
+      <Text>Welcome to Galerie !</Text>
+      <View>
+        <Galerie/>
+      </View>
+      <StatusBar style="auto" />
+    </LinearGradient>
+  );
+}
+
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#f2B872',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  });
+  

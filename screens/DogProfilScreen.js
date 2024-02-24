@@ -78,12 +78,14 @@ export default function DogProfilScreen({ route, navigation }) {
   // USE EFFECT pour initialiser le state dogInfo
   // avec les données du store Redux lors du montage du composant
   // si le dogID est renseigné on initialise
+  const dogInfoTmp= useSelector((state) => state.dog.value);
+  console.log("dogInfoTmp (recup du reducer",dogInfoTmp);
   useEffect(() => {
     (async () => {
     if (dogID) {
-      setDogInfo(useSelector((state) => state.dog.value));
-      setTraitsDogData(dogInfo.traitID);
-      console.log("dogInfo du toutou : ", dogInfo);
+      setDogInfo(dogInfoTmp);
+      setTraitsDogData(dogInfoTmp.traitID);
+      console.log("dogInfoTmp du toutou : ", dogInfoTmp);
       //setActivitiesDogData(dogInfo.activityID);
       //setPhotosDogData(dogInfo.photosDog);
     }else{
@@ -102,7 +104,7 @@ export default function DogProfilScreen({ route, navigation }) {
       // MAJ de la liste des traits de caractère avec sélection des traits
       // du chien constenu dans traitsDogData
 
-      lovTraits = data.traits.map((item) => {
+      lovTraits = await data.traits.map((item) => {
         // Vérifie si l'item actuel correspond à un élément dans `traitsDogData`
         console.log("traitDogData avec Some", traitsDogData);
         const haveTraits = traitsDogData.some((trait) => trait.id === item._id);
@@ -122,8 +124,11 @@ export default function DogProfilScreen({ route, navigation }) {
   }, []);  
 
   // use effect pour gerer la navigation (si on sort on enregistre en bdd)
-  const handleSave = async () => {
-    const data = await updateDog_webSrv(dogInfo.dogID);
+  //
+  const handleSave = async (dogInfo) => {
+    console.log("ogInfo en entrée du handle ", dogInfo);
+    const data = await updateDog_webSrv(dogInfo);
+    console.log("Reponse OK j'enregistre : ", data.result)
     if (data.result) {
       dispatch(infoDog(data.dog));
     } else {
@@ -144,7 +149,7 @@ export default function DogProfilScreen({ route, navigation }) {
             "caniConnect",
             "Vous quittez la page, voulez-vous enregistrer vos modifications ?",
             [{ text: "annuler", style: "cancel" },
-              { text: "enregistrer", onPress: () => handleSave() }],
+              { text: "enregistrer", onPress: () => handleSave(dogInfo) }],
             { cancelable: true, onDismiss: () => e.preventDefault() }); // Annuler la navigation par défaut
         }
       },[]);
@@ -185,13 +190,9 @@ export default function DogProfilScreen({ route, navigation }) {
 
   // A chaque onBlur (sortie d'un champ), mise à jour du store infoDog avec le state local dogInfo
   const handleUpdateDogInfo = (name) => {
-    dispatch(
-      infoDog({
-        ...dogInfo,
-        [name]: dogInfo[name],
-      })
-    );
-    console.log(`MAJ infoDog Redux`, useSelector((state)=> state.dog.value));
+    let value = {...dogInfo,[name]: dogInfo[name]}
+    dispatch(infoDog(value));
+    console.log(`MAJ infoDog Redux`, value);
   };
 
   //---------------------------------------------------------------------------------------------------------------------------------------//
@@ -309,6 +310,8 @@ export default function DogProfilScreen({ route, navigation }) {
                 onChangeText={(value) =>
                   handleFieldChange("description", value)
                 }
+                onBlur={() => handleUpdateDogInfo("description")}
+                
                 value={dogInfo.description}
                 style={globalCSS.input}
               />

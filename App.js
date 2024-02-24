@@ -30,7 +30,7 @@ import WelcomeScreen from "./screens/WelcomeScreen";
 import ProfilScreen from "./screens/ProfilScreen";
 import DogProfilScreen from "./screens/DogProfilScreen";
 import UserProfilScreen from "./screens/UserProfilScreen";
-import FavorisScreen from "./screens/FavorisScreen";
+import GalerieScreen from "./screens/GalerieScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 
 // import of screens related to Promenade
@@ -83,18 +83,18 @@ const Tab = createBottomTabNavigator();
 const TabNavigator = () => {
   return (
     <Tab.Navigator
-      screenOptions={({ route}) => ({
+      screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
           let iconName = "";
           let iconLib = "";
-           color = "#000000";
+          color = "#000000";
           size = 24;
-          
+
           switch (route.name) {
             case "Home":
               iconLib = "MI";
-              iconName ="home";
-              
+              iconName = "home";
+
               break;
             case "Promenade":
               iconLib = "MCI";
@@ -102,11 +102,11 @@ const TabNavigator = () => {
               break;
             case "Races":
               iconLib = "AD";
-              iconName = "idcard"
+              iconName = "idcard";
               break;
             case "Profil":
               iconLib = "MCI";
-              iconName = "dog"
+              iconName = "dog";
               break;
             /*
             // a activer pour rechercher un pro
@@ -115,11 +115,16 @@ const TabNavigator = () => {
               iconName = "contacts"
               break; */
             default:
-              return Alert.alert("Oups !", "Pb switch case TabNavigator : route.name ");
+              return Alert.alert(
+                "Oups !",
+                "Pb switch case TabNavigator : route.name "
+              );
           }
           switch (iconLib) {
             case "MI":
-              return <MaterialIcons name={iconName} size={size} color={color} />;
+              return (
+                <MaterialIcons name={iconName} size={size} color={color} />
+              );
               break;
             case "MCI":
               return (
@@ -130,15 +135,13 @@ const TabNavigator = () => {
                 />
               );
               break;
-              case "AD":
+            case "AD":
               return <AntDesign name={iconName} size={size} color={color} />;
               break;
             default:
               return Alert.alert("Oups !", "Pb switch iconLib TabNavigator");
               break;
           }
-          
-           
         },
         tabBarActiveTintColor: "#f2B872",
         tabBarInactiveTintColor: "#335561",
@@ -147,7 +150,8 @@ const TabNavigator = () => {
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Promenade" component={PromenadeScreen} />
-      <Tab.Screen name="Races" component={BreedsScreen} />
+      <Tab.Screen name="Races" component={GalerieScreen} />
+      {/*  <Tab.Screen name="Races" component={BreedsScreen} /> */}
       <Tab.Screen name="Profil" component={ProfilScreen} />
     </Tab.Navigator>
   );

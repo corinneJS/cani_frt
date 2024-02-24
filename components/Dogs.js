@@ -1,27 +1,27 @@
 import React, { useEffect } from "react";
 import { View, Text, Button, ActivityIndicator } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchTraitsAsync } from "./reducers/trait.js";
+import { fetchDogsAsync } from "./reducers/dog.js";
 
-const TraitsComponent = () => {
-  const { traits, status, error } = useSelector((state) => state.traits);
+const DogsComponent = () => {
+  const { dogs, status, error } = useSelector((state) => state.dogs);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchTraitsAsync());
+    dispatch(fetchDogsAsync());
   }, [dispatch]);
 
   return (
     <View>
       {status === "loading" && <ActivityIndicator />}
       {status === "failed" && <Text>Erreur: {error}</Text>}
-      {traits.map((trait) => (
-        <View key={trait._id}>
-          <Text>{trait.traitName}</Text>
+      {dogs.map((dog) => (
+        <View key={dog._id}>
+          <Text>{dog.dogName}</Text>
         </View>
       ))}
     </View>
   );
 };
 
-export default TraitsComponent;
+export default DogsComponent;
