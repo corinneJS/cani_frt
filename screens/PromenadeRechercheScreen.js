@@ -152,6 +152,7 @@ export default function PromenadeRechercheScreen ({ navigation }) {
             color = "red";
         }   
         let tempCoord = (event.walkID.itinerary.map((coord, j) => {
+          dispatch(addMapPositionCentered({latitude: coord.lat, longitude: coord.lon}));
           return  <Marker 
                     key={i-j} 
                     coordinate={{ latitude: coord.lat, longitude: coord.lon }} 
@@ -159,7 +160,6 @@ export default function PromenadeRechercheScreen ({ navigation }) {
                   />;
           }));
           dispatch(addMarkers(tempCoord));
-          dispatch(addMapPositionCentered({latitude: coord.lat, longitude: coord.lon}));
           /* setMarkers(...markers, tempCoord);
           setPositionCentered({latitude: coord.lat, longitude: coord.lon}); */
       });
