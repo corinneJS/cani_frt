@@ -167,7 +167,7 @@ export default function PromenadeRechercheScreen ({ navigation }) {
     }
   }; // fin de la fct handleSearch
   
-  console.log(walk);
+  /* console.log(walk); */
   /* let markers = walk.markers; */
   console.log("markers", markers);
  
