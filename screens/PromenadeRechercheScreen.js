@@ -44,8 +44,8 @@ violet / purple / plum
 indigo */
 
 export default function PromenadeRechercheScreen ({ navigation }) {
-  /* const dispatch = useDispatch();
-  const walk = useSelector((state) => state.walk.value); */
+  const dispatch = useDispatch();
+  const walk = useSelector((state) => state.walk.value);
 
   const [eventName, setEventName] = useState("");
   const [eventDate, setEventDate] = useState("");
@@ -58,10 +58,10 @@ export default function PromenadeRechercheScreen ({ navigation }) {
   const [distance, setDistance] = useState("");
   const [description, setDescription] = useState("");
   const [isSeachBarVisible, setIsSeachBarVisible] = useState(true);
-  const [positionCentered, setPositionCentered] = useState({latitude: -16.5, longitude: -151.74});
+  /* const [positionCentered, setPositionCentered] = useState({latitude: -16.5, longitude: -151.74}); */
   const [currentPosition, setCurrentPosition] = useState({latitude: -16.5, longitude: -151.74});
   const [scrollerData, setScrollerData] = useState([]);
-  const [markers, setMarkers] = useState([]);
+  /* const [markers, setMarkers] = useState([]); */
 
   
 /*   const handleSearch = () => {
@@ -107,10 +107,10 @@ export default function PromenadeRechercheScreen ({ navigation }) {
       setScrollerData(data.walkEvents);
             
       data.walkEvents.forEach((event, i) => {
-        let color = red;
+        console.log("modulo", i%13);
         switch (i%13) {
           case 0:
-            color = "tomato";
+            color = "violet";
             break;
           case 1:
             color = "orange";
@@ -119,7 +119,7 @@ export default function PromenadeRechercheScreen ({ navigation }) {
             color = "yellow";
             break;
           case 3:
-            color = "violet";
+            color = "tomato";
             break;
           case 4:
             color = "indigo";
@@ -152,23 +152,24 @@ export default function PromenadeRechercheScreen ({ navigation }) {
             color = "red";
         }   
         let tempCoord = (event.walkID.itinerary.map((coord, j) => {
-          setMarkers(...markers, tempCoord);
-          setPositionCentered({latitude: coord.lat, longitude: coord.lon});
           return  <Marker 
                     key={i-j} 
                     coordinate={{ latitude: coord.lat, longitude: coord.lon }} 
-                    pinColor = {color}
+                    pinColor={color}                  
                   />;
           }));
-          /* dispatch(addMarkers(tempCoord)); */
-          /* dispatch(addMapPositionCentered({latitude: coord.lat, longitude: coord.lon})); */
+          dispatch(addMarkers(tempCoord));
+          dispatch(addMapPositionCentered({latitude: coord.lat, longitude: coord.lon}));
+          /* setMarkers(...markers, tempCoord);
+          setPositionCentered({latitude: coord.lat, longitude: coord.lon}); */
       });
       
     }
   }; // fin de la fct handleSearch
   
-  /* console.log(walk); */
-  /* let markers = walk.markers; */
+  console.log(walk);
+  let markers = walk.markers;
+  let positionCentered = walk.mapPositionCentered;
   console.log("markers", markers);
  
     return (
