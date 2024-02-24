@@ -125,12 +125,16 @@ export default function PromenadeRechercheScreen ({ navigation }) {
           default:
             color = "red";
         }   
+        let eventID = event._id;
+        let eventName = event.eventName;
         let tempCoord = (event.walkID.itinerary.map((coord, j) => {
           dispatch(addMapPositionCentered({latitude: coord.lat, longitude: coord.lon}));
           return  <Marker 
                     key={i-j} 
                     coordinate={{ latitude: coord.lat, longitude: coord.lon }} 
-                    pinColor={color}                  
+                    pinColor={color}    
+                    eventName={eventName}
+                    eventID={eventID}            
                   />;
           }));
           dispatch(addMarkers(tempCoord));
@@ -179,6 +183,7 @@ export default function PromenadeRechercheScreen ({ navigation }) {
                   date={item.eventDate}
                   time={item.eventTime}
                   environment={item.walkID.environment}
+                  eventID={item._id}
                 />
               }
               keyExtractor={item => item._id}

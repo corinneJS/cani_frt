@@ -23,8 +23,8 @@ export default function WalkEventSearchCard (props) {
     switch (props.environment) {
         case "Campagne":
             urlToEnvironmentImage="../assets/favicon.png";
-            iconLib = "F5";
-            iconName ="home";
+            iconLib = "MC";
+            iconName ="park";
             break;
         case "forêt":
                 urlToEnvironmentImage="../assets/favicon.png";
@@ -47,13 +47,16 @@ export default function WalkEventSearchCard (props) {
             iconName ="city";
             break;
         default:
-          iconLib = "F5", iconName ="city";
+          iconLib = "F5", iconName ="walking";
     }   
 
     let environmentPicto = "";
     switch (iconLib) {
         case "F5":
             environmentPicto= <FontAwesome5 name={iconName} size={24} color="black" />;
+            break;
+        case "MC":
+            environmentPicto= <MaterialIcons name={iconName} size={24} color="black" />;
             break;
         case "MCI":
             environmentPicto= <MaterialCommunityIcons name={iconName} size={24} color="black" />;
