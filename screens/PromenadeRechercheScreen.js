@@ -13,6 +13,7 @@ import {
   TextInput,
   TouchableOpacity,
   Modal,
+  ScrollView,
 } from 'react-native';
 import { LinearGradient } from "expo-linear-gradient"; 
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,6 +21,7 @@ import { addWalk, removeWalk, importWalks, addItinerary } from '../reducers/walk
 import { infoUser } from '../reducers/user';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
+import WalkEventSearchCard from '../components/walkEventSearchCard';
 
 //feuille de style global
 const globalCSS = require("../styles/global.js");
@@ -36,8 +38,10 @@ export default function PromenadeRechercheScreen ({ navigation }) {
   const [duration, setDuration] = useState("");
   const [distance, setDistance] = useState("");
   const [description, setDescription] = useState("");
+  const [isSeachBarVisible, setIsSeachBarVisible] = useState(true);
+  const [currentPosition, setCurrentPosition] = useState({latitude: -16.5, longitude: -151.74});
 
-  const handleSearch = () => {
+/*   const handleSearch = () => {
     let walkEvents = [];
     fetch(`${process.env.EXPO_PUBLIC_BASE_URL}walks/walkevent/${eventCity}`, {
       method: 'GET',
@@ -48,36 +52,70 @@ export default function PromenadeRechercheScreen ({ navigation }) {
         //console.log("walkEvents", walkEvents)
       });
       console.log("walkEvents", walkEvents)
+  }; */
+
+  const handleSearch = async() => {
+    const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}walks/walkevent/${eventCity}`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    const data = await response.json();
+
+    if (!data.result) {
+      return { result: false, error: "walkEvents not found" };
+    } else {
+      setEventCity("");
+      setIsSeachBarVisible(false);
+      console.log("walkEvents", data.walkEvents);
+      return { result: true, walkEvents: data.walkEvents };
+    }
   };
+  
+
+  /* const markers = itinerary.map((data, i) => {
+    return <Marker key={i} coordinate={{ latitude: data.lat, longitude: data.lon }} />;
+  }); */
 
     return (
       <LinearGradient
         colors={["#F2B872", "#FFFFFF"]}
         style={globalCSS.backgrdContainer}
       >
-        <Text>Welcome to caniconnect PromenadeRechercheScreen !</Text>
-        <View style={styles.searchBar}>
-          <TextInput placeholder="Ville" onChangeText={(value) => setEventCity(value)} value={eventCity} style={styles.input} />
-          <TouchableOpacity onPress={() => handleSearch()} style={styles.button} activeOpacity={0.8}>
+        { isSeachBarVisible &&
+          <View style={styles.searchBar}>
+            <Text style={styles.textButton}>Saisissez une ville pour y trouver des promenades</Text>
+            <TextInput placeholder="Ville" onChangeText={(value) => setEventCity(value)} value={eventCity} style={styles.input} />
+            <TouchableOpacity onPress={() => handleSearch()} style={styles.button} activeOpacity={0.8}>
               <Text style={styles.textButton}>Valider</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.walkInfo}>
-          <Text> Nom de la promenade : {name} </Text>
-          <Text> Environment : {environment} </Text>
-          <Text> Rythme : {rythme}</Text>
-          <Text> Distance : {distance} </Text>
-          <Text> Duration : {duration} </Text>
-          <Text> Description : {description} </Text>
-        </View> 
-        <View style={styles.walkEventInfo}>
-          <Text> Nom de l'événement' : {eventName} </Text>
-          <Text> Date : {eventDate} </Text>
-          <Text> Heure : {eventTime} </Text>
-          <Text> Ville : {eventCity} </Text>
-        </View>
-       
-
+            </TouchableOpacity>
+          </View>
+        }
+        { !isSeachBarVisible &&
+          <MapView /* onLongPress={(e) => handleLongPress(e)} */ mapType="standard" style={styles.map} 
+          region={{
+              latitude: currentPosition.latitude,
+              longitude: currentPosition.longitude,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }}
+        >
+          {currentPosition && <Marker coordinate={currentPosition} title="My position" pinColor="#fecb2d" />}
+          {/* {markers} */}
+        </MapView>
+        }
+        { !isSeachBarVisible &&
+          <ScrollView style={styles.scrollView}>
+            <Text style={styles.resultatsText}>Resultats </Text>
+            <WalkEventSearchCard 
+              key="1" 
+              name="Promenade n°1" 
+              duration="60" 
+              distance="5"
+              urlToEnvironmentImage={require("../assets/favicon.png")}
+            />
+          </ScrollView>
+        
+        }
         <StatusBar style="auto" />
       </LinearGradient>
     );
@@ -91,9 +129,11 @@ export default function PromenadeRechercheScreen ({ navigation }) {
         justifyContent: 'center',
       },
       searchBar: {
-        /* flexDirection: 'column',
-        justifyContent: "space-around",
-        alignItems: "center", */
+        height: "100%",
+        width: "100%",
+        marginTop: "50%",
+        justifyContent: "center",
+        alignItems: "center",
       },
       input: {
         width: "80%",
@@ -117,11 +157,20 @@ export default function PromenadeRechercheScreen ({ navigation }) {
         fontWeight: "600",
         fontSize: 16,
       },
-      walkInfo: {
-        borderColor: '#f2B872',
+      map: {
+        width: '100%',
+        height: '30%',
+        marginTop: '15%',
       },
-      walkEventInfo: {
-        borderColor: '#f2B872',
-      }
+      scrollView: {
+        marginTop: '5%',
+      },
+      resultatsText:  {
+        textAlign: 'center',
+        color: "#ffffff",
+        height: 30,
+        fontWeight: "600",
+        fontSize: 16,
+      },
     });
     
