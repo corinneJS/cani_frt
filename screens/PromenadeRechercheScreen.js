@@ -19,7 +19,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from "expo-linear-gradient"; 
 import { useDispatch, useSelector } from 'react-redux';
-import { addWalk, removeWalk, importWalks, addItinerary, addMarkers  } from '../reducers/walk';
+import { addWalk, removeWalk, importWalks, addItinerary, addMarkers, addMapPositionCentered  } from '../reducers/walk';
 import { infoUser } from '../reducers/user';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
@@ -47,7 +47,7 @@ export default function PromenadeRechercheScreen ({ navigation }) {
   const [positionCentered, setPositionCentered] = useState({latitude: -16.5, longitude: -151.74});
   const [currentPosition, setCurrentPosition] = useState({latitude: -16.5, longitude: -151.74});
   const [scrollerData, setScrollerData] = useState([]);
-  /* const [markers, setMarkers] = useState([]); */
+  const [markers, setMarkers] = useState([]);
 
   
 /*   const handleSearch = () => {
@@ -94,18 +94,20 @@ export default function PromenadeRechercheScreen ({ navigation }) {
             
       data.walkEvents.forEach((event, i) => {
           let tempCoord = (event.walkID.itinerary.map((coord, j) => {
+            setMarkers(...markers, tempCoord)
             return  <Marker key={i-j} coordinate={{ latitude: coord.lat, longitude: coord.lon }} />;
           }));
-          setPositionCentered({latitude: coord.lat, longitude: coord.lon})
-          dispatch(addMarkers(tempCoord));
+          /* dispatch(addMarkers(tempCoord)); */
+          dispatch(addMapPositionCentered({latitude: coord.lat, longitude: coord.lon}));
          /*  setMarkers(...markers, tempCoord) */
+         /* setPositionCentered({latitude: coord.lat, longitude: coord.lon}) */
       });
       
     }
   }; // fin de la fct handleSearch
   
   console.log(walk);
-  let markers = walk.markers;
+  /* let markers = walk.markers; */
   console.log("markers", markers);
   /* markers = itineraryData.map((data, i) => {
     return <Marker key={i} coordinate={{ latitude: data.lat, longitude: data.lon }} />;
