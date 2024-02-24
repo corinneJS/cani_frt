@@ -43,7 +43,9 @@ export default function PromenadeRechercheScreen ({ navigation }) {
   const [isSeachBarVisible, setIsSeachBarVisible] = useState(true);
   const [currentPosition, setCurrentPosition] = useState({latitude: -16.5, longitude: -151.74});
   const [scrollerData, setScrollerData] = useState([]);
+  const [itineraryData, setItineraryData] = useState([]);
 
+  let markers="";
 /*   const handleSearch = () => {
     let walkEvents = [];
     fetch(`${process.env.EXPO_PUBLIC_BASE_URL}walks/walkevent/${eventCity}`, {
@@ -69,16 +71,20 @@ export default function PromenadeRechercheScreen ({ navigation }) {
     } else {
       setEventCity("");
       setIsSeachBarVisible(false);
-      console.log("walkEvents", data.walkEvents);
+      //console.log("walkEvents", data.walkEvents);
       setScrollerData(data.walkEvents);
-      /* return { result: true, walkEvents: data.walkEvents }; */
+            
+      data.walkEvents.forEach((event, i) => {
+          markers.push(event.walkID.itinerary.map((cood, j) => {
+            return <Marker key={i-j} coordinate={{ latitude: cood.lat, longitude: cood.lon }} />;
+          }))
+      });
       
-
     }
-  };
+  }; // fin de la fct handleSearch
   
-
-  /* const markers = itinerary.map((data, i) => {
+  console.log("markers", markers);
+  /* markers = itineraryData.map((data, i) => {
     return <Marker key={i} coordinate={{ latitude: data.lat, longitude: data.lon }} />;
   }); */
 
@@ -103,7 +109,7 @@ export default function PromenadeRechercheScreen ({ navigation }) {
               }}
           >
             {currentPosition && <Marker coordinate={currentPosition} title="My position" pinColor="#fecb2d" />}
-            {/* {markers} */}
+            {markers}
           </MapView>
           }
          {!isSeachBarVisible &&
