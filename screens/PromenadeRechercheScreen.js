@@ -67,6 +67,12 @@ export default function PromenadeRechercheScreen ({ navigation }) {
     console.log("currentPosition:", currentPosition);
   }, []);
 
+  //Fonction envoyée en props à la card WalkEventSearchCard pour utilisation en inverse data flow
+  const selectEventCard = (id,name) => {
+    console.log("card", id, name);
+  };
+
+
   const handleSearch = async() => {
     const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}walks/walkevent/${eventCity}`, {
       method: 'GET',
@@ -185,6 +191,7 @@ export default function PromenadeRechercheScreen ({ navigation }) {
                   time={item.eventTime}
                   environment={item.walkID.environment}
                   eventID={item._id}
+                  selectEventCard={selectEventCard}
                 />
               }
               keyExtractor={item => item._id}

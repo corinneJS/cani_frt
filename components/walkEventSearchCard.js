@@ -2,6 +2,7 @@
 // Date : vendredi 23 Février
 // Card à afficher pour lors de la recherche d'une promenade
 import {
+  Pressable,
   Image,
   KeyboardAvoidingView,
   Platform,
@@ -19,7 +20,14 @@ import { FontAwesome5, MaterialCommunityIcons, MaterialIcons, AntDesign } from "
 
 
 export default function WalkEventSearchCard (props) {
-    
+
+    // Fonction pour la gestion d'un "press in" (doigt reste appuyé) sur la card"
+    // Inverse data flow : la fonction est reçu en prop depuis le composant parent
+    const handlePressIn = () => {
+        props.selectEventCard(props.eventID, props.name)
+    };
+
+    // Les 2 switch ci-dessous servent pour le choix d'un nom d'icone et d'une bibliothèque d'icones
     switch (props.environment) {
         case "Campagne":
             urlToEnvironmentImage="../assets/favicon.png";
@@ -71,29 +79,31 @@ export default function WalkEventSearchCard (props) {
 
     return (
         <View style={styles.card}>
-            <View style={styles.environmentPicture}>
-                {environmentPicto}
-            </View>
-            <View style={styles.centralTexts}>
-                <Text style={styles.text}> {props.name}                           </Text>
-                <Text style={styles.text}> {props.duration}min - {props.distance}km    </Text>
-            </View> 
-            <View style={styles.rightPart}>
-                <View style={styles.dateTime}>
-                    <View style={styles.timePicture}>
-                        <Ionicons name="time-outline" size={24} color="black" />
+            <Pressable onPressIn={() => handlePressIn()} activeOpacity={0.8}>
+                <View style={styles.environmentPicture}>
+                    {environmentPicto}
+                </View>
+                <View style={styles.centralTexts}>
+                    <Text style={styles.text}> {props.name}                           </Text>
+                    <Text style={styles.text}> {props.duration}min - {props.distance}km    </Text>
+                </View> 
+                <View style={styles.rightPart}>
+                    <View style={styles.dateTime}>
+                        <View style={styles.timePicture}>
+                            <Ionicons name="time-outline" size={24} color="black" />
+                        </View>
+                        <View style={styles.time}>
+                            <Text style={styles.text}> {props.date} </Text>
+                            <Text style={styles.text}> {props.time} </Text>
+                        </View> 
                     </View>
-                    <View style={styles.time}>
-                        <Text style={styles.text}> {props.date} </Text>
-                        <Text style={styles.text}> {props.time} </Text>
+                    <View style={styles.participateButton}> 
+                        <Pressable onPress={() => handleSearch()} style={styles.button} activeOpacity={0.8}>
+                            <Text style={styles.textButton}>Je participe</Text>
+                        </Pressable>
                     </View> 
                 </View>
-                <View style={styles.participateButton}> 
-                    <TouchableOpacity onPress={() => handleSearch()} style={styles.button} activeOpacity={0.8}>
-                        <Text style={styles.textButton}>Je participe</Text>
-                    </TouchableOpacity>
-                </View> 
-            </View>
+            </Pressable>
         </View>
       );
 }
