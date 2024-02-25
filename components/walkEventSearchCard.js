@@ -24,7 +24,11 @@ export default function WalkEventSearchCard (props) {
     // Fonction pour la gestion d'un "press in" (doigt reste appuyé) sur la card"
     // Inverse data flow : la fonction est reçu en prop depuis le composant parent
     const handlePressIn = () => {
-        props.selectEventCard(props.eventID, props.name)
+        props.selectEventCard(props.eventID, props.name);
+    };
+
+    const handlePressOut = () => {
+        props.unselectEventCard();
     };
 
     // Les 2 switch ci-dessous servent pour le choix d'un nom d'icone et d'une bibliothèque d'icones
@@ -78,7 +82,7 @@ export default function WalkEventSearchCard (props) {
       }
 
     return (
-        <Pressable onPressIn={() => handlePressIn()} >
+        <Pressable onPressIn={() => handlePressIn()} onPressOut={() => handlePressOut()}>
             <View style={styles.card}>
                 <View style={styles.environmentPicture}>
                     {environmentPicto}

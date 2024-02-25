@@ -20,7 +20,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from "expo-linear-gradient"; 
 import { useDispatch, useSelector } from 'react-redux';
-import { addWalk, removeWalk, importWalks, addItinerary, addMarkers, addSelectedMarkers, addMapPositionCentered  } from '../reducers/walk';
+import { addMarkers, addSelectedMarkers, addAllMarkersCoord, emptySelectedMarkers, addMapPositionCentered  } from '../reducers/walk';
 import { infoUser } from '../reducers/user';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
@@ -47,12 +47,14 @@ indigo */
 export default function PromenadeRechercheScreen ({ navigation }) {
   const dispatch = useDispatch();
   const walk = useSelector((state) => state.walk.value);
-  const selectedMarkers = walk.selectedMarkers;
+  const selectedMarkers = walk.selectedMarkers; // non utilisé sur la page, si pas besoin lors de l'appui sur je valide, à supprimer d'ici et du reducer
 
   const [eventCity, setEventCity] = useState("");
   const [isSeachBarVisible, setIsSeachBarVisible] = useState(true);
   const [currentPosition, setCurrentPosition] = useState({latitude: -16.5, longitude: -151.74});
   const [scrollerData, setScrollerData] = useState([]);
+  const [selectedMarkersHighlighted, setSelectedMarkersHighlighted] = useState(null);
+  
  
   useEffect(() => {
     (async () => {
@@ -69,19 +71,33 @@ export default function PromenadeRechercheScreen ({ navigation }) {
   }, []);
 
   //Fonction envoyée en props à la card WalkEventSearchCard pour utilisation en inverse data flow
+  // pour les actions à faire lors d'un appui sur une card.
   const selectEventCard = (cardId,cardName) => {
     console.log("card", cardId, cardName);
-    /* let selectedMarkersHighlighted = markers.map((marker) => {
-      if (marker.eventID === cardId){
-        marker.pinColor = "orange";
-      } else {
-        marker.pinColor = "black";
-      }
-      return marker;
-    })
-    dispatch(addSelectedMarkers(selectedMarkersHighlighted)); */
-  };
+    let allMarkersCoord = walk.allMarkersCoord;
+    let markerKey = 0;
+    setSelectedMarkersHighlighted (
+      allMarkersCoord.map((markersCoord) => {
+        markerKey++;
+        let color = "";
+        if (markersCoord.eventID === cardId){
+          color = "orange";
+          return <Marker 
+                  key={markerKey} 
+                  coordinate={{ latitude: markersCoord.latitude, longitude: markersCoord.longitude }} 
+                  pinColor={color}    
+                  eventName={markersCoord.eventName}
+                  eventID={markersCoord.eventID}         
+                />;
+        } 
+      })
+    ) // fin du setSelectedMarkersHighlighted 
+  }; // fin de la fonction selectEventCard
 
+  //Fonction envoyée en props à la card WalkEventSearchCard pour les actions à faire lorsque le doigt quitte une card (onPressOut).
+  const unselectEventCard = () => {
+    setSelectedMarkersHighlighted(null);
+  }; 
 
   const handleSearch = async() => {
     const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}walks/walkevent/${eventCity}`, {
@@ -145,6 +161,7 @@ export default function PromenadeRechercheScreen ({ navigation }) {
         let eventName = event.eventName;
         let tempCoord = (event.walkID.itinerary.map((coord, j) => {
           dispatch(addMapPositionCentered({latitude: coord.lat, longitude: coord.lon}));
+          dispatch(addAllMarkersCoord({ eventID: eventID, eventName: eventName, latitude: coord.lat, longitude: coord.lon}));
           return  <Marker 
                     key={i-j} 
                     coordinate={{ latitude: coord.lat, longitude: coord.lon }} 
@@ -161,7 +178,9 @@ export default function PromenadeRechercheScreen ({ navigation }) {
   
   let markers = walk.markers;
   let positionCentered = walk.mapPositionCentered;
-  console.log("markers", markers);
+  //console.log("markers", markers);
+  console.log("selectedMarkersHighlighted", selectedMarkersHighlighted);
+  
   //console.log("positionCentered", positionCentered);
   //console.log("selectedMarkers", selectedMarkers);
 
@@ -186,7 +205,7 @@ export default function PromenadeRechercheScreen ({ navigation }) {
               }}
           >
             {currentPosition && <Marker coordinate={currentPosition} title="My position" pinColor="#fecb2d" />}
-            {markers}
+            { selectedMarkersHighlighted ? selectedMarkersHighlighted : markers}
           </MapView>
           }
          {!isSeachBarVisible &&
@@ -202,6 +221,7 @@ export default function PromenadeRechercheScreen ({ navigation }) {
                   environment={item.walkID.environment}
                   eventID={item._id}
                   selectEventCard={selectEventCard}
+                  unselectEventCard={unselectEventCard}
                 />
               }
               keyExtractor={item => item._id}
@@ -265,27 +285,4 @@ export default function PromenadeRechercheScreen ({ navigation }) {
       },
     });
     
-   {/* <ScrollView style={styles.scrollView}>
-              <Text style={styles.resultatsText}>Resultats </Text>
-                <WalkEventSearchCard 
-                  key="1" 
-                  name="Promenade n°1" 
-                  duration="60" 
-                  distance="5"
-                  urlToEnvironmentImage={require("../assets/favicon.png")}
-                />
-                <WalkEventSearchCard 
-                  key="2" 
-                  name="Promenade n°2" 
-                  duration="60" 
-                  distance="5"
-                  urlToEnvironmentImage={require("../assets/favicon.png")}
-                />
-                <WalkEventSearchCard 
-                  key="3" 
-                  name="Promenade n°3" 
-                  duration="60" 
-                  distance="5"
-                  urlToEnvironmentImage={require("../assets/favicon.png")}
-                />
-            </ScrollView> */}
+   

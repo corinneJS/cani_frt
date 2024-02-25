@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  value: { walks: [], itineraries: [], markers:[], mapPositionCentered:[], selectedMarkers: [], },
+  value: { walks: [], itineraries: [], markers:[], mapPositionCentered:[], selectedMarkers: [], allMarkersCoord: [], },
 };
 
 export const walkSlice = createSlice({
@@ -25,14 +25,20 @@ export const walkSlice = createSlice({
     },
     addSelectedMarkers: (state, action) => {
       state.value.selectedMarkers.push(action.payload);
-  },
+    },
+    addAllMarkersCoord: (state, action) => {
+      state.value.allMarkersCoord.push(action.payload);
+    },
+    emptySelectedMarkers: (state, action) => {
+      state.value.selectedMarkers = [];
+    },
     addMapPositionCentered: (state, action) => {
       state.value.mapPositionCentered = action.payload;
-  },
+    },
 
   },
 });
 
 export const { addWalk, removeWalk, importWalks, addItinerary, addMarkers, 
-  addSelectedMarkers, addMapPositionCentered } = walkSlice.actions;
+  addSelectedMarkers, addAllMarkersCoord, emptySelectedMarkers, addMapPositionCentered } = walkSlice.actions;
 export default walkSlice.reducer;
