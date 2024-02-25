@@ -149,8 +149,8 @@ export default function PromenadeRechercheScreen ({ navigation }) {
                     key={i-j} 
                     coordinate={{ latitude: coord.lat, longitude: coord.lon }} 
                     pinColor={color}    
-                    /* eventName={eventName}
-                    eventID={eventID}    */        
+                    eventName={eventName}
+                    eventID={eventID}         
                   />;
           }));
           dispatch(addMarkers(tempCoord));
@@ -163,7 +163,7 @@ export default function PromenadeRechercheScreen ({ navigation }) {
   let positionCentered = walk.mapPositionCentered;
   console.log("markers", markers);
   //console.log("positionCentered", positionCentered);
-  console.log("selectedMarkers", selectedMarkers);
+  //console.log("selectedMarkers", selectedMarkers);
 
     return (
       <View style={styles.container}>
