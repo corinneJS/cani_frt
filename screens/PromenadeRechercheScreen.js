@@ -3,6 +3,7 @@
 // Ecran pour rechercher une promenade par ville
 import { useEffect, useState } from 'react';
 import {
+  Pressable,
   Image,
   KeyboardAvoidingView,
   Platform,
@@ -154,9 +155,9 @@ export default function PromenadeRechercheScreen ({ navigation }) {
             <View style={styles.searchBar}>
               <Text style={styles.textButton}>Saisissez une ville pour y trouver des promenades</Text>
               <TextInput placeholder="Ville" onChangeText={(value) => setEventCity(value)} value={eventCity} style={styles.input} />
-              <TouchableOpacity onPress={() => handleSearch()} style={styles.button} activeOpacity={0.8}>
+              <Pressable onPress={() => handleSearch()} style={styles.button} activeOpacity={0.8}>
                 <Text style={styles.textButton}>Valider</Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
           }
           { !isSeachBarVisible &&
