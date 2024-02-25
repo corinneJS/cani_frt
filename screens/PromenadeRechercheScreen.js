@@ -141,7 +141,7 @@ export default function PromenadeRechercheScreen ({ navigation }) {
                     coordinate={{ latitude: coord.lat, longitude: coord.lon }} 
                     pinColor={color}    
                     eventName={eventName}
-                    eventID={eventID}            
+                    eventID={eventID}           
                   />;
           }));
           dispatch(addMarkers(tempCoord));
