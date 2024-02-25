@@ -119,7 +119,7 @@ export default function PromenadeCreationScreen ({ navigation }) {
   };
 
   const markers = itinerary.map((data, i) => {
-    return <Marker key={i} draggable coordinate={{ latitude: data.lat, longitude: data.lon }} />;
+    return <Marker key={i} coordinate={{ latitude: data.lat, longitude: data.lon }} />;
   });
 
   return (
