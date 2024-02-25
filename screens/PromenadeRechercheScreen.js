@@ -73,7 +73,6 @@ export default function PromenadeRechercheScreen ({ navigation }) {
   //Fonction envoyée en props à la card WalkEventSearchCard pour utilisation en inverse data flow
   // pour les actions à faire lors d'un appui sur une card.
   const selectEventCard = (cardId,cardName) => {
-    console.log("card", cardId, cardName);
     let allMarkersCoord = walk.allMarkersCoord;
     let markerKey = 0;
     setSelectedMarkersHighlighted (
@@ -172,17 +171,11 @@ export default function PromenadeRechercheScreen ({ navigation }) {
           }));
           dispatch(addMarkers(tempCoord));
       });
-      
     }
   }; // fin de la fct handleSearch
   
   let markers = walk.markers;
   let positionCentered = walk.mapPositionCentered;
-  //console.log("markers", markers);
-  console.log("selectedMarkersHighlighted", selectedMarkersHighlighted);
-  
-  //console.log("positionCentered", positionCentered);
-  //console.log("selectedMarkers", selectedMarkers);
 
     return (
       <View style={styles.container}>
