@@ -20,7 +20,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from "expo-linear-gradient"; 
 import { useDispatch, useSelector } from 'react-redux';
-import { addWalk, removeWalk, importWalks, addItinerary, addMarkers, addMapPositionCentered  } from '../reducers/walk';
+import { addWalk, removeWalk, importWalks, addItinerary, addMarkers, addSelectedMarkers, addMapPositionCentered  } from '../reducers/walk';
 import { infoUser } from '../reducers/user';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
@@ -47,6 +47,7 @@ indigo */
 export default function PromenadeRechercheScreen ({ navigation }) {
   const dispatch = useDispatch();
   const walk = useSelector((state) => state.walk.value);
+  const selectedMarkers = walk.selectedMarkers;
 
   const [eventCity, setEventCity] = useState("");
   const [isSeachBarVisible, setIsSeachBarVisible] = useState(true);
@@ -68,8 +69,17 @@ export default function PromenadeRechercheScreen ({ navigation }) {
   }, []);
 
   //Fonction envoyée en props à la card WalkEventSearchCard pour utilisation en inverse data flow
-  const selectEventCard = (id,name) => {
-    console.log("card", id, name);
+  const selectEventCard = (cardId,cardName) => {
+    console.log("card", cardId, cardName);
+    /* let selectedMarkersHighlighted = markers.map((marker) => {
+      if (marker.eventID === cardId){
+        marker.pinColor = "orange";
+      } else {
+        marker.pinColor = "black";
+      }
+      return marker;
+    })
+    dispatch(addSelectedMarkers(selectedMarkersHighlighted)); */
   };
 
 
@@ -88,13 +98,12 @@ export default function PromenadeRechercheScreen ({ navigation }) {
       setScrollerData(data.walkEvents);
             
       data.walkEvents.forEach((event, i) => {
-        console.log("modulo", i%13);
         switch (i%13) {
           case 0:
             color = "violet";
             break;
           case 1:
-            color = "orange";
+            color = "green";
             break;  
           case 2:
             color = "yellow";
@@ -109,7 +118,7 @@ export default function PromenadeRechercheScreen ({ navigation }) {
             color = "wheat";
             break;
           case 6:
-            color = "orange";
+            color = "linen";
             break;  
           case 7:
             color = "yellow";
@@ -140,8 +149,8 @@ export default function PromenadeRechercheScreen ({ navigation }) {
                     key={i-j} 
                     coordinate={{ latitude: coord.lat, longitude: coord.lon }} 
                     pinColor={color}    
-                    eventName={eventName}
-                    eventID={eventID}           
+                    /* eventName={eventName}
+                    eventID={eventID}    */        
                   />;
           }));
           dispatch(addMarkers(tempCoord));
@@ -153,7 +162,8 @@ export default function PromenadeRechercheScreen ({ navigation }) {
   let markers = walk.markers;
   let positionCentered = walk.mapPositionCentered;
   console.log("markers", markers);
-  console.log("positionCentered", positionCentered);
+  //console.log("positionCentered", positionCentered);
+  console.log("selectedMarkers", selectedMarkers);
 
     return (
       <View style={styles.container}>
@@ -161,9 +171,9 @@ export default function PromenadeRechercheScreen ({ navigation }) {
             <View style={styles.searchBar}>
               <Text style={styles.textButton}>Saisissez une ville pour y trouver des promenades</Text>
               <TextInput placeholder="Ville" onChangeText={(value) => setEventCity(value)} value={eventCity} style={styles.input} />
-              <Pressable onPress={() => handleSearch()} style={styles.button} activeOpacity={0.8}>
+              <TouchableOpacity onPress={() => handleSearch()} style={styles.button} activeOpacity={0.8}>
                 <Text style={styles.textButton}>Valider</Text>
-              </Pressable>
+              </TouchableOpacity>
             </View>
           }
           { !isSeachBarVisible &&

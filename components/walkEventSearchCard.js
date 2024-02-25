@@ -78,8 +78,8 @@ export default function WalkEventSearchCard (props) {
       }
 
     return (
-        <View style={styles.card}>
-            <Pressable onPressIn={() => handlePressIn()} activeOpacity={0.8}>
+        <Pressable onPressIn={() => handlePressIn()} >
+            <View style={styles.card}>
                 <View style={styles.environmentPicture}>
                     {environmentPicto}
                 </View>
@@ -103,8 +103,8 @@ export default function WalkEventSearchCard (props) {
                         </Pressable>
                     </View> 
                 </View>
-            </Pressable>
-        </View>
+            </View>
+        </Pressable>
       );
 }
 
