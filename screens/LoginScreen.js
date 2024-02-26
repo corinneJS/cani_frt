@@ -80,7 +80,7 @@ export default function LoginScreen({ navigation }) {
               console.log(data.user.userID);          
               const dogData = await findDogsByUserID_webSrv(data.user.userID); 
               console.log("dogData dans le screen", dogData)
-              if (dogData) {
+              if (dogData.result) {
                 // MAJ Store infoDog
                 dispatch(infoDog(dogData.dog));
                 /* console.log("infoUser enregistré dans le store ",useSelector((state) => state.user.value));
