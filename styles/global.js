@@ -30,7 +30,7 @@ module.exports = StyleSheet.create({
     fontFamily: "BioRhyme_700Bold",
     fontSize: 22,
     color: "black",
-    marginBottom: 20,
+    marginBottom: 40,
   },
   stitle: {
     fontFamily: "BioRhyme_400Regular",

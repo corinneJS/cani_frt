@@ -54,7 +54,7 @@ console.log(reduxInfoDog);
             <Text style={globalCSS.stitle}>{reduxInfoUser.username}</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.profileContainer}
+            style={styles.profilContainer}
             onPress={() =>
               navigation.navigate("DogProfil", { dogID: reduxInfoDog.dogID })
             }

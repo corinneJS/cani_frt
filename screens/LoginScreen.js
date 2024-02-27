@@ -79,7 +79,7 @@ export default function LoginScreen({ navigation }) {
               // recherche du 1er chien possédé et mise à jour infoDog
               console.log(data.user.userID);          
               const dogData = await findDogsByUserID_webSrv(data.user.userID); 
-              console.log("dogData dans le screen", dogData)
+              console.log("dogData dans le loginscreen", dogData)
               if (dogData.result) {
                 // MAJ Store infoDog
                 dispatch(infoDog(dogData.dog));

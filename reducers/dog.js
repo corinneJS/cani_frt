@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 
 const initialState = {
@@ -43,18 +43,16 @@ export const dogSlice = createSlice({
       state.value.dateModified = action.payload.dateModified;
       state.value.breedID = action.payload.breedID;
     },
-    
-    
-
-
-
-
-
-
-
-
+    addDogPhoto: (state, action) => {
+      state.value.dogPhotos.push(action.payload);
+    },
+    removeDogPhoto: (state, action) => {
+      state.value.photos = state.value.photos.filter(
+        (data) => data !== action.payload
+      );
+    },
   },
 });
 
-export const { infoDog, resetDogStore } = dogSlice.actions;
+export const { infoDog, resetDogStore, addDogPhoto, removeDogPhoto } = dogSlice.actions;
 export default dogSlice.reducer;
