@@ -42,11 +42,11 @@ export default function WelcomeScreen({navigation}) {
         </Text>
         <Text style={globalCSS.stitle}>Invitez vos amis à vous accompagner</Text>
         <TouchableOpacity
-          onPress={() => () => navigation.navigate("Login")}
+          onPress={() => () => navigation.navigate("RegisterScreen")}
           style={globalCSS.button}
           activeOpacity={0.8}
         >
-          <Text style={globalCSS.textButton}>Go to Home</Text>
+          <Text style={globalCSS.textButton}>Bienvenue</Text>
         </TouchableOpacity>
         <StatusBar style="auto" />
       </LinearGradient>

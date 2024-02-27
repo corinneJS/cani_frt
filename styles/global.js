@@ -10,21 +10,13 @@
 
 
 import { StyleSheet } from "react-native";
-/* import {
-  useFonts,
-  BioRhyme_400Regular,
-  BioRhyme_700Bold,
-} from "@expo-google-fonts/biorhyme";
-import {  
-  Lato_400Regular,
-  Lato_700Bold,
-} from "@expo-google-fonts/lato"; */
+
 
 module.exports = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
-    justifyContent:"flex-end",
+    justifyContent:"center",
     alignItems: "center",
   },
   divider: {
@@ -33,16 +25,12 @@ module.exports = StyleSheet.create({
     height: 1,
     width: "100%",
   },
-  /* body: {
-    fontFamily: "Lato_400Regular",
-    fontSize: 22,
-    color: "black",
-  }, */
+ 
   title: {
     fontFamily: "BioRhyme_700Bold",
     fontSize: 22,
     color: "black",
-    marginBottom: 20,
+    marginBottom: 40,
   },
   stitle: {
     fontFamily: "BioRhyme_400Regular",

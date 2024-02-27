@@ -5,6 +5,7 @@
 // gestion fontGoogle MaterialCommunityIcons, suppression des imports et fonctions inutilisées
 // MAJ 15/02, CP :  ajout reducer dog, modif du Menu right header du Stack.navigator : DevMenu 
 // MAJ 15/02, KB : ajout reducer walk
+// MAJ 21/02, KB : ajout des écrans PromenadeCreationScreen, PromenadeInscriptionScreen, PromenadeRechercheScreen
 // --------------------------------------------------
 
 import { NavigationContainer } from "@react-navigation/native";
@@ -29,10 +30,16 @@ import WelcomeScreen from "./screens/WelcomeScreen";
 import ProfilScreen from "./screens/ProfilScreen";
 import DogProfilScreen from "./screens/DogProfilScreen";
 import UserProfilScreen from "./screens/UserProfilScreen";
-import PromenadeScreen from "./screens/PromenadeScreen";
-import FavorisScreen from "./screens/FavorisScreen";
+
+import SnapCamera from "./screens/SnapCamera";
 import RegisterScreen from "./screens/RegisterScreen";
 import UserProfilScreen from "./screens/UserProfilScreen"
+
+// import of screens related to Promenade
+import PromenadeScreen from "./screens/PromenadeScreen";
+import PromenadeCreationScreen from "./screens/PromenadeCreationScreen";
+import PromenadeInscriptionScreen from "./screens/PromenadeInscriptionScreen";
+import PromenadeRechercheScreen from "./screens/PromenadeRechercheScreen";
 
 // import Component
 import DevMenu from "./components/DevMenu";
@@ -50,23 +57,26 @@ import {
 import { Lato_400Regular, Lato_700Bold } from "@expo-google-fonts/lato";
 
 import { MaterialCommunityIcons, MaterialIcons, AntDesign } from "@expo/vector-icons";
-
+// import for DatePicker in app
+import { enGB, registerTranslation } from "react-native-paper-dates";
+registerTranslation("en", enGB);
 
 // import of reducers
 import user, { logout } from "./reducers/user";
 import dog from "./reducers/dog";
 import walk from "./reducers/walk";
 
-const reducers = combineReducers({ user, dog, walk });
+/* const reducers = combineReducers({ user, dog, walk });
 const persistConfig = { key: "caniconnect", storage: AsyncStorage }; //ici le storage de react est remplacé par "storage: AsyncStorage" de react-native
-
+ */
 const store = configureStore({
-  reducer: persistReducer(persistConfig, reducers),
+  reducer: { user, dog, walk },/* persistReducer(persistConfig, reducers), */
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }),
+  
 });
 
-const persistor = persistStore(store);
+/* const persistor = persistStore(store); */
 
 
 
@@ -77,30 +87,31 @@ const Tab = createBottomTabNavigator();
 const TabNavigator = () => {
   return (
     <Tab.Navigator
-      screenOptions={({ route}) => ({
+      screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
           let iconName = "";
           let iconLib = "";
-           color = "#000000";
+          color = "#000000";
           size = 24;
-          
+
           switch (route.name) {
             case "Home":
               iconLib = "MI";
-              iconName ="home";
-              
+              iconName = "home";
+
               break;
             case "Promenade":
               iconLib = "MCI";
               iconName = "paw-outline";
               break;
             case "Races":
-              iconLib = "AD";
-              iconName = "idcard"
+              iconLib = "MCI";
+              iconName = "dog";
+              
               break;
             case "Profil":
-              iconLib = "MCI";
-              iconName = "dog"
+              iconLib = "AD";
+              iconName = "idcard";
               break;
             /*
             // a activer pour rechercher un pro
@@ -109,11 +120,16 @@ const TabNavigator = () => {
               iconName = "contacts"
               break; */
             default:
-              return Alert.alert("Oups !", "Pb switch case TabNavigator : route.name ");
+              return Alert.alert(
+                "Oups !",
+                "Pb switch case TabNavigator : route.name "
+              );
           }
           switch (iconLib) {
             case "MI":
-              return <MaterialIcons name={iconName} size={size} color={color} />;
+              return (
+                <MaterialIcons name={iconName} size={size} color={color} />
+              );
               break;
             case "MCI":
               return (
@@ -124,15 +140,13 @@ const TabNavigator = () => {
                 />
               );
               break;
-              case "AD":
+            case "AD":
               return <AntDesign name={iconName} size={size} color={color} />;
               break;
             default:
               return Alert.alert("Oups !", "Pb switch iconLib TabNavigator");
               break;
           }
-          
-           
         },
         tabBarActiveTintColor: "#f2B872",
         tabBarInactiveTintColor: "#335561",
@@ -142,13 +156,15 @@ const TabNavigator = () => {
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Promenade" component={PromenadeScreen} />
       <Tab.Screen name="Races" component={BreedsScreen} />
+      {/*  <Tab.Screen name="Races" component={BreedsScreen} /> */}
       <Tab.Screen name="Profil" component={ProfilScreen} />
     </Tab.Navigator>
   );
 };
+// CP : Mise en oeuvre des CustomHeaderRight de la stack Navigation
 function CustomHeaderRight({ navigation, screenName }) {
   switch (screenName) {
-            case 'DogProfil':
+            case 'DogProfil' || 'UserProfil':
               return (
                 <View style={{ flexDirection: 'row' }}>
                   <TouchableOpacity onPress={() => console.log('Ajouter')}>
@@ -169,34 +185,20 @@ function CustomHeaderRight({ navigation, screenName }) {
                       // Logique pour basculer/afficher le statut de géolocalisation
                     }}
                   />
+                  <MaterialCommunityIcons
+                    name="sign-direction"
+                    size={24}
+                    onPress={() => {}} // METTRE ICI CREER UNE BALADE
+                  />
                   <MaterialIcons
                     name="menu"
                     size={24}
                     onPress={() => handleMenu()}
-                    // onPress={() => navigation.navigate("UserMenu")} // Naviguez vers un écran de menu ou ouvrez un menu contextuel
                   />
                 </View>
               );
   }
-
-  
-}
-
-
-
-
-
-
-
-
-                
-            
-
-
-
-
-
-
+} 
 
 export default function App() {
   // utilisation font google
@@ -223,7 +225,7 @@ export default function App() {
         <Stack.Navigator
           screenOptions={({ navigation }) => ({
             headerTransparent: true,
-            hearderRight: () => {
+            headerRight: () => {
               <View style={{ flexDirection: "row" }}>
                 <MaterialIcons
                   name="location-off" // "location-on" CP : Changez le nom de l'icône en fonction du statut
@@ -232,19 +234,14 @@ export default function App() {
                     // Logique pour basculer/afficher le statut de géolocalisation
                   }}
                 />
-                <MaterialCommunityIcons
-                  name="sign-direction"
-                  size={24}
-                  onPress={() => {}} //
-                />
+
                 <MaterialIcons
                   name="menu"
                   size={24}
                   onPress={() => handleMenu()}
-                  // onPress={() => navigation.navigate("UserMenu")}
                 />
               </View>;
-            }, 
+            },
           })}
         >
           <Stack.Screen
@@ -258,18 +255,37 @@ export default function App() {
             component={DogProfilScreen}
             options={({ navigation }) => ({
               title: "🐾 Profil 4 pattes",
-              headerRight: () => (
+              /* headerRight: () => (
                 <CustomHeaderRight
                   navigation={navigation}
                   screenName="DogProfil"
                 />
-              ),
+              ), */
+            })}
+          />
+          <Stack.Screen
+            name="SnapCamera"
+            component={SnapCamera}
+            options={({ navigation }) => ({
+              title: "🐾 Camera",
+              /* headerRight: () => (
+                <CustomHeaderRight
+                  navigation={navigation}
+                  screenName="DogProfil"
+                />
+              ), */
             })}
           />
           <Stack.Screen
             name="UserProfil"
-            options={{ title: "caniConnect" }}
+            options={{ title: "🐾 caniConnect" }}
             component={UserProfilScreen}
+            /* options={{ headerShown: false }} */
+          />
+          <Stack.Screen
+            name="Welcome"
+            options={{ title: "🐾 caniConnect" }}
+            component={WelcomeScreen}
             /* options={{ headerShown: false }} */
           />
           <Stack.Screen
@@ -282,7 +298,19 @@ export default function App() {
           <Stack.Screen
             name="TabNavigator"
             component={TabNavigator}
-            options={{ title: "caniConnect" }}
+            options={{ title: "🐾 caniConnect" }}
+          />
+          <Stack.Screen
+            name="PromenadeCreation"
+            component={PromenadeCreationScreen}
+          />
+          <Stack.Screen
+            name="PromenadeRecherche"
+            component={PromenadeRechercheScreen}
+          />
+          <Stack.Screen
+            name="PromenadeInscription"
+            component={PromenadeInscriptionScreen}
           />
         </Stack.Navigator>
       </NavigationContainer>
