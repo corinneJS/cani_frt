@@ -21,8 +21,8 @@ import { DatePickerModal } from "react-native-paper-dates";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
 import {MultipleSelectList} from "react-native-dropdown-select-list";
-
-import { GalerieScreen } from "./GalerieScreen";
+// Affichage Galerie photo
+import {Gallery} from "../components/Gallery.js";
 
 // import pour gestion states
 import React, { useState, useEffect } from "react";
@@ -37,6 +37,7 @@ import { updateDog_webSrv } from "../webservices/dogs_webSrv.js";
 const globalCSS = require("../styles/global.js");
 
 
+//---------------------------------------------------------------------------------------------------------------------------------------//
 //---------------------------------------------------------------------------------------------------------------------------------------//
 // COMPOSANT DogProfilScreen
 //---------------------------------------------------------------------------------------------------------------------------------------//
@@ -58,11 +59,12 @@ export default function DogProfilScreen({ route, navigation }) {
     traitID: [],
     activityID: [],
     dateCreated: new Date().toLocaleDateString("fr"),
-    dogPhotos: [{}],
+    dogPhotos: [],
     dateModified: new Date().toLocaleDateString("fr"),
     breedID: "",
   };
   const [dogInfo, setDogInfo] = useState("");
+  const [photosInfo, setPhotosInfo] = useState([]);
   const [traitsDogData, setTraitsDogData] = useState([]);
   // Preparation Listes de Valeurs
   const [traitsData, setTraitsData] = useState([]);
@@ -71,7 +73,7 @@ export default function DogProfilScreen({ route, navigation }) {
   const [date, setDate] = useState(new Date());
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
 
-  // Préparation Photo de Profil
+  
 
   // ----------------------------------------------------------------------//
   // USE EFFECT
@@ -87,6 +89,7 @@ export default function DogProfilScreen({ route, navigation }) {
     (async () => {
       if (dogID) {
         setDogInfo(dogInfoTmp);
+        setPhotosInfo(dogInfoTmp.dogPhotos);
         setTraitsDogData(dogInfoTmp.traitID);
         console.log("dogInfoTmp du toutou : ", dogInfoTmp);
         //setActivitiesDogData(dogInfo.activityID);
@@ -222,7 +225,9 @@ export default function DogProfilScreen({ route, navigation }) {
             behavior={Platform.OS === "ios" ? "padding" : "height"}
           >
             <View style={styles.formContent}>
-              <View style={styles.Galerie}>{/*  <GalerieScreen /> */}</View>
+              <View style={styles.Galerie}>
+              {/*   <Gallery photosInfo={dogInfoTmp.dogPhotos} /> */}
+              </View>
 
               <TextInput
                 placeholder="Entrez le nom du 4 pattes"
@@ -264,17 +269,21 @@ export default function DogProfilScreen({ route, navigation }) {
                   style={globalCSS.input}
                 />
                 <TouchableOpacity onPress={showDatePicker}>
-              <MaterialIcons name="calendar-month" size={24} color="black" />
-            </TouchableOpacity>
+                  <MaterialIcons
+                    name="calendar-month"
+                    size={24}
+                    color="black"
+                  />
+                </TouchableOpacity>
 
-            <DatePickerModal
-              locale="en"
-              visible={isDatePickerVisible}
-              date={dogInfo.birthdate}
-              onConfirm={onConfirm}
-              onCancel={onCancel}
-              mode="single"
-            />
+                <DatePickerModal
+                  locale="en"
+                  visible={isDatePickerVisible}
+                  date={dogInfo.birthdate}
+                  onConfirm={onConfirm}
+                  onCancel={onCancel}
+                  mode="single"
+                />
               </View>
               <TextInput
                 placeholder="Je suis un 4pattes ..."

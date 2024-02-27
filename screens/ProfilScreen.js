@@ -29,7 +29,7 @@ export default function ProfilScreen({navigation}) {
 // Import des profils
 const reduxInfoUser = useSelector((state) => state.user.value);
 const reduxInfoDog = useSelector((state) => state.dog.value);
-console.log(reduxInfoDog);
+console.log("reduxInfoUser",reduxInfoUser);
 
 
   return (
@@ -44,7 +44,9 @@ console.log(reduxInfoDog);
         <View style={styles.iconsContainer}>
           <TouchableOpacity
             style={styles.profileContainer}
-            onPress={() => navigation.navigate("UserProfil")}
+            onPress={() =>
+              navigation.navigate("UserProfil", { userID: reduxInfoUser.userID })
+            }
           >
             <MaterialCommunityIcons
               name="account-cog-outline"

@@ -12,13 +12,16 @@ export const userSlice = createSlice({
     
     infoUser: (state, action) => {
       state.value.token = action.payload.token; // KB : bonne pratique sécurité préférer le seesion storage
-      state.value.userID = action.payload._id;
+      state.value.userID = action.payload.userID;
       state.value.isConnect = action.payload.isConnect;
       state.value.username = action.payload.username;
+      state.value.firstname = action.payload.firstname;
+      state.value.lastname = action.payload.lastname;
       state.value.email = action.payload.email;
       state.value.isDogOwner = action.payload.isDogOwner;
       state.value.isProfessional = action.payload.isProfessional;
       state.value.city = action.payload.city;
+      state.value.photos = action.payload.photos;
     },
 
     logout: (state) => {
@@ -27,9 +30,7 @@ export const userSlice = createSlice({
      state.value.isConnect = false;
      state.value.username = "";
      state.value.email = "";
-     state.value.isDogOwner = false;
-     state.value.isProfessional = false;
-     state.value.city = "";
+     
     
     },
   },

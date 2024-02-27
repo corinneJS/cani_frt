@@ -3,7 +3,7 @@ import { ImageBackground, Platform, SafeAreaView, ScrollView, StyleSheet, Text, 
 import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-export default function App() {
+export default function CityDropDown() {
   const [dataSet, setDataSet] = useState([]);
   const [citiesData, setCitiesData] = useState([]);
 

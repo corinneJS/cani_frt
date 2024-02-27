@@ -30,7 +30,7 @@ import WelcomeScreen from "./screens/WelcomeScreen";
 import ProfilScreen from "./screens/ProfilScreen";
 import DogProfilScreen from "./screens/DogProfilScreen";
 import UserProfilScreen from "./screens/UserProfilScreen";
-import GalerieScreen from "./screens/GalerieScreen";
+
 import SnapCamera from "./screens/SnapCamera";
 import RegisterScreen from "./screens/RegisterScreen";
 
@@ -104,12 +104,13 @@ const TabNavigator = () => {
               iconName = "paw-outline";
               break;
             case "Races":
-              iconLib = "AD";
-              iconName = "idcard";
-              break;
-            case "Profil":
               iconLib = "MCI";
               iconName = "dog";
+              
+              break;
+            case "Profil":
+              iconLib = "AD";
+              iconName = "idcard";
               break;
             /*
             // a activer pour rechercher un pro
@@ -153,7 +154,7 @@ const TabNavigator = () => {
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Promenade" component={PromenadeScreen} />
-      <Tab.Screen name="Races" component={GalerieScreen} />
+      <Tab.Screen name="Races" component={BreedsScreen} />
       {/*  <Tab.Screen name="Races" component={BreedsScreen} /> */}
       <Tab.Screen name="Profil" component={ProfilScreen} />
     </Tab.Navigator>
@@ -232,12 +233,11 @@ export default function App() {
                     // Logique pour basculer/afficher le statut de géolocalisation
                   }}
                 />
-                
+
                 <MaterialIcons
                   name="menu"
                   size={24}
                   onPress={() => handleMenu()}
-                
                 />
               </View>;
             },
@@ -279,6 +279,12 @@ export default function App() {
             name="UserProfil"
             options={{ title: "🐾 caniConnect" }}
             component={UserProfilScreen}
+            /* options={{ headerShown: false }} */
+          />
+          <Stack.Screen
+            name="Welcome"
+            options={{ title: "🐾 caniConnect" }}
+            component={WelcomeScreen}
             /* options={{ headerShown: false }} */
           />
           <Stack.Screen
