@@ -31,6 +31,7 @@ import ProfilScreen from "./screens/ProfilScreen";
 import DogProfilScreen from "./screens/DogProfilScreen";
 import UserProfilScreen from "./screens/UserProfilScreen";
 import GalerieScreen from "./screens/GalerieScreen";
+import SnapCamera from "./screens/SnapCamera";
 import RegisterScreen from "./screens/RegisterScreen";
 
 // import of screens related to Promenade
@@ -55,7 +56,9 @@ import {
 import { Lato_400Regular, Lato_700Bold } from "@expo-google-fonts/lato";
 
 import { MaterialCommunityIcons, MaterialIcons, AntDesign } from "@expo/vector-icons";
-
+// import for DatePicker in app
+import { enGB, registerTranslation } from "react-native-paper-dates";
+registerTranslation("en", enGB);
 
 // import of reducers
 import user, { logout } from "./reducers/user";
@@ -156,10 +159,10 @@ const TabNavigator = () => {
     </Tab.Navigator>
   );
 };
-// Fonction ci-dessous non fonctionnel
-/* function CustomHeaderRight({ navigation, screenName }) {
+// CP : Mise en oeuvre des CustomHeaderRight de la stack Navigation
+function CustomHeaderRight({ navigation, screenName }) {
   switch (screenName) {
-            case 'DogProfil':
+            case 'DogProfil' || 'UserProfil':
               return (
                 <View style={{ flexDirection: 'row' }}>
                   <TouchableOpacity onPress={() => console.log('Ajouter')}>
@@ -180,16 +183,20 @@ const TabNavigator = () => {
                       // Logique pour basculer/afficher le statut de géolocalisation
                     }}
                   />
+                  <MaterialCommunityIcons
+                    name="sign-direction"
+                    size={24}
+                    onPress={() => {}} // METTRE ICI CREER UNE BALADE
+                  />
                   <MaterialIcons
                     name="menu"
                     size={24}
                     onPress={() => handleMenu()}
-                    // onPress={() => navigation.navigate("UserMenu")} // Naviguez vers un écran de menu ou ouvrez un menu contextuel
                   />
                 </View>
               );
   }
-} */
+} 
 
 export default function App() {
   // utilisation font google
@@ -225,16 +232,12 @@ export default function App() {
                     // Logique pour basculer/afficher le statut de géolocalisation
                   }}
                 />
-                <MaterialCommunityIcons
-                  name="sign-direction"
-                  size={24}
-                  onPress={() => {}} //
-                />
+                
                 <MaterialIcons
                   name="menu"
                   size={24}
                   onPress={() => handleMenu()}
-                  // onPress={() => navigation.navigate("UserMenu")}
+                
                 />
               </View>;
             },
@@ -260,8 +263,21 @@ export default function App() {
             })}
           />
           <Stack.Screen
+            name="SnapCamera"
+            component={SnapCamera}
+            options={({ navigation }) => ({
+              title: "🐾 Camera",
+              /* headerRight: () => (
+                <CustomHeaderRight
+                  navigation={navigation}
+                  screenName="DogProfil"
+                />
+              ), */
+            })}
+          />
+          <Stack.Screen
             name="UserProfil"
-            options={{ title: "caniConnect" }}
+            options={{ title: "🐾 caniConnect" }}
             component={UserProfilScreen}
             /* options={{ headerShown: false }} */
           />
@@ -281,7 +297,7 @@ export default function App() {
             name="PromenadeCreation"
             component={PromenadeCreationScreen}
           />
-           <Stack.Screen
+          <Stack.Screen
             name="PromenadeRecherche"
             component={PromenadeRechercheScreen}
           />
