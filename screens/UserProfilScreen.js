@@ -11,18 +11,17 @@ import {
   Text,
   TextInput,
   Switch,
-  ScrollView,
+  StatusBar,
   SafeAreaView,
   TouchableOpacity,
   Alert,
 } from "react-native";
 import { DatePickerModal } from "react-native-paper-dates";
 import Gallery from "../components/Gallery.js";
-import CityDropDown from "../components/CityDropDown.js";
-
+// import CityDropDown from "../components/CityDropDown.js";
+import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
-
 
 // import pour gestion states
 import React, { useState, useEffect } from "react";
@@ -74,8 +73,6 @@ export default function UserProfilScreen({ route, navigation }) {
   const [date, setDate] = useState(new Date());
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
 
-  // Préparation Photo de Profil
-
   // ----------------------------------------------------------------------//
   // USE EFFECT
   // ----------------------------------------------------------------------//
@@ -90,7 +87,7 @@ export default function UserProfilScreen({ route, navigation }) {
     (async () => {
       if (userID) {
         setUserInfo(userInfoTmp);
-
+        setUserPhotosInfo(userInfoTmp.photos);
         console.log("userInfoTmp  : ", userInfoTmp);
       } else {
         setUserInfo(initialStateUserInfo);
@@ -105,7 +102,7 @@ export default function UserProfilScreen({ route, navigation }) {
     const data = await updateUser_webSrv(userInfo);
     console.log("Reponse OK j'enregistre : ", userInfo);
     if (data.result) {
-      // dispatch(infoUser(userInfo));
+      Alert.alert("🐾 caniConnect", data.result);
     } else {
       Alert.alert("Oups !", `erreur dans update user ${data.error}`);
     }
@@ -137,43 +134,27 @@ export default function UserProfilScreen({ route, navigation }) {
   // photo de profil
 
   // Fonction pour gérer l'API cities
-    const searchCity = (query) => {
-      // Prevent search with an empty query
-      if (query === "") {
-        return;
-      }
+  const searchCity = async (query) => {
+    // Prevent search with an empty query
+    if (query === "") {
+      return;
+    }
 
-      fetch(`https://api-adresse.data.gouv.fr/search/?q=${query}`)
-        .then((response) => response.json())
-        .then(({ features }) => {
-          const suggestions = features.map((data, i) => {
-            return {
-              id: i,
-              title: data.properties.name,
-              context: data.properties.context,
-            };
-          });
-          setDataSet(suggestions);
-        });
-    };
+    const response = await fetch(
+      `https://api-adresse.data.gouv.fr/search/?q=${query}`
+    );
+    const features = await response.json();
 
-    const cities = citiesData.map((data, i) => {
-      return (
-        <View key={i} style={styles.resultContainer}>
-          <MaterialCommunityIcons
-            name="map-marker-check"
-            size={30}
-            color="#51e181"
-          />
-          <View>
-            <Text style={{ ...styles.resultText, ...styles.resultTitle }}>
-              {data.title}
-            </Text>
-            <Text style={styles.resultText}>{data.context}</Text>
-          </View>
-        </View>
-      );
+    console.log(features);
+    const suggestions = features.map((data, i) => {
+      return {
+        id: i,
+        title: data.properties.name,
+        context: data.properties.context,
+      };
     });
+    setDataSet(suggestions);
+  };
 
   // Fonction pour gérer le datePicker
 
@@ -225,73 +206,79 @@ export default function UserProfilScreen({ route, navigation }) {
       colors={["#F2B872", "#FFFFFF"]}
       style={globalCSS.backgrdContainer}
     >
-      <KeyboardAvoidingView
-        style={globalCSS.container}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-      >
-        <SafeAreaView>
-          <View style={styles.gallery}>
-            <Gallery photosInfo={userPhotosInfo} />
-          </View>
-
-          <View style={styles.formContent}>
-            <TextInput
-              placeholder="Username"
-              onChangeText={(value) => handleFieldChange("username", value)}
-              value={userInfo.username}
-              onBlur={() => handleUpdateUserInfo("username")}
-              style={globalCSS.input}
-            />
-
-            <View style={styles.listSwitchContainer}>
-              <View style={styles.switchContainer}>
-                <Switch
-                  trackColor={{ false: "#B39C81", true: "#F2B872" }}
-                  thumbColor={userInfo.isDogOwner ? "#F2B872" : "#B39C81"}
-                  value={userInfo.isFemale}
-                  onValueChange={(value) => toggleSwitchIsDogOwner(value)}
-                />
-                <Text>
-                  {userInfo.isDogOwner
-                    ? "Humain d'un 4 pattes"
-                    : "Sans 4pattes"}
-                </Text>
-              </View>
-
-              <View style={styles.switchContainer}>
-                <Switch
-                  trackColor={{ false: "#B39C81", true: "#F2B872" }}
-                  thumbColor={userInfo.isProfessional ? "#F2B872" : "#B39C81"}
-                  onValueChange={(value) => toggleSwitchIsProfessional(value)}
-                  value={userInfo.isProfessional}
-                />
-                <Text>Services à proposer ?</Text>
-              </View>
+      <SafeAreaView>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <View style={globalCSS.container}>
+            <View style={styles.gallery}>
+              {/* <Gallery photosInfo={userInfo.photos} />  */}
+              <Text style={globalCSS.stitle}>Ici la galerie photo</Text>
             </View>
-
-            <View style={styles.dateContainer}>
+            <View style={styles.formContent}>
               <TextInput
-                placeholder="date de naissance"
-                onChangeText={(value) => handleFieldChange("birthdate", value)}
-                value={userInfo.birthdate}
+                placeholder="Username"
+                onChangeText={(value) => handleFieldChange("username", value)}
+                value={userInfo.username}
+                onBlur={() => handleUpdateUserInfo("username")}
                 style={globalCSS.input}
               />
-              <TouchableOpacity onPress={showDatePicker}>
-                <MaterialIcons name="calendar-month" size={24} color="black" />
-              </TouchableOpacity>
 
-              <DatePickerModal
-                locale="en"
-                visible={isDatePickerVisible}
-                date={userInfo.birthdate}
-                onConfirm={onConfirm}
-                onCancel={onCancel}
-                mode="single"
-              />
-            </View>
-            <View style={styles.namesContainer}>
+              <View style={styles.listSwitchContainer}>
+                <View style={styles.switchContainer}>
+                  <Switch
+                    trackColor={{ false: "#B39C81", true: "#F2B872" }}
+                    thumbColor={userInfo.isDogOwner ? "#F2B872" : "#B39C81"}
+                    value={userInfo.isFemale}
+                    onValueChange={(value) => toggleSwitchIsDogOwner(value)}
+                  />
+                  <Text>
+                    {userInfo.isDogOwner
+                      ? "Humain d'un 4 pattes"
+                      : "Sans 4pattes"}
+                  </Text>
+                </View>
+
+                <View style={styles.switchContainer}>
+                  <Switch
+                    trackColor={{ false: "#B39C81", true: "#F2B872" }}
+                    thumbColor={userInfo.isProfessional ? "#F2B872" : "#B39C81"}
+                    onValueChange={(value) => toggleSwitchIsProfessional(value)}
+                    value={userInfo.isProfessional}
+                  />
+                  <Text>Services à proposer ?</Text>
+                </View>
+              </View>
+
+              <View style={styles.dateContainer}>
+                <TextInput
+                  placeholder="date de naissance"
+                  onChangeText={(value) =>
+                    handleFieldChange("birthdate", value)
+                  }
+                  value={userInfo.birthdate}
+                  style={globalCSS.input}
+                />
+                <TouchableOpacity onPress={showDatePicker}>
+                  <MaterialIcons
+                    name="calendar-month"
+                    size={24}
+                    color="black"
+                  />
+                </TouchableOpacity>
+
+                <DatePickerModal
+                  locale="en"
+                  visible={isDatePickerVisible}
+                  date={userInfo.birthdate}
+                  onConfirm={onConfirm}
+                  onCancel={onCancel}
+                  mode="single"
+                />
+              </View>
+
               <TextInput
-                placeholder="prénom"
+                placeholder="prenom"
                 onChangeText={(value) => handleFieldChange("firstname", value)}
                 onBlur={() => handleUpdateUserInfo("firstname")}
                 value={userInfo.firstname}
@@ -304,35 +291,35 @@ export default function UserProfilScreen({ route, navigation }) {
                 value={userInfo.lastname}
                 style={globalCSS.input}
               />
-            </View>
 
-            <TextInput
-              placeholder="email"
-              onChangeText={(value) => handleFieldChange("email", value)}
-              onBlur={() => handleUpdateUserInfo("email")}
-              value={userInfo.email}
-              style={globalCSS.input}
-            />
-            <TextInput
-              placeholder="Ville"
-              onChangeText={(value) => handleFieldChange("city", value)}
-              onBlur={() => handleUpdateUserInfo("city")}
-              value={userInfo.city}
-              style={globalCSS.input}
-            />
-            <View>
-              <AutocompleteDropdown
-                onChangeText={(value) => searchCity(value)}
-                onSelectItem={(item) => item && setCitiesData([...citiesData, item])}
-                dataSet={dataSet}
-                textInputProps={{ placeholder: 'Search city' }}
-                inputContainerStyle={styles.inputContainer}
-                containerStyle={styles.dropdownContainer}
-                suggestionsListContainerStyle={styles.suggestionListContainer}
-                closeOnSubmit
+              <TextInput
+                placeholder="email"
+                onChangeText={(value) => handleFieldChange("email", value)}
+                onBlur={() => handleUpdateUserInfo("email")}
+                value={userInfo.email}
+                style={globalCSS.input}
               />
-            </View>  
-            <View>
+              <TextInput
+                placeholder="Ville"
+                onChangeText={(value) => handleFieldChange("city", value)}
+                onBlur={() => handleUpdateUserInfo("city")}
+                value={userInfo.city}
+                style={globalCSS.input}
+              />
+              <View>
+                <AutocompleteDropdown
+                  onChangeText={(value) => searchCity(value)}
+                  onSelectItem={(item) => handleFieldChange("city", item)}
+                  onBlur={() => handleUpdateUserInfo("city")}
+                  dataSet={dataSet}
+                  textInputProps={{ placeholder: "Rechercher votre ville" }}
+                  inputContainerStyle={styles.inputContainer}
+                  containerStyle={styles.dropdownContainer}
+                  suggestionsListContainerStyle={styles.suggestionListContainer}
+                  closeOnSubmit
+                />
+              </View>
+
               <TouchableOpacity
                 onPress={() => handleSave()}
                 style={globalCSS.button}
@@ -340,13 +327,14 @@ export default function UserProfilScreen({ route, navigation }) {
               >
                 <Text style={globalCSS.textButton}>Valider</Text>
               </TouchableOpacity>
-            </View>
 
-            <Text>Modifié le :{userInfo.dateModified}</Text>
-            <Text>Crée le :{userInfo.dateCreated}</Text>
+              <Text>Modifié le :{userInfo.dateModified}</Text>
+              <Text>Crée le :{userInfo.dateCreated}</Text>
+            </View>
           </View>
-        </SafeAreaView>
-      </KeyboardAvoidingView>
+          <StatusBar barStyle={"default"} hidden={false} />
+        </KeyboardAvoidingView>
+      </SafeAreaView>
     </LinearGradient>
   );
 }
@@ -379,11 +367,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
   },
-  namesContainer: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
-  },
+  
   dropdown: {
     height: 50,
     backgroundColor: "transparent",
@@ -409,5 +393,44 @@ const styles = StyleSheet.create({
   },
   selectedStyle: {
     borderRadius: 12,
+  },
+  dropdownContainer: {
+    width: "100%",
+    marginBottom: 20,
+  },
+  inputContainer: {
+    borderWidth: 1,
+    borderColor: "#51e181",
+    backgroundColor: "#ffffff",
+  },
+  title: {
+    fontSize: 50,
+    color: "#51e181",
+    fontWeight: "bold",
+    alignSelf: "flex-start",
+    fontFamily: Platform.select({ ios: "Georgia", android: "serif" }),
+    marginBottom: 15,
+  },
+  suggestionListContainer: {
+    borderRadius: 3,
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+  },
+  resultContainer: {
+    backgroundColor: "#ffffff",
+    width: "100%",
+    borderRadius: 6,
+    padding: 20,
+    marginBottom: 10,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    borderColor: "#51e181",
+    borderWidth: 1,
+  },
+  resultText: {
+    textAlign: "right",
+  },
+  resultTitle: {
+    fontWeight: "bold",
   },
 });

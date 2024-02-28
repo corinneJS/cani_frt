@@ -15,10 +15,12 @@ import {
   View,
   StyleSheet,
   Image,
+  SafeAreaView,
   Text,
   TextInput,
   TouchableOpacity,
   Alert,
+  StatusBar,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 // import pour gestion des States et 
@@ -44,10 +46,6 @@ export default function LoginScreen({ navigation }) {
   const reduxInfoUser = useSelector((state) => state.user.value);
   const reduxInfoDog = useSelector((state) => state.dog.value);
 
-/* // fct pour btn connect avec ggle  CP : A FAIRE A LA FIN
-  const handleGoogle = () => {
-        Alert.alert('Oups !',`L'authentification Google n'est pas encore développée`)
-  }; */
 
 
 // fct btn connect via backend
@@ -109,61 +107,55 @@ export default function LoginScreen({ navigation }) {
       colors={["#F2B872", "#FFFFFF"]}
       style={globalCSS.backgrdContainer}
     >
-      <KeyboardAvoidingView
-        style={globalCSS.container}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-      >
-        <Image
-          style={styles.image}
-          source={require("../assets/ccLogoColor.png")}
-        />
-        <Text style={globalCSS.title}>Heureux de vous retrouver !</Text>
-        <View style={styles.formContent}>
-          <TextInput
-            placeholder="Email"
-            autoCapitalize="none" // https://reactnative.dev/docs/textinput#autocapitalize
-            keyboardType="email-address" // https://reactnative.dev/docs/textinput#keyboardtype
-            textContentType="emailAddress" // https://reactnative.dev/docs/textinput#textcontenttype-ios
-            autoComplete="email" // https://reactnative.dev/docs/textinput#autocomplete-android
-            onChangeText={(value) => setEmail(value)}
-            value={email}
-            style={globalCSS.input}
-          />
+      <SafeAreaView>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <View style={globalCSS.container}>
+            <Image
+              style={styles.image}
+              source={require("../assets/ccLogoColor.png")}
+            />
+            <Text style={globalCSS.title}>Heureux de vous retrouver !</Text>
+            <TextInput
+              placeholder="Email"
+              autoCapitalize="none" // https://reactnative.dev/docs/textinput#autocapitalize
+              keyboardType="email-address" // https://reactnative.dev/docs/textinput#keyboardtype
+              textContentType="emailAddress" // https://reactnative.dev/docs/textinput#textcontenttype-ios
+              autoComplete="email" // https://reactnative.dev/docs/textinput#autocomplete-android
+              onChangeText={(value) => setEmail(value)}
+              value={email}
+              style={globalCSS.input}
+            />
 
-          <TextInput
-            placeholder="Password"
-            onChangeText={(value) => setPassword(value)}
-            value={password}
-            secureTextEntry={true}
-            style={globalCSS.input}
-          />
-          <TouchableOpacity
-            onPress={() => handleConnect()}
-            style={globalCSS.button}
-            activeOpacity={0.8}
-          >
-            <Text style={globalCSS.textButton}>connexion</Text>
-          </TouchableOpacity>
-          <Text style={globalCSS.stitle}>Première visite ? Rejoignez-nous !</Text>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Register")}
-            style={globalCSS.button}
-            activeOpacity={0.8}
-          >
-            <Text style={globalCSS.textButton}>s'inscrire</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* <View>  // CP : pour plus tard
-          <TouchableOpacity
-            onPress={() => handleGoogle()}
-            style={globalCSS.button}
-            activeOpacity={0.8}
-          >
-            <Text style={globalCSS.textButton}>se connecter avec google</Text>
-          </TouchableOpacity>
-        </View> */}
-      </KeyboardAvoidingView>
+            <TextInput
+              placeholder="Password"
+              onChangeText={(value) => setPassword(value)}
+              value={password}
+              secureTextEntry={true}
+              style={globalCSS.input}
+            />
+            <TouchableOpacity
+              onPress={() => handleConnect()}
+              style={globalCSS.button}
+              activeOpacity={0.8}
+            >
+              <Text style={globalCSS.textButton}>connexion</Text>
+            </TouchableOpacity>
+            <Text style={globalCSS.stitle}>
+              Première visite ? Rejoignez-nous !
+            </Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Welcome")}
+              style={globalCSS.button}
+              activeOpacity={0.8}
+            >
+              <Text style={globalCSS.textButton}>s'inscrire</Text>
+            </TouchableOpacity>
+          </View>
+          <StatusBar barStyle={"default"} hidden={false} />
+        </KeyboardAvoidingView>
+      </SafeAreaView>
     </LinearGradient>
   );
 }

@@ -8,6 +8,8 @@ import {
   Platform,
   View,
   StyleSheet,
+  SafeAreaView,
+  StatusBar,
   Image,
   Text,
   TextInput,
@@ -87,78 +89,81 @@ export default function RegisterScreen({ navigation }) {
       colors={["#F2B872", "#FFFFFF"]}
       style={globalCSS.backgrdContainer}
     >
-      <KeyboardAvoidingView
-        style={globalCSS.container}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-      >
-        <Image
-          style={styles.image}
-          source={require("../assets/ccLogoColor.png")}
-        />
-        <Text style={globalCSS.stitle}>Bienvenue !</Text>
-        <View style={styles.formContent}>
-          <TextInput
-            placeholder="nom d'utilisateur"
-            label="Choisissez votre :"
-            onChangeText={(value) => setUsername(value)}
-            value={username}
-            style={globalCSS.input}
-          />
+      <SafeAreaView>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <View style={globalCSS.container}>
+            <Image
+              style={styles.image}
+              source={require("../assets/ccLogoColor.png")}
+            />
+            <Text style={globalCSS.stitle}>Bienvenue !</Text>
 
-          <TextInput
-            placeholder="votre ville"
-            onChangeText={(value) => setCity(value)}
-            value={city}
-            style={globalCSS.input}
-          />
-          <View style={styles.listSwitchContainer}>
-            <View style={styles.switchContainer}>
-              <Switch
-                trackColor={{ false: "#B39C81", true: "#F2B872" }}
-                thumbColor={isDogOwner ? "#F2B872" : "#B39C81"}
-                onValueChange={toggleSwitchDogOwner}
-                value={isDogOwner}
-              />
-              <Text>Je suis propriétaire d'un ou plusieurs 4 pattes.</Text>
+            <TextInput
+              placeholder="nom d'utilisateur"
+              label="Choisissez votre :"
+              onChangeText={(value) => setUsername(value)}
+              value={username}
+              style={globalCSS.input}
+            />
+
+            <TextInput
+              placeholder="votre ville"
+              onChangeText={(value) => setCity(value)}
+              value={city}
+              style={globalCSS.input}
+            />
+            <View style={styles.listSwitchContainer}>
+              <View style={styles.switchContainer}>
+                <Switch
+                  trackColor={{ false: "#B39C81", true: "#F2B872" }}
+                  thumbColor={isDogOwner ? "#F2B872" : "#B39C81"}
+                  onValueChange={toggleSwitchDogOwner}
+                  value={isDogOwner}
+                />
+                <Text>Je suis propriétaire d'un ou plusieurs 4 pattes.</Text>
+              </View>
+              <View style={styles.switchContainer}>
+                <Switch
+                  trackColor={{ false: "#B39C81", true: "#F2B872" }}
+                  thumbColor={isProfessional ? "#F2B872" : "B39C81"}
+                  onValueChange={toggleSwitchProfessional}
+                  value={isProfessional}
+                />
+                <Text>Je suis un professionel</Text>
+              </View>
             </View>
-            <View style={styles.switchContainer}>
-              <Switch
-                trackColor={{ false: "#B39C81", true: "#F2B872" }}
-                thumbColor={isProfessional ? "#F2B872" : "B39C81"}
-                onValueChange={toggleSwitchProfessional}
-                value={isProfessional}
-              />
-              <Text>Je suis un professionel</Text>
-            </View>
+            <TextInput
+              placeholder="Email"
+              autoCapitalize="none" // https://reactnative.dev/docs/textinput#autocapitalize
+              keyboardType="email-address" // https://reactnative.dev/docs/textinput#keyboardtype
+              textContentType="emailAddress" // https://reactnative.dev/docs/textinput#textcontenttype-ios
+              autoComplete="email" // https://reactnative.dev/docs/textinput#autocomplete-android
+              onChangeText={(value) => setEmail(value)}
+              value={email}
+              style={globalCSS.input}
+            />
+
+            <TextInput
+              placeholder="Password"
+              onChangeText={(value) => setPassword(value)}
+              value={password}
+              secureTextEntry={true}
+              style={globalCSS.input}
+            />
+
+            <TouchableOpacity
+              onPress={() => handleRegister()}
+              style={globalCSS.button}
+              activeOpacity={0.8}
+            >
+              <Text style={globalCSS.textButton}>je valide</Text>
+            </TouchableOpacity>
           </View>
-          <TextInput
-            placeholder="Email"
-            autoCapitalize="none" // https://reactnative.dev/docs/textinput#autocapitalize
-            keyboardType="email-address" // https://reactnative.dev/docs/textinput#keyboardtype
-            textContentType="emailAddress" // https://reactnative.dev/docs/textinput#textcontenttype-ios
-            autoComplete="email" // https://reactnative.dev/docs/textinput#autocomplete-android
-            onChangeText={(value) => setEmail(value)}
-            value={email}
-            style={globalCSS.input}
-          />
-
-          <TextInput
-            placeholder="Password"
-            onChangeText={(value) => setPassword(value)}
-            value={password}
-            secureTextEntry={true}
-            style={globalCSS.input}
-          />
-          
-          <TouchableOpacity
-            onPress={() => handleRegister()}
-            style={globalCSS.button}
-            activeOpacity={0.8}
-          >
-            <Text style={globalCSS.textButton}>je valide</Text>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
+          <StatusBar barStyle={"default"} hidden={false} />
+        </KeyboardAvoidingView>
+      </SafeAreaView>
     </LinearGradient>
   );
 };

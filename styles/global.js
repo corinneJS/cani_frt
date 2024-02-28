@@ -10,32 +10,59 @@
 
 
 import { StyleSheet } from "react-native";
+import {Dimensions} from "react-native";
+
+// variables pour gestion hauteur du container principal
+const screenHeight = Dimensions.get("window").height;
+const headerHeight = 65;
+const bottomHeight = 50;
+const screenWidth = Dimensions.get("window").width;
 
 
 module.exports = StyleSheet.create({
   container: {
     flex: 1,
-    width: "100%",
-    justifyContent:"center",
+    width: screenWidth - 30,
+    height: screenHeight - (bottomHeight + headerHeight),
+    justifyContent: "flex-start",
     alignItems: "center",
+    marginTop: 65,
+  },
+  iconsContainer: {
+    flexDirection: "row",
+    
+    flexWrap: "wrap",
+
+    flexGrow:1,
+    minWidth: "26%",
+    alignItems: "center",
+    justifyContent: "space-around",
+  },
+  profilContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    margin: 10,
+    padding: 10,
   },
   divider: {
-    borderBottomColor: "#F2B872",
-    borderBottomWidth: 1,
-    height: 1,
-    width: "100%",
+    borderBottomColor: "#000000",
+    borderBottomWidth: 4,
+    height: 2,
+    width: "100vw",
   },
- 
+
   title: {
     fontFamily: "BioRhyme_700Bold",
     fontSize: 22,
     color: "black",
-    marginBottom: 40,
+    marginVertical: 40,
   },
   stitle: {
     fontFamily: "BioRhyme_400Regular",
     fontSize: 18,
     color: "black",
+    marginVertical: 10,
   },
   text: {
     fontFamily: "Lato_400Regular",
@@ -45,8 +72,10 @@ module.exports = StyleSheet.create({
   button: {
     alignItems: "center",
     paddingTop: 8,
-    width: "80%",
+
+    width: "90%",
     marginTop: 30,
+    marginHorizontal: 20,
     backgroundColor: "#f2B872",
     borderRadius: 10,
     marginBottom: 80,
@@ -63,9 +92,9 @@ module.exports = StyleSheet.create({
     alignItems: "center",
   },
   input: {
-    width: "80%",
-    marginTop: 25,
-    borderBottomColor: "#f2B872",
+    width: "90%",
+    marginTop: 20,
+    borderBottomColor: "#000000",
     borderBottomWidth: 1,
     fontSize: 18,
   },
