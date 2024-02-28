@@ -94,7 +94,7 @@ module.exports = StyleSheet.create({
   input: {
     width: "90%",
     marginTop: 20,
-    borderBottomColor: "#000000",
+    borderBottomColor: "#F2B872",
     borderBottomWidth: 1,
     fontSize: 18,
   },

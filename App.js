@@ -33,7 +33,7 @@ import UserProfilScreen from "./screens/UserProfilScreen";
 
 import SnapCamera from "./screens/SnapCamera";
 import RegisterScreen from "./screens/RegisterScreen";
-import UserProfilScreen from "./screens/UserProfilScreen"
+
 
 // import of screens related to Promenade
 import PromenadeScreen from "./screens/PromenadeScreen";
