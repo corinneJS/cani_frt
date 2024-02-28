@@ -34,7 +34,7 @@ export default function CityDropDown() {
       </View>
     );
   });
-
+ console.log("cities",cities)
   return (
     <View>
       <AutocompleteDropdown

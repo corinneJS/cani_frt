@@ -11,7 +11,7 @@ import {
   Text,
   TextInput,
   Switch,
-  ScrollView,
+  StatusBar,
   SafeAreaView, TouchableOpacity,
   Alert
  
@@ -219,147 +219,135 @@ export default function DogProfilScreen({ route, navigation }) {
       style={globalCSS.backgrdContainer}
     >
       <SafeAreaView>
-        <ScrollView style={styles.scrollView}>
-          <KeyboardAvoidingView
-            style={globalCSS.container}
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-          >
-            <View style={styles.formContent}>
-              <View style={styles.Galerie}>
-              {/*   <Gallery photosInfo={dogInfoTmp.dogPhotos} /> */}
-              </View>
-
-              <TextInput
-                placeholder="Entrez le nom du 4 pattes"
-                onChangeText={(value) => handleFieldChange("dogName", value)}
-                value={dogInfo.dogName}
-                onBlur={() => handleUpdateDogInfo("dogName")}
-                style={globalCSS.input}
-              />
-
-              <View style={styles.listSwitchContainer}>
-                <View style={styles.switchContainer}>
-                  <Switch
-                    trackColor={{ false: "#B39C81", true: "#F2B872" }}
-                    thumbColor={dogInfo.isSterilized ? "#F2B872" : "#B39C81"}
-                    value={dogInfo.isFemale}
-                    onValueChange={(value) => toggleSwitchIsFemale(value)}
-                  />
-                  <Text>{dogInfo.isFemale ? "Femelle" : "Mâle"}</Text>
-                </View>
-
-                <View style={styles.switchContainer}>
-                  <Switch
-                    trackColor={{ false: "#B39C81", true: "#F2B872" }}
-                    thumbColor={dogInfo.isSterilized ? "#F2B872" : "#B39C81"}
-                    onValueChange={(value) => toggleSwitchIsSterilized(value)}
-                    value={dogInfo.isSterilized}
-                  />
-                  <Text>Stérilisé ?</Text>
-                </View>
-              </View>
-
-              <View style={styles.dateContainer}>
-                <TextInput
-                  placeholder="date de naissance"
-                  onChangeText={(value) =>
-                    handleFieldChange("birthdate", value)
-                  }
-                  value={dogInfo.birthdate}
-                  style={globalCSS.input}
-                />
-                <TouchableOpacity onPress={showDatePicker}>
-                  <MaterialIcons
-                    name="calendar-month"
-                    size={24}
-                    color="black"
-                  />
-                </TouchableOpacity>
-
-                <DatePickerModal
-                  locale="en"
-                  visible={isDatePickerVisible}
-                  date={dogInfo.birthdate}
-                  onConfirm={onConfirm}
-                  onCancel={onCancel}
-                  mode="single"
-                />
-              </View>
-              <TextInput
-                placeholder="Je suis un 4pattes ..."
-                onChangeText={(value) =>
-                  handleFieldChange("description", value)
-                }
-                onBlur={() => handleUpdateDogInfo("description")}
-                value={dogInfo.description}
-                style={globalCSS.input}
-              />
-              <View>
-                <MultipleSelectList
-                  setSelected={(val) => setSelected(val)}
-                  data={traitsData}
-                  save="trait"
-                  label="Traits de Caractère"
-                  boxStyles={{
-                    marginTop: 25,
-                    backgroundColor: "#F2B872",
-                    color: "#ffffff",
-                    borderColor: "#F2B872",
-                  }}
-                  dropdownStyles={{ borderColor: "#F2B872" }}
-                  checkBoxStyles={{ borderColor: "#F2B872" }}
-                  badgeStyles={{
-                    backgroundColor: "#F2B872",
-                    color: "#ffffff",
-                    borderColor: "#F2B872",
-                  }}
-                />
-              </View>
-              <View>
-                <TouchableOpacity
-                  onPress={() => handleSave()}
-                  style={globalCSS.button}
-                  activeOpacity={0.8}
-                >
-                  <Text style={globalCSS.textButton}>Valider</Text>
-                </TouchableOpacity>
-              </View>
-              <Text>
-                Mon Humain :{useSelector((state) => state.user.value.username)}
-              </Text>
-              <Text>Modifié le :{dogInfo.dateModified}</Text>
-              <Text>Crée le :{dogInfo.dateCreated}</Text>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <View style={globalCSS.container}>
+            <View style={styles.gallery}>
+              {/* <Gallery photosInfo={dogInfoTmp.dogPhotos} />  */}
+              <Text style={globalCSS.stitle}>Ici la galerie photo</Text>
             </View>
-          </KeyboardAvoidingView>
-        </ScrollView>
+
+            <TextInput
+              placeholder="Entrez le nom du 4 pattes"
+              onChangeText={(value) => handleFieldChange("dogName", value)}
+              value={dogInfo.dogName}
+              onBlur={() => handleUpdateDogInfo("dogName")}
+              style={globalCSS.input}
+            />
+
+            <View style={styles.listSwitchContainer}>
+              <View style={styles.switchContainer}>
+                <Switch
+                  trackColor={{ false: "#B39C81", true: "#F2B872" }}
+                  thumbColor={dogInfo.isSterilized ? "#F2B872" : "#B39C81"}
+                  value={dogInfo.isFemale}
+                  onValueChange={(value) => toggleSwitchIsFemale(value)}
+                />
+                <Text>{dogInfo.isFemale ? "Femelle" : "Mâle"}</Text>
+              </View>
+
+              <View style={styles.switchContainer}>
+                <Switch
+                  trackColor={{ false: "#B39C81", true: "#F2B872" }}
+                  thumbColor={dogInfo.isSterilized ? "#F2B872" : "#B39C81"}
+                  onValueChange={(value) => toggleSwitchIsSterilized(value)}
+                  value={dogInfo.isSterilized}
+                />
+                <Text>Stérilisé ?</Text>
+              </View>
+            </View>
+
+            <View style={styles.dateContainer}>
+              <TextInput
+                placeholder="date de naissance"
+                onChangeText={(value) => handleFieldChange("birthdate", value)}
+                value={dogInfo.birthdate}
+                style={globalCSS.input}
+              />
+              <TouchableOpacity onPress={showDatePicker}>
+                <MaterialIcons name="calendar-month" size={24} color="black" />
+              </TouchableOpacity>
+
+              <DatePickerModal
+                locale="en"
+                visible={isDatePickerVisible}
+                date={dogInfo.birthdate}
+                onConfirm={onConfirm}
+                onCancel={onCancel}
+                mode="single"
+              />
+            </View>
+            <TextInput
+              placeholder="Je suis un 4pattes ..."
+              onChangeText={(value) => handleFieldChange("description", value)}
+              onBlur={() => handleUpdateDogInfo("description")}
+              value={dogInfo.description}
+              style={globalCSS.input}
+            />
+            <View style={styles.selectListContainer}>
+              <MultipleSelectList
+                setSelected={(val) => setSelected(val)}
+                data={traitsData}
+                save="trait"
+                label="Traits de Caractère"
+                boxStyles={{
+                  marginTop: 25,
+
+                  color: "#ffffff",
+                  borderColor: "#F2B872",
+                }}
+                dropdownStyles={{ borderColor: "#F2B872" }}
+                checkBoxStyles={{ borderColor: "#F2B872" }}
+                badgeStyles={{
+                  backgroundColor: "#F2B872",
+                  color: "#000000",
+                  borderColor: "#F2B872",
+                }}
+              />
+            </View>
+
+            <Text>
+              Mon Humain :{useSelector((state) => state.user.value.username)}
+            </Text>
+            <Text>Modifié le :{dogInfo.dateModified}</Text>
+            <Text>Crée le :{dogInfo.dateCreated}</Text>
+
+            <TouchableOpacity
+              onPress={() => handleSave()}
+              style={globalCSS.button}
+              activeOpacity={0.8}
+            >
+              <Text style={globalCSS.textButton}>enregistrer</Text>
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+
+        <StatusBar barStyle={"default"} hidden={false} />
       </SafeAreaView>
     </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
-    marginHorizontal: 20,
-  },
-  image: {
-    width: "80%",
-    resizeMode: "contain",
-  },
-  formContent: {
+  gallery: {
     width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
+    height:"40vh",
+    backgroundColor: "#ffffff",
   },
+
+  
   listSwitchContainer: {
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "flex-start",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "space-arrow",
   },
 
   switchContainer: {
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
+    marginHorizontal:"5"
   },
   dateContainer: {
     flexDirection: "row",
