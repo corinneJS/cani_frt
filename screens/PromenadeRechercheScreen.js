@@ -54,6 +54,9 @@ export default function PromenadeRechercheScreen ({ navigation }) {
   const [currentPosition, setCurrentPosition] = useState({latitude: -16.5, longitude: -151.74});
   const [scrollerData, setScrollerData] = useState([]);
   const [selectedMarkersHighlighted, setSelectedMarkersHighlighted] = useState(null);
+  const [allMarkersCoord, setAllMarkersCoord] = useState([]);
+  const [mapData, setMapData] = useState([]);
+  const [positionCentered, setPositionCentered] = useState([]);
   
  
   useEffect(() => {
@@ -73,24 +76,29 @@ export default function PromenadeRechercheScreen ({ navigation }) {
   //Fonction envoyée en props à la card WalkEventSearchCard pour utilisation en inverse data flow
   // pour les actions à faire lors d'un appui sur une card.
   const selectEventCard = (cardId,cardName) => {
-    let allMarkersCoord = walk.allMarkersCoord;
+    //let allMarkersCoord = walk.allMarkersCoord;
     let markerKey = 0;
-    setSelectedMarkersHighlighted (
-      allMarkersCoord.map((markersCoord) => {
-        markerKey++;
-        let color = "";
-        if (markersCoord.eventID === cardId){
-          color = "orange";
-          return <Marker 
-                  key={markerKey} 
-                  coordinate={{ latitude: markersCoord.latitude, longitude: markersCoord.longitude }} 
-                  pinColor={color}    
-                  eventName={markersCoord.eventName}
-                  eventID={markersCoord.eventID}         
-                />;
-        } 
-      })
-    ) // fin du setSelectedMarkersHighlighted 
+    /* setSelectedMarkersHighlighted (
+        mapData.map ((event, i) => {
+          if (!event) return; 
+          markerKey++;
+          let color = "";
+          if (event.eventID === cardId){
+            color = "orange";
+            return event.walkID.itinerary.map ((marker, j) => {
+              console.log("event.walkID.itinerary", event.walkID.itinerary);
+              markerKey++
+              return  <Marker 
+                        key={markerKey} 
+                        coordinate={{ latitude: marker.lat, longitude: marker.lon }} 
+                        pinColor={color}    
+                        eventName={event.eventName}
+                        eventID={event.eventID}         
+                      />;
+            });
+          } 
+        })
+    ) // fin du setSelectedMarkersHighlighted */ 
   }; // fin de la fonction selectEventCard
 
   //Fonction envoyée en props à la card WalkEventSearchCard pour les actions à faire lorsque le doigt quitte une card (onPressOut).
@@ -111,8 +119,8 @@ export default function PromenadeRechercheScreen ({ navigation }) {
       setEventCity("");
       setIsSeachBarVisible(false);
       setScrollerData(data.walkEvents);
-            
-      data.walkEvents.forEach((event, i) => {
+      setMapData(data.walkEvents);     
+      /* data.walkEvents.forEach((event, i) => {
         switch (i%13) {
           case 0:
             color = "violet";
@@ -158,9 +166,9 @@ export default function PromenadeRechercheScreen ({ navigation }) {
         }   
         let eventID = event._id;
         let eventName = event.eventName;
-        let tempCoord = (event.walkID.itinerary.map((coord, j) => {
-          dispatch(addMapPositionCentered({latitude: coord.lat, longitude: coord.lon}));
-          dispatch(addAllMarkersCoord({ eventID: eventID, eventName: eventName, latitude: coord.lat, longitude: coord.lon}));
+        let tempCoord = (event.walkID.itinerary.forEach((coord, j, array) => {
+          j = array.length - 1 && dispatch(addMapPositionCentered({latitude: coord.lat, longitude: coord.lon}));
+          setAllMarkersCoord([...allMarkersCoord, { eventID: eventID, eventName: eventName, latitude: coord.lat, longitude: coord.lon}]);
           return  <Marker 
                     key={i-j} 
                     coordinate={{ latitude: coord.lat, longitude: coord.lon }} 
@@ -169,13 +177,76 @@ export default function PromenadeRechercheScreen ({ navigation }) {
                     eventID={eventID}         
                   />;
           }));
-          dispatch(addMarkers(tempCoord));
-      });
-    }
+          //dispatch(addMarkers(tempCoord));
+      });*/
+    } 
   }; // fin de la fct handleSearch
+
+
+  //console.log("allMarkersCoord", allMarkersCoord);
+  //let markers = walk.markers;
+  let markers = mapData.map ((event, i) => {
+    //console.log("mapData", mapData);
+    //console.log("event.walkID.itinerary", event.walkID.itinerary);
+   if (!event) return 
+   return event.walkID.itinerary.map ((marker, j, array) => {
+    j = array.length - 1 && setPositionCentered({latitude: marker.lat, longitude: marker.lat});
+    //console.log("marker", marker);
+    switch (i%13) {
+      case 0:
+        color = "violet";
+        break;
+      case 1:
+        color = "green";
+        break;  
+      case 2:
+        color = "yellow";
+        break;
+      case 3:
+        color = "tomato";
+        break;
+      case 4:
+        color = "indigo";
+        break;  
+      case 5:
+        color = "wheat";
+        break;
+      case 6:
+        color = "linen";
+        break;  
+      case 7:
+        color = "yellow";
+        break;
+      case 8:
+        color = "wheat";
+        break;
+      case 9:
+        color = "tan";
+        break; 
+      case 10:
+        color = "linen";
+        break;  
+      case 11:
+        color = "green";
+        break;
+      case 12:
+        color = "blue";
+        break;   
+      default:
+        color = "red";
+    }   
+    
+    return  <Marker 
+              key={i-j} 
+              coordinate={{ latitude: marker.lat, longitude: marker.lon }} 
+              pinColor={color}    
+              eventName={event.eventName}
+              eventID={event.eventID}         
+            />;
+    });
+  })
+  //let positionCentered = walk.mapPositionCentered;
   
-  let markers = walk.markers;
-  let positionCentered = walk.mapPositionCentered;
 
     return (
       <View style={styles.container}>
