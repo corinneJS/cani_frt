@@ -18,10 +18,7 @@ import {
   ScrollView,
   FlatList,
 } from 'react-native';
-import { LinearGradient } from "expo-linear-gradient"; 
-import { useDispatch, useSelector } from 'react-redux';
-import { addMarkers, addSelectedMarkers, addAllMarkersCoord, emptySelectedMarkers, addMapPositionCentered  } from '../reducers/walk';
-import { infoUser } from '../reducers/user';
+
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import WalkEventSearchCard from '../components/walkEventSearchCard';
@@ -44,11 +41,7 @@ aqua / teal / turquoise
 violet / purple / plum
 indigo */
 
-export default function PromenadeRechercheScreen ({ navigation }) {
-  const dispatch = useDispatch();
-  const walk = useSelector((state) => state.walk.value);
-  const selectedMarkers = walk.selectedMarkers; // non utilisé sur la page, si pas besoin lors de l'appui sur je valide, à supprimer d'ici et du reducer
-
+export default function PromenadeRechercheScreen ({ navigation }) {  
   const [eventCity, setEventCity] = useState("");
   const [isSeachBarVisible, setIsSeachBarVisible] = useState(true);
   const [currentPosition, setCurrentPosition] = useState({latitude: -16.5, longitude: -151.74});
@@ -71,7 +64,7 @@ export default function PromenadeRechercheScreen ({ navigation }) {
 
   //Fonction envoyée en props à la card WalkEventSearchCard pour utilisation en inverse data flow
   // pour les actions à faire lors d'un appui sur une card.
-  const selectEventCard = (cardId,cardName) => {
+  const selectEventCard = (cardId, cardName) => {
     setMapData(mapData.filter(e => e._id === cardId));
   }; // fin de la fonction selectEventCard
 
@@ -101,13 +94,13 @@ export default function PromenadeRechercheScreen ({ navigation }) {
       console.log("event", event);
       //console.log("event.walkID.itinerary", event.walkID.itinerary);
       if (!event) return 
-      if (arr.length === 1){
+      if (arr.length === 1) {
         console.log("here");
         return event.walkID.itinerary.map ((marker, j) => {
           return  <Marker 
                     key={i-j} 
                     coordinate={{ latitude: marker.lat, longitude: marker.lon }} 
-                    pinColor="orange"   
+                    pinColor="orange"    
                     eventName={event.eventName}
                     eventID={event._id}         
                   />;
@@ -169,8 +162,10 @@ export default function PromenadeRechercheScreen ({ navigation }) {
       } 
     })
 
-  console.log(mapData);
-  let initialCoords = mapData.length? mapData[mapData.length-1]?.walkID.itinerary[0]:{lat:0, lon:0}
+  console.log("markers", markers);
+  //console.log(mapData);
+  let initialCoords = mapData.length ? mapData[mapData.length-1]?.walkID.itinerary[0] : {lat:0, lon:0}
+
     return (
       <View style={styles.container}>
           { isSeachBarVisible &&
@@ -192,7 +187,7 @@ export default function PromenadeRechercheScreen ({ navigation }) {
               }}
           >
             {currentPosition && <Marker coordinate={currentPosition} title="My position" pinColor="#fecb2d" />}
-            { markers}
+            { markers }
           </MapView>
           }
          {!isSeachBarVisible &&
