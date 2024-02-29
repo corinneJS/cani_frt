@@ -164,8 +164,8 @@ export default function PromenadeRechercheScreen ({ navigation }) {
 
   console.log("markers", markers);
   //console.log(mapData);
-  let initialCoords = mapData.length ? mapData[mapData.length-1]?.walkID.itinerary[0] : {lat:0, lon:0}
-
+  let initialCoords = mapData.length ? mapData[mapData.length-1]?.walkID.itinerary[0] : {lat: -16.5, lon: -151.74}
+  
     return (
       <View style={styles.container}>
           { isSeachBarVisible &&
