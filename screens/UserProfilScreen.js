@@ -212,8 +212,8 @@ export default function UserProfilScreen({ route, navigation }) {
         >
           <View style={globalCSS.container}>
             <View style={styles.gallery}>
-              {/* <Gallery photosInfo={userInfo.photos} />  */}
-              <Text style={globalCSS.stitle}>Ici la galerie photo</Text>
+              <Gallery photosInfo={userInfo.photos} />  
+             {/*  <Text style={globalCSS.stitle}>Ici la galerie photo</Text> */}
             </View>
             <View style={styles.formContent}>
               <TextInput

@@ -1,9 +1,8 @@
 import React from "react";
-import { Alert } from "react-native";
+import { View, Text, Modal, Alert } from "react-native";
 import { useSelector } from "react-redux";
 
 
-import Icon from "react-native-vector-icons/FontAwesome";
 
 const DevMenu = () => {
 const [isVisible, setIsVisible] = useState(true);  
@@ -18,7 +17,6 @@ const [isVisible, setIsVisible] = useState(true);
 return (
   <Modal
     visible={isVisible}
-    transparent={true}
     onRequestClose={() => {
       Alert.alert("Modal has been closed.");
       setIsVisible(!isVisible);

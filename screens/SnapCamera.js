@@ -1,13 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  StatusBar,
+  SafeAreaView,
+} from "react-native";
 import { Camera, CameraType, FlashMode } from 'expo-camera';
+import { LinearGradient } from "expo-linear-gradient";
 import { useDispatch } from 'react-redux';
 import { addPhoto } from '../reducers/user';
 import { addDogPhoto } from '../reducers/dog';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useIsFocused } from '@react-navigation/native';
-
+// import feuille de style globale
+const globalCSS = require("../styles/global.js");
 
 
 export default function SnapCamera() {
@@ -68,29 +78,62 @@ export default function SnapCamera() {
   }
 
   return (
-    <Camera type={type} flashMode={flashMode} ref={(ref) => cameraRef = ref} style={styles.camera}>
-      <View style={styles.buttonsContainer}>
-        <TouchableOpacity
-          onPress={() => setType(type === CameraType.back ? CameraType.front : CameraType.back)}
-          style={styles.button}
+    <LinearGradient
+      colors={["#F2B872", "#FFFFFF"]}
+      style={globalCSS.backgrdContainer}
+    >
+      <SafeAreaView>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
-          <FontAwesome name='rotate-right' size={25} color='#ffffff' />
-        </TouchableOpacity>
+          <Camera
+            type={type}
+            flashMode={flashMode}
+            ref={(ref) => (cameraRef = ref)}
+            style={styles.camera}
+          >
+            <View style={styles.buttonsContainer}>
+              <TouchableOpacity
+                onPress={() =>
+                  setType(
+                    type === CameraType.back
+                      ? CameraType.front
+                      : CameraType.back
+                  )
+                }
+                style={styles.button}
+              >
+                <FontAwesome name="rotate-right" size={25} color="#ffffff" />
+              </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={() => setFlashMode(flashMode === FlashMode.off ? FlashMode.torch : FlashMode.off)}
-          style={styles.button}
-        >
-          <FontAwesome name='flash' size={25} color={flashMode === FlashMode.off ? '#ffffff' : '#e8be4b'} />
-        </TouchableOpacity>
-      </View>
+              <TouchableOpacity
+                onPress={() =>
+                  setFlashMode(
+                    flashMode === FlashMode.off
+                      ? FlashMode.torch
+                      : FlashMode.off
+                  )
+                }
+                style={styles.button}
+              >
+                <FontAwesome
+                  name="flash"
+                  size={25}
+                  color={flashMode === FlashMode.off ? "#ffffff" : "#e8be4b"}
+                />
+              </TouchableOpacity>
+            </View>
 
-      <View style={styles.snapContainer}>
-        <TouchableOpacity onPress={() => cameraRef && takePicture()}>
-          <FontAwesome name='circle-thin' size={95} color='#ffffff' />
-        </TouchableOpacity>
-      </View>
-    </Camera>
+            <View style={styles.snapContainer}>
+              <TouchableOpacity onPress={() => cameraRef && takePicture()}>
+                <FontAwesome name="circle-thin" size={95} color="#ffffff" />
+              </TouchableOpacity>
+            </View>
+          </Camera>
+        </KeyboardAvoidingView>
+        <StatusBar barStyle={"default"} hidden={false} />
+      </SafeAreaView>
+    </LinearGradient>
   );
 
   }

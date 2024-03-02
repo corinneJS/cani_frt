@@ -25,23 +25,33 @@ import * as Location from 'expo-location';
 const globalCSS = require("../styles/global.js");
 
 export default function PromenadeScreen({ navigation }) {
-  
+ 
+ 
   return (
     <LinearGradient
       colors={["#F2B872", "#FFFFFF"]}
       style={globalCSS.backgrdContainer}
     >
-      <Text> Crée ou recherche une promenade !</Text>
-     
+      <Text> Créez ou recherchez une promenade !</Text>
+
       <View style={styles.formContent}>
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate('PromenadeCreation')} style={styles.button} activeOpacity={0.8}>
-              <Text style={globalCSS.textButton}>Créer</Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("PromenadeCreation")}
+            style={styles.button}
+            activeOpacity={0.8}
+          >
+            <Text style={globalCSS.textButton}>Créer</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('PromenadeRecherche')} style={styles.button} activeOpacity={0.8}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("PromenadeRecherche")}
+            style={styles.button}
+            activeOpacity={0.8}
+          >
             <Text style={globalCSS.textButton}>Chercher</Text>
           </TouchableOpacity>
-        </View>     
+        </View>
+        
       </View>
       <StatusBar style="auto" />
     </LinearGradient>

@@ -46,11 +46,6 @@ export default function LoginScreen({ navigation }) {
   const reduxInfoUser = useSelector((state) => state.user.value);
   const reduxInfoDog = useSelector((state) => state.dog.value);
 
-/* // fct pour btn connect avec ggle  CP : A FAIRE A LA FIN
-  const handleGoogle = () => {
-        Alert.alert('Oups !',`L'authentification Google n'est pas encore développée`)
-  }; */
-
 
 // fct btn connect via backend
   const handleConnect = async () => {
@@ -79,17 +74,13 @@ export default function LoginScreen({ navigation }) {
             // Si proprietaire d'un 4pattes alors MAJ store redux Dog
             if (data.user.isDogOwner) {
               // recherche du 1er chien possédé et mise à jour infoDog
-              console.log(data.user.userID);          
+               
               const dogData = await findDogsByUserID_webSrv(data.user.userID); 
-              console.log("dogData dans le loginscreen", dogData)
+             
               if (dogData.result) {
                 // MAJ Store infoDog
                 dispatch(infoDog(dogData.dog));
-                /* console.log("infoUser enregistré dans le store ",useSelector((state) => state.user.value));
-                console.log(
-                  "infoDog enregistré dans le store ",
-                  useSelector((state) => state.dog.value)
-                ); */
+                
                 
               } else {
                 Alert.alert("Oups !", `Vous êtes propriétaire mais je ne trouve pas votre 4pattes. Erreur : ${dogData.error}`);
