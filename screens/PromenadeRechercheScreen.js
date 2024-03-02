@@ -47,6 +47,7 @@ export default function PromenadeRechercheScreen ({ navigation }) {
   const [currentPosition, setCurrentPosition] = useState({latitude: -16.5, longitude: -151.74});
   const [scrollerData, setScrollerData] = useState([]);
   const [mapData, setMapData] = useState([]);
+  const [pressed, setPressed] = useState(false);
  
   useEffect(() => {
     (async () => {
@@ -59,19 +60,26 @@ export default function PromenadeRechercheScreen ({ navigation }) {
           });
       }
     })();
-    console.log("currentPosition:", currentPosition);
+    //console.log("currentPosition:", currentPosition);
   }, []);
 
   //Fonction envoyée en props à la card WalkEventSearchCard pour utilisation en inverse data flow
   // pour les actions à faire lors d'un appui sur une card.
   const selectEventCard = (cardId, cardName) => {
     setMapData(mapData.filter(e => e._id === cardId));
+    setPressed(true);
   }; // fin de la fonction selectEventCard
 
   //Fonction envoyée en props à la card WalkEventSearchCard pour les actions à faire lorsque le doigt quitte une card (onPressOut).
   const unselectEventCard = () => {
     setMapData(scrollerData);
+    setPressed(false);
   }; 
+
+  // Fonction envoyée en props à la card WalkEventSearchCard pour l'appui sur le bouton "je participe"
+  const participate = (cardId, cardName) => {
+    navigation.navigate("PromenadeInscription", { mapData: scrollerData.filter(e => e._id === cardId), eventID : cardId })
+  };
 
   const handleSearch = async() => {
     const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}walks/walkevent/${eventCity}`, {
@@ -95,7 +103,7 @@ export default function PromenadeRechercheScreen ({ navigation }) {
       //console.log("event.walkID.itinerary", event.walkID.itinerary);
       if (!event) return 
       if (arr.length === 1) {
-        console.log("here");
+        //console.log("here");
         return event.walkID.itinerary.map ((marker, j) => {
           return  <Marker 
                     key={i-j} 
@@ -162,7 +170,7 @@ export default function PromenadeRechercheScreen ({ navigation }) {
       } 
     })
 
-  console.log("markers", markers);
+  //console.log("markers", markers);
   //console.log(mapData);
   let initialCoords = mapData.length ? mapData[mapData.length-1]?.walkID.itinerary[0] : {lat: -16.5, lon: -151.74}
   
@@ -182,7 +190,7 @@ export default function PromenadeRechercheScreen ({ navigation }) {
             region={{
                 latitude: initialCoords.lat,
                 longitude: initialCoords.lon,
-                latitudeDelta: 0.0922,
+                latitudeDelta: pressed ? 0.02 : 0.0922,
                 longitudeDelta: 0.0421,
               }}
           >
@@ -204,6 +212,7 @@ export default function PromenadeRechercheScreen ({ navigation }) {
                   eventID={item._id}
                   selectEventCard={selectEventCard}
                   unselectEventCard={unselectEventCard}
+                  participate={participate}
                 />
               }
               keyExtractor={item => item._id}
