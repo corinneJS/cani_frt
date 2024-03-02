@@ -12,7 +12,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 //import for redux persistance
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
@@ -30,6 +30,7 @@ import WelcomeScreen from "./screens/WelcomeScreen";
 import ProfilScreen from "./screens/ProfilScreen";
 import DogProfilScreen from "./screens/DogProfilScreen";
 import UserProfilScreen from "./screens/UserProfilScreen";
+import UserHistoryScreen from "./screens/UserHistoryScreen";
 
 import SnapCamera from "./screens/SnapCamera";
 import RegisterScreen from "./screens/RegisterScreen";
@@ -46,6 +47,7 @@ import DevMenu from "./components/DevMenu";
 
 
 
+
 import {Alert,StyleSheet,View,TouchableOpacity} from "react-native";
 
 // import font & Icons
@@ -56,10 +58,15 @@ import {
 } from "@expo-google-fonts/biorhyme";
 import { Lato_400Regular, Lato_700Bold } from "@expo-google-fonts/lato";
 
-import { MaterialCommunityIcons, MaterialIcons, AntDesign } from "@expo/vector-icons";
+import {
+  MaterialCommunityIcons,
+  MaterialIcons,
+  AntDesign,
+  SimpleLineIcons,
+} from "@expo/vector-icons";
 // import for DatePicker in app
 import { enGB, registerTranslation } from "react-native-paper-dates";
-registerTranslation("en", enGB);
+registerTranslation("fr", enGB);
 
 // import of reducers
 import user, { logout } from "./reducers/user";
@@ -79,6 +86,7 @@ const store = configureStore({
 /* const persistor = persistStore(store); */
 
 
+  // utilisation font google
 
 //pour la navigation "nested"
 const Stack = createNativeStackNavigator();
@@ -156,52 +164,57 @@ const TabNavigator = () => {
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Promenade" component={PromenadeScreen} />
       <Tab.Screen name="Races" component={BreedsScreen} />
-      {/*  <Tab.Screen name="Races" component={BreedsScreen} /> */}
       <Tab.Screen name="Profil" component={ProfilScreen} />
     </Tab.Navigator>
   );
 };
+//
+  // Affichage userMenu ou DevMenu 
+  // 
+  const handleMenu = () => {
+    return <DevMenu/>
+  };
 // CP : Mise en oeuvre des CustomHeaderRight de la stack Navigation
-function CustomHeaderRight({ navigation, screenName }) {
+//
+
+function CustomHeaderRight({ navigation, screenName, }) {
+  
   switch (screenName) {
-            case 'DogProfil' || 'UserProfil':
-              return (
-                <View style={{ flexDirection: 'row' }}>
-                  <TouchableOpacity onPress={() => console.log('Ajouter')}>
-                    <MaterialIcons name="add" size={24} color="black" />
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => console.log('Enregistrer')}>
-                    <MaterialIcons name="save" size={24} color="black" />
-                  </TouchableOpacity>
-                </View>
-              );
-            default:
-              return (
-                <View style={{ flexDirection: "row" }}>
-                  <MaterialIcons
-                    name="location-off" // "location-on" CP : Changez le nom de l'icône en fonction du statut
-                    size={24}
-                    onPress={() => {
-                      // Logique pour basculer/afficher le statut de géolocalisation
-                    }}
-                  />
-                  <MaterialCommunityIcons
-                    name="sign-direction"
-                    size={24}
-                    onPress={() => {}} // METTRE ICI CREER UNE BALADE
-                  />
-                  <MaterialIcons
-                    name="menu"
-                    size={24}
-                    onPress={() => handleMenu()}
-                  />
-                </View>
-              );
+      case 'DogProfil' || 'UserProfil':
+        return (
+          <View style={{ flexDirection: 'row' }}>
+              <MaterialIcons name="add" size={24} color="black" onPress={() => console.log('Ajouter')} />
+              <MaterialIcons name="save" size={24} color="black" onPress={() => console.log('Enregistrer')}/>
+          </View>
+        );
+      default:
+        return (
+          <View style={{ flexDirection: "row" }}>
+            <MaterialIcons
+              name="location-off"
+              size={24}
+              onPress={() =>
+                Alert.alert("Prochainement !", "Flag Géolocalisation")
+              }
+            />
+            <SimpleLineIcons
+              name="directions"
+              size={24}
+              onPress={() =>
+                Alert.alert(
+                  "Prochainement !",
+                  "Enregistrer un nouvel itinéraire (en live)"
+                )
+              }
+            />
+
+            </View>
+        );
   }
 } 
 
 export default function App() {
-  // utilisation font google
+
   let [fontsLoaded] = useFonts({
     BioRhyme_400Regular,
     BioRhyme_700Bold,
@@ -211,12 +224,8 @@ export default function App() {
   if (!fontsLoaded) {
     return null;
   }
-  //
-  // Affichage userMenu ou DevMenu 
-  // 
-  const handleMenu = () => {
-    return <DevMenu/>
-  };
+  
+  
 
   return (
     <Provider store={store}>
@@ -225,97 +234,31 @@ export default function App() {
         <Stack.Navigator
           screenOptions={({ navigation }) => ({
             headerTransparent: true,
-            headerRight: () => {
-              <View style={{ flexDirection: "row" }}>
-                <MaterialIcons
-                  name="location-off" // "location-on" CP : Changez le nom de l'icône en fonction du statut
-                  size={24}
-                  onPress={() => {
-                    // Logique pour basculer/afficher le statut de géolocalisation
-                  }}
-                />
+            headerShown: true,
+            headerRight: () => (<CustomHeaderRight navigation={navigation} screenName=""/>)  
+          })}>
 
-                <MaterialIcons
-                  name="menu"
-                  size={24}
-                  onPress={() => handleMenu()}
-                />
-              </View>;
-            },
-          })}
-        >
-          <Stack.Screen
-            name="Login"
-            options={{ title: "🐾 caniConnect" }}
-            component={LoginScreen}
-            /* options={{ headerShown: false }} */
-          />
-          <Stack.Screen
-            name="DogProfil"
-            component={DogProfilScreen}
-            options={({ navigation }) => ({
-              title: "🐾 Profil 4 pattes",
-              /* headerRight: () => (
-                <CustomHeaderRight
-                  navigation={navigation}
-                  screenName="DogProfil"
-                />
-              ), */
-            })}
-          />
-          <Stack.Screen
-            name="SnapCamera"
-            component={SnapCamera}
-            options={({ navigation }) => ({
-              title: "🐾 Camera",
-              /* headerRight: () => (
-                <CustomHeaderRight
-                  navigation={navigation}
-                  screenName="DogProfil"
-                />
-              ), */
-            })}
-          />
-          <Stack.Screen
-            name="UserProfil"
-            options={{ title: "🐾 caniConnect" }}
-            component={UserProfilScreen}
-            /* options={{ headerShown: false }} */
-          />
-          <Stack.Screen
-            name="Welcome"
-            options={{ title: "🐾 caniConnect" }}
-            component={WelcomeScreen}
-            /* options={{ headerShown: false }} */
-          />
-          <Stack.Screen
-            name="Register"
-            component={RegisterScreen}
-            options={{ title: "🐾 S'inscrire" }}
-            /* options={{ headerShown: false }} */
-          />
-          {/*  <Stack.Screen name="UserMenu" component={UserMenu} /> */}
-          <Stack.Screen
-            name="TabNavigator"
-            component={TabNavigator}
-            options={{ title: "🐾 caniConnect" }}
-          />
-          <Stack.Screen
-            name="PromenadeCreation"
-            component={PromenadeCreationScreen}
-          />
-          <Stack.Screen
-            name="PromenadeRecherche"
-            component={PromenadeRechercheScreen}
-          />
-          <Stack.Screen
-            name="PromenadeInscription"
-            component={PromenadeInscriptionScreen}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-      {/* </PersistGate> */}
-    </Provider>
+              
+          <Stack.Screen name="Login" component={LoginScreen} options={{ title: "🐾 caniConnect" }}/>
+          <Stack.Screen name="DogProfil" component={DogProfilScreen} options={{title: "🐾 Profil 4 pattes"}}/>
+          <Stack.Screen name="SnapCamera" component={SnapCamera} options={{title: "🐾 Camera"}}/>
+          <Stack.Screen name="UserProfil" component={UserProfilScreen} options={{ title: "🐾 caniConnect" }}/>
+          <Stack.Screen name="UserHistory" component={UserHistoryScreen} options={{ title: "🐾 caniConnect" }}/>
+          <Stack.Screen name="Welcome" component={WelcomeScreen} options={{ title: "🐾 caniConnect" }}/>
+          <Stack.Screen name="Register" component={RegisterScreen} options={{ title: "🐾 S'inscrire" }}/>
+          <Stack.Screen name="TabNavigator" component={TabNavigator} options={{ title: "🐾 caniConnect" }}/>
+          <Stack.Screen name="PromenadeCreation" component={PromenadeCreationScreen}/>
+          <Stack.Screen name="PromenadeRecherche" component={PromenadeRechercheScreen}/>
+          <Stack.Screen name="PromenadeInscription" component={PromenadeInscriptionScreen}/>
+          </Stack.Navigator>
+         </NavigationContainer>
+          
+              {/* </PersistGate> */}
+     
+          </Provider>
+          
+     
+
   );
 }
 

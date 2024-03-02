@@ -57,6 +57,7 @@ export default function ProfilScreen({ navigation }) {
                 onPress={() =>
                   navigation.navigate("DogProfil", {
                     dogID: reduxInfoDog.dogID,
+                    userID: reduxInfoUser.userID,
                   })
                 }
               >

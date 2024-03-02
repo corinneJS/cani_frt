@@ -19,11 +19,12 @@ const globalCSS = require("../styles/global.js");
 
 // COMPOSANT
 export default function Gallery(props) {
-  console.log("props",props)
-  if (typeof props.photosInfo != undefined || props.photosInfo!="") {
+  const {navigation, photosInfo} = props
+  
+  if (photosInfo) {
     // Séparation de la photo de profil des autres photos
-    const profilPhoto = props.photosInfo.find((photo) => photo.isProfilPhoto);
-    const otherPhotos = props.photosInfo.filter(
+    const profilPhoto = photosInfo.find((photo) => photo.isProfilPhoto);
+    const otherPhotos = photosInfo.filter(
       (photo) => !photo.isProfilPhoto
     );
 
@@ -53,6 +54,17 @@ export default function Gallery(props) {
             />
           )}
         />
+        <View>
+          <View style={styles.iconsContainer}>
+            <TouchableOpacity
+              style={styles.profilContainer}
+              onPress={() => navigation.navigate("SnapCamera")}
+            >
+              <MaterialCommunityIcons name="camera" size={50} color="#F2B872" />
+              <Text style={globalCSS.stitle}>Ajouter</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
     );
   } else {
