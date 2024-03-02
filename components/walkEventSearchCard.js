@@ -31,6 +31,10 @@ export default function WalkEventSearchCard (props) {
         props.unselectEventCard();
     };
 
+    const handleParticipate = () => {
+        props.participate(props.eventID, props.name);
+    };
+
     // Les 2 switch ci-dessous servent pour le choix d'un nom d'icone et d'une bibliothèque d'icones
     switch (props.environment) {
         case "Campagne":
@@ -102,7 +106,7 @@ export default function WalkEventSearchCard (props) {
                         </View> 
                     </View>
                     <View style={styles.participateButton}> 
-                        <Pressable onPress={() => handleSearch()} style={styles.button} activeOpacity={0.8}>
+                        <Pressable onPress={() => handleParticipate()} style={styles.button} activeOpacity={0.8}>
                             <Text style={styles.textButton}>Je participe</Text>
                         </Pressable>
                     </View> 
