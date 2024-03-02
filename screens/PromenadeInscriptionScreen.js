@@ -26,9 +26,10 @@ const globalCSS = require("../styles/global.js");
 
 
 export default function PromenadeInscriptionScreen ({ navigation, route }) {
-  //const { mapData, eventID} = route.params;
-  const mapData = route.params.mapData;
-  const eventID = route.params.eventID;
+  const { mapData, eventID} = route.params;
+  //const mapData = route.params.mapData;
+  //const eventID = route.params.eventID;
+
   console.log("mapData dans promenadeInscriptionScreen", mapData);
   mapData.length > 1 && console.log("mapData continent plus d'un élément : ceci est anormal");
   !mapData.length && console.log("mapData n'est pas truthy : ceci est anormal");
@@ -44,6 +45,25 @@ export default function PromenadeInscriptionScreen ({ navigation, route }) {
 
   let initialCoords = mapData.length ? mapData[mapData.length-1]?.walkID.itinerary[0] : {lat: -16.5, lon: -151.74}
    
+  let dogsInfo = mapData.dogIDs.map((dogID) => {
+    async() => {
+      const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}getdogbyid/${dogID}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const data = await response.json();
+  
+      if (!data.result) {
+        return { result: false, error: "dogs=Info not found" };
+      } else {
+        setMapData(data.walkEvents);     
+      } 
+    }; // fin de la fct handleSearch
+  
+    
+  })
+
+
   return (
     <View style={styles.container}>
       <View style={styles.walkEventInfo}>
