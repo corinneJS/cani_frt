@@ -26,7 +26,10 @@ const globalCSS = require("../styles/global.js");
 
 export default function PromenadeCreationScreen ({ navigation }) {
   const dispatch = useDispatch();
+  //Récupértion des infos du store redux
   const walk = useSelector((state) => state.walk.value);
+  const user = useSelector((state) => state.user.value);
+  const dog = useSelector((state) => state.dog.value);
 
   const [currentPosition, setCurrentPosition] = useState({latitude: -16.5, longitude: -151.74});
   const [name, setName] = useState("");
@@ -76,7 +79,8 @@ export default function PromenadeCreationScreen ({ navigation }) {
         rythme: rythme,
         distance: distance,
         description: description,
-        token: "0dff_dNSfK6RLg-HmaDWWQxoOj1NoYZD",
+        token: user.token, // user.token vient du store redux
+        dogID: dog.dogID, // dog.dogID vient du store redux
         duration : duration,
         dateCreated: new Date,
         dateModified: null,

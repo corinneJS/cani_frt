@@ -27,8 +27,8 @@ const globalCSS = require("../styles/global.js");
 
 export default function PromenadeInscriptionScreen ({ navigation, route }) {
   const { mapData, eventID} = route.params;
-  //const mapData = route.params.mapData;
-  //const eventID = route.params.eventID;
+  const user = useSelector((state) => state.user.value);
+  const dog = useSelector((state) => state.dog.value);
   const [scrollerData, setScrollerData] = useState([]);
 
   // Gestion des dogs et humains inscrits
@@ -51,6 +51,28 @@ export default function PromenadeInscriptionScreen ({ navigation, route }) {
   }, []); */
 
   console.log(scrollerData);
+  let eventIDSent = eventID ? eventID : "";
+  let tokenSent = user.token ? user.token : "";
+  let dogIDSent = dog.dogID ? dog.dogID : "";
+
+  const handleRegister = () => {
+    // Send new walk to backend to register it in database
+    fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/walks/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        eventID: eventIDSent, // eventID vient de route.params
+        token: tokenSent, // user.token vient du store redux
+        dogID: dogIDSent, // dog.dogID vient du store redux
+      }),
+    }).then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          Alert.alert("Inscription effectuée")
+        }
+      });
+  };
+
 
   console.log("mapData dans promenadeInscriptionScreen", mapData);
   // Gestion de la map
@@ -89,7 +111,7 @@ export default function PromenadeInscriptionScreen ({ navigation, route }) {
       </View>
       <View style={styles.buttonsContainer}>
           <TouchableOpacity
-            onPress={() => navigation.navigate("PromenadeCreation")}
+            onPress={() => handleRegister()}
             style={styles.button}
             activeOpacity={0.8}
           >
