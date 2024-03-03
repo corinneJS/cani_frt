@@ -13,6 +13,7 @@ import {
   TextInput,
   TouchableOpacity,
   Modal,
+  Alert,
 } from 'react-native';
 import { LinearGradient } from "expo-linear-gradient"; 
 import { useDispatch, useSelector } from 'react-redux';
@@ -67,8 +68,11 @@ export default function PromenadeInscriptionScreen ({ navigation, route }) {
       }),
     }).then((response) => response.json())
       .then((data) => {
+        console.log("here data", data);
         if (data.result) {
           Alert.alert("Inscription effectuée")
+        } else {
+          Alert.alert("Inscription non effectuée : un problème est survenu")
         }
       });
   };
