@@ -29,8 +29,31 @@ export default function PromenadeInscriptionScreen ({ navigation, route }) {
   const { mapData, eventID} = route.params;
   //const mapData = route.params.mapData;
   //const eventID = route.params.eventID;
+  const [scrollerData, setScrollerData] = useState([]);
+
+  // Gestion des dogs et humains inscrits
+/*   useEffect(() => {
+    let dogsInfo = mapData.dogIDs.map((dogID) => {
+      async() => {
+        const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}getdogbyid/${dogID}`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        const data = await response.json();
+    
+        if (!data.result) {
+          return { result: false, error: "dogInfo not found" };
+        } else {
+          setScrollerData([...scrollerData, data.dog ]);     
+        } 
+      }; 
+    })
+  }, []); */
+
+  console.log(scrollerData);
 
   console.log("mapData dans promenadeInscriptionScreen", mapData);
+  // Gestion de la map
   mapData.length > 1 && console.log("mapData continent plus d'un élément : ceci est anormal");
   !mapData.length && console.log("mapData n'est pas truthy : ceci est anormal");
 
@@ -44,39 +67,34 @@ export default function PromenadeInscriptionScreen ({ navigation, route }) {
   });
 
   let initialCoords = mapData.length ? mapData[mapData.length-1]?.walkID.itinerary[0] : {lat: -16.5, lon: -151.74}
-   
-  let dogsInfo = mapData.dogIDs.map((dogID) => {
-    async() => {
-      const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}getdogbyid/${dogID}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
-      const data = await response.json();
   
-      if (!data.result) {
-        return { result: false, error: "dogs=Info not found" };
-      } else {
-        setMapData(data.walkEvents);     
-      } 
-    }; // fin de la fct handleSearch
+  // Gestion de l'inscription
+
+
+
+
   
-    
-  })
+
 
 
   return (
     <View style={styles.container}>
       <View style={styles.walkEventInfo}>
-        <Text> eventID : {mapData[0]._id}</Text>
         <Text> Nom : {mapData[0].eventName}</Text>
-        <Text> Date : {mapData[0].eventDate}</Text>
-        <Text> Heure: {mapData[0].eventTime}</Text>
-        <Text> Ville: {mapData[0].eventCity}</Text>
-        <Text> environment: {mapData[0].walkID.environment}</Text>
+        <Text> Date : {mapData[0].eventDate} Heure: {mapData[0].eventTime}</Text>
+        <Text> Ville: {mapData[0].eventCity} environment: {mapData[0].walkID.environment} </Text>
         <Text> rythme: {mapData[0].walkID.rythme}</Text>
-        <Text> distance: {mapData[0].walkID.distance} km</Text>
+        <Text> distance: {mapData[0].walkID.distance} km durée: {mapData[0].walkID.duration} min</Text>
         <Text> description: {mapData[0].walkID.description}</Text>
-        <Text> durée: {mapData[0].walkID.duration} min</Text>
+      </View>
+      <View style={styles.buttonsContainer}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("PromenadeCreation")}
+            style={styles.button}
+            activeOpacity={0.8}
+          >
+            <Text style={globalCSS.textButton}>Je m'inscris</Text>
+          </TouchableOpacity>
       </View>
       <MapView mapType="standard" style={styles.map} 
           region={{
@@ -123,11 +141,28 @@ export default function PromenadeInscriptionScreen ({ navigation, route }) {
       },
       walkEventInfo: {
         marginTop: "15%",
+        justifyContent: "space-between",
+        alignItems: "center",
       },
       map: {
         width: '100%',
         height: '30%',
         marginTop: '1%',
+      },
+      buttonsContainer: {
+        flexDirection: 'row',
+        justifyContent: "space-between",
+        alignItems: "center",
+      },
+      button: {
+        alignItems: "center",
+        paddingTop: 8,
+        width: "30%",
+        marginTop: 30,
+        marginLeft: 20,
+        backgroundColor: "#f2B872",
+        borderRadius: 10,
+        marginBottom: 80,
       },
     });
     
