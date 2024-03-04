@@ -21,31 +21,22 @@ import {
   
   export default function DogRegisteredCard (props) {
   
+    let dogGender = props.isFemale ? "femelle" : "mâle";
+    let breedName = props.breedName ? props.breedName : "race inconnue";
       return (
-          <Pressable onPressIn={() => handlePressIn()} onPressOut={() => handlePressOut()}>
+          <Pressable>
               <View style={styles.card}>
-                  <View style={styles.environmentPicture}>
-                      {environmentPicto}
+                  <View style={styles.dogPicture}>
                   </View>
                   <View style={styles.centralTexts}>
-                      <Text style={styles.text}> {props.name}                           </Text>
-                      <Text style={styles.text}> {props.duration}min - {props.distance}km    </Text>
+                      <Text style={styles.text}> {props.dogName} </Text>
+                      <Text style={styles.text}> {dogGender}     </Text>
+                      <Text style={styles.text}> {breedName}     </Text>
                   </View> 
                   <View style={styles.rightPart}>
-                      <View style={styles.dateTime}>
-                          <View style={styles.timePicture}>
-                              <Ionicons name="time-outline" size={24} color="black" />
-                          </View>
-                          <View style={styles.time}>
-                              <Text style={styles.text}> {props.date} </Text>
-                              <Text style={styles.text}> {props.time} </Text>
-                          </View> 
+                      <View style={styles.userInfo}>
+                        <Text style={styles.text}> {props.username}     </Text>  
                       </View>
-                      <View style={styles.participateButton}> 
-                          <Pressable onPress={() => handleParticipate()} style={styles.button} activeOpacity={0.8}>
-                              <Text style={styles.textButton}>Je participe</Text>
-                          </Pressable>
-                      </View> 
                   </View>
               </View>
           </Pressable>

@@ -99,7 +99,7 @@ export default function PromenadeRechercheScreen ({ navigation }) {
   }; // fin de la fct handleSearch
 
   let markers = mapData.map ((event, i, arr) => {
-      console.log("event", event);
+      //console.log("event", event);
       //console.log("event.walkID.itinerary", event.walkID.itinerary);
       if (!event) return 
       if (arr.length === 1) {

@@ -13,6 +13,7 @@ import {
   TextInput,
   TouchableOpacity,
   Modal,
+  FlatList,
   Alert,
 } from 'react-native';
 import { LinearGradient } from "expo-linear-gradient"; 
@@ -21,6 +22,7 @@ import { addWalk, removeWalk, importWalks, addItinerary } from '../reducers/walk
 import { infoUser } from '../reducers/user';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
+import DogRegisteredCard  from '../components/dogRegisteredCard';
 
 //feuille de style global
 const globalCSS = require("../styles/global.js");
@@ -31,27 +33,58 @@ export default function PromenadeInscriptionScreen ({ navigation, route }) {
   const user = useSelector((state) => state.user.value);
   const dog = useSelector((state) => state.dog.value);
   const [scrollerData, setScrollerData] = useState([]);
+  const [dogOwner, setDogOwner] = useState([]);
+  const [dogInfoWithUser, setDogInfoWithUser] = useState([]);
 
+  let dogsIDs = mapData[0].dogIDs.map ((dog) => {
+    return  dog._id
+  })
+  //console.log ("dogsIDs", dogsIDs)
+
+  //le useEffect ne fonctionne pas
   // Gestion des dogs et humains inscrits
-/*   useEffect(() => {
-    let dogsInfo = mapData.dogIDs.map((dogID) => {
-      async() => {
-        const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}getdogbyid/${dogID}`, {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        });
-        const data = await response.json();
-    
-        if (!data.result) {
-          return { result: false, error: "dogInfo not found" };
-        } else {
-          setScrollerData([...scrollerData, data.dog ]);     
-        } 
-      }; 
-    })
-  }, []); */
+  /* useEffect(() => {
+    if (dogsIDs){
+      let fetchDogInfoWithUser = async(dogID) => {
+          const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}getdogbyid/${dogID}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+          });
+          const data = await response.json();
+          if (!data.result) {
+            return { result: false, error: "dogInfo not found" };
+          } else {
+            return data.dog;
+          } 
+        }; 
 
-  console.log(scrollerData);
+        let dogInfoPart2 = dogsIDs.map((dogID) => fetchDogInfoWithUser(dogID))
+        console.log("dogInfoPart2", dogInfoPart2);
+        fetchDogInfoWithUser("65d5e5c3a5ad1ab25e3f2fda")
+        fetchDogInfoWithUser(65d5e5c3a5ad1ab25e3f2fda)
+    }
+  }, []);   */
+
+  // Mise en forme des données pour le scroller (Flatlist)
+  let scrollerInfoPart1 = mapData[0].dogIDs.map ((dog, i) => {
+    let dogInfo = {
+      key: i,
+      dogName: dog.dogName,
+      isFemale: dog.isFemale,
+      dogBirthdate: dog.birthdate,
+      breedName : dog.breedID?.breedNameEN ? dog.breedID.breedNameEN : null // le ? permet d'eviter que l'appli ne plante si dog.breedID est "undefined"
+    }
+    return dogInfo;
+  })
+
+  // console.log("mapData dans promenadeInscriptionScreen", mapData);
+  //console.log("mapData[0].dogIDs", mapData[0].dogIDs);
+  //console.log ("scrollerInfoPart1", scrollerInfoPart1)
+  //console.log("dogInfoWithUser", dogInfoWithUser); 
+  //console.log("scrollerData", scrollerData);
+  
+
+  // Gestion de l'inscription
   let eventIDSent = eventID ? eventID : "";
   let tokenSent = user.token ? user.token : "";
   let dogIDSent = dog.dogID ? dog.dogID : "";
@@ -68,7 +101,7 @@ export default function PromenadeInscriptionScreen ({ navigation, route }) {
       }),
     }).then((response) => response.json())
       .then((data) => {
-        console.log("here data", data);
+        //console.log("here data", data);
         if (data.result) {
           Alert.alert("Inscription effectuée")
         } else {
@@ -76,9 +109,7 @@ export default function PromenadeInscriptionScreen ({ navigation, route }) {
         }
       });
   };
-
-
-  console.log("mapData dans promenadeInscriptionScreen", mapData);
+ 
   // Gestion de la map
   mapData.length > 1 && console.log("mapData continent plus d'un élément : ceci est anormal");
   !mapData.length && console.log("mapData n'est pas truthy : ceci est anormal");
@@ -94,15 +125,6 @@ export default function PromenadeInscriptionScreen ({ navigation, route }) {
 
   let initialCoords = mapData.length ? mapData[mapData.length-1]?.walkID.itinerary[0] : {lat: -16.5, lon: -151.74}
   
-  // Gestion de l'inscription
-
-
-
-
-  
-
-
-
   return (
     <View style={styles.container}>
       <View style={styles.walkEventInfo}>
@@ -135,24 +157,18 @@ export default function PromenadeInscriptionScreen ({ navigation, route }) {
       <View style={styles.participantsText}>
         <Text> Participants </Text>
         </View>
-        {/* <FlatList
-              data={scrollerData}
+        <FlatList
+              data={scrollerInfoPart1}
               renderItem={({item}) => 
-                <WalkEventSearchCard 
-                  name={item.eventName} 
-                  duration={item.walkID.duration} 
-                  distance={item.walkID.distance}
-                  date={item.eventDate}
-                  time={item.eventTime}
-                  environment={item.walkID.environment}
-                  eventID={item._id}
-                  selectEventCard={selectEventCard}
-                  unselectEventCard={unselectEventCard}
-                  participate={participate}
+                <DogRegisteredCard 
+                  dogName={item.dogName} 
+                  breedName={item.breedName} 
+                  isFemale={item.isFemale}
+                  username="Humain : inconnu pour le moment" 
                 />
               }
-              keyExtractor={item => item._id}
-            /> */}
+              keyExtractor={item => item.key}
+            />
       <StatusBar style="auto" />
     </View>
     );
@@ -173,7 +189,7 @@ export default function PromenadeInscriptionScreen ({ navigation, route }) {
       map: {
         width: '100%',
         height: '30%',
-        marginTop: '1%',
+        marginTop: '-15%',
       },
       buttonsContainer: {
         flexDirection: 'row',
