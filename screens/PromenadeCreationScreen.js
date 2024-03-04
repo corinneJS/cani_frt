@@ -73,6 +73,7 @@ export default function PromenadeCreationScreen ({ navigation }) {
     // On s'assure que l'utilisateur a placé au moins un marquer
     if (!itinerary) {
       Alert.alert("Indiquer l'itinéraire de la promenade sur la carte à l'aide de marqueurs, en effectuant un appui long à l'endroit où vous souhaitez placer le marqueur");
+      return;
     } else {
       // Send new walk to backend to register it in database
       fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/walks/create`, {
