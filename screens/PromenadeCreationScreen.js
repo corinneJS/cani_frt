@@ -71,7 +71,7 @@ export default function PromenadeCreationScreen ({ navigation }) {
 
   const handleNewWalk= () => {
     // On s'assure que l'utilisateur a placé au moins un marquer
-    if (!itinerary) {
+    if (itinerary === undefined || itinerary.length == 0 ) {
       Alert.alert("Indiquer l'itinéraire de la promenade sur la carte à l'aide de marqueurs, en effectuant un appui long à l'endroit où vous souhaitez placer le marqueur");
       return;
     } else {
