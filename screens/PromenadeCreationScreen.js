@@ -73,60 +73,60 @@ export default function PromenadeCreationScreen ({ navigation }) {
     // On s'assure que l'utilisateur a placé au moins un marquer
     if (!itinerary) {
       Alert.alert("Indiquer l'itinéraire de la promenade sur la carte à l'aide de marqueurs, en effectuant un appui long à l'endroit où vous souhaitez placer le marqueur");
-      return;
-    }
-    // Send new walk to backend to register it in database
-    fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/walks/create`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        name: name, 
-        environment: environment, 
-        rythme: rythme,
-        distance: distance,
-        description: description,
-        token: user.token, // user.token vient du store redux
-        dogID: dog.dogID, // dog.dogID vient du store redux
-        duration : duration,
-        dateCreated: new Date,
-        dateModified: null,
-        itinerary: itinerary,
-        eventName: eventName,
-        eventDate: eventDate,
-        eventTime: eventTime,
-        eventCity: eventCity,
-      }),
-    }).then((response) => response.json())
-      .then((data) => {
-        // Dispatch in Redux store if the new place have been registered in database
-        if (data.result) {
-          dispatch(addWalk({
-            name: name, 
-            environment: environment, 
-            rythme: rythme,
-            distance: distance,
-            description: description,
-            duration : duration,
-          }))
-          dispatch(addItinerary(itinerary));
+    } else {
+      // Send new walk to backend to register it in database
+      fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/walks/create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          name: name, 
+          environment: environment, 
+          rythme: rythme,
+          distance: distance,
+          description: description,
+          token: user.token, // user.token vient du store redux
+          dogID: dog.dogID, // dog.dogID vient du store redux
+          duration : duration,
+          dateCreated: new Date,
+          dateModified: null,
+          itinerary: itinerary,
+          eventName: eventName,
+          eventDate: eventDate,
+          eventTime: eventTime,
+          eventCity: eventCity,
+        }),
+      }).then((response) => response.json())
+        .then((data) => {
+          // Dispatch in Redux store if the new place have been registered in database
+          if (data.result) {
+            dispatch(addWalk({
+              name: name, 
+              environment: environment, 
+              rythme: rythme,
+              distance: distance,
+              description: description,
+              duration : duration,
+            }))
+            dispatch(addItinerary(itinerary));
 
-          console.log("reducer walk:", walk.walks)
-          console.log("itinerary:", itinerary)
-          console.log("reducer walk/itineraries:", walk.itineraries)
-          setName('');
-          setEnvironment('');
-          setRythme('');
-          setDistance();
-          setDescription('');
-          setDuration();
-          setItinerary([]);
-          setEventName('');
-          setEventDate('');
-          setEventTime('');
-          setEventCity('');
-          Alert.alert("Promenade créée avec succès !");
-        }
-      });
+            console.log("reducer walk:", walk.walks)
+            console.log("itinerary:", itinerary)
+            console.log("reducer walk/itineraries:", walk.itineraries)
+            setName('');
+            setEnvironment('');
+            setRythme('');
+            setDistance();
+            setDescription('');
+            setDuration();
+            setItinerary([]);
+            setEventName('');
+            setEventDate('');
+            setEventTime('');
+            setEventCity('');
+            Alert.alert("Promenade créée avec succès !");
+          }
+        });
+      }
   };
 
   const markers = itinerary.map((data, i) => {
