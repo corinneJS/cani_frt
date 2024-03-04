@@ -13,6 +13,7 @@ import {
   TextInput,
   TouchableOpacity,
   Modal,
+  Alert,
 } from 'react-native';
 import { LinearGradient } from "expo-linear-gradient"; 
 import { useDispatch, useSelector } from 'react-redux';
@@ -69,6 +70,11 @@ export default function PromenadeCreationScreen ({ navigation }) {
   };
 
   const handleNewWalk= () => {
+    // On s'assure que l'utilisateur a placé au moins un marquer
+    if (!itinerary) {
+      Alert.alert("Indiquer l'itinéraire de la promenade sur la carte à l'aide de marqueurs, en effectuant un appui long à l'endroit où vous souhaitez placer le marqueur");
+      return;
+    }
     // Send new walk to backend to register it in database
     fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/walks/create`, {
       method: 'POST',
@@ -118,6 +124,7 @@ export default function PromenadeCreationScreen ({ navigation }) {
           setEventDate('');
           setEventTime('');
           setEventCity('');
+          Alert.alert("Promenade créée avec succès !");
         }
       });
   };
