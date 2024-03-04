@@ -43,13 +43,13 @@ export default function PromenadeInscriptionScreen ({ navigation, route }) {
 
   //le useEffect ne fonctionne pas
   // Gestion des dogs et humains inscrits
-  /* useEffect(() => {
+  // 'dog._id': { $in: [array du front] } // je donne un array et je cherche tous les résulats qui correspondent à 
+  // au moins un résulat de la liste
+ /*  useEffect(() => {
     if (dogsIDs){
       let fetchDogInfoWithUser = async(dogID) => {
-          const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}getdogbyid/${dogID}`, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-          });
+          const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}getdogbyid/${dogID}`)
+          console.log("here");
           const data = await response.json();
           if (!data.result) {
             return { result: false, error: "dogInfo not found" };
@@ -61,9 +61,8 @@ export default function PromenadeInscriptionScreen ({ navigation, route }) {
         let dogInfoPart2 = dogsIDs.map((dogID) => fetchDogInfoWithUser(dogID))
         console.log("dogInfoPart2", dogInfoPart2);
         fetchDogInfoWithUser("65d5e5c3a5ad1ab25e3f2fda")
-        fetchDogInfoWithUser(65d5e5c3a5ad1ab25e3f2fda)
     }
-  }, []);   */
+  }, []); */  
 
   // Mise en forme des données pour le scroller (Flatlist)
   let scrollerInfoPart1 = mapData[0].dogIDs.map ((dog, i) => {
