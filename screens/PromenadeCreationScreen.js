@@ -72,7 +72,7 @@ export default function PromenadeCreationScreen ({ navigation }) {
   const handleNewWalk= () => {
     // On s'assure que l'utilisateur a placé au moins un marquer
     if (itinerary === undefined || itinerary.length == 0 ) {
-      Alert.alert("Indiquer l'itinéraire en effectuant des appuis longs pour placer des marqueurs");
+      Alert.alert("Indiquer l'itinéraire en effectuant des appuis longs sur la carte");
       return;
     } else {
       // Send new walk to backend to register it in database
