@@ -41,28 +41,9 @@ export default function PromenadeInscriptionScreen ({ navigation, route }) {
   })
   //console.log ("dogsIDs", dogsIDs)
 
-  //le useEffect ne fonctionne pas
-  // Gestion des dogs et humains inscrits
-  // 'dog._id': { $in: [array du front] } // je donne un array et je cherche tous les résulats qui correspondent à 
-  // au moins un résulat de la liste
- /*  useEffect(() => {
-    if (dogsIDs){
-      let fetchDogInfoWithUser = async(dogID) => {
-          const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}getdogbyid/${dogID}`)
-          console.log("here");
-          const data = await response.json();
-          if (!data.result) {
-            return { result: false, error: "dogInfo not found" };
-          } else {
-            return data.dog;
-          } 
-        }; 
-
-        let dogInfoPart2 = dogsIDs.map((dogID) => fetchDogInfoWithUser(dogID))
-        console.log("dogInfoPart2", dogInfoPart2);
-        fetchDogInfoWithUser("65d5e5c3a5ad1ab25e3f2fda")
-    }
-  }, []); */  
+  //let username = mapData[0].dogIDs[0].userID.username;
+  //console.log("username", username);
+   
 
   // Mise en forme des données pour le scroller (Flatlist)
   let scrollerInfoPart1 = mapData[0].dogIDs.map ((dog, i) => {
@@ -71,7 +52,8 @@ export default function PromenadeInscriptionScreen ({ navigation, route }) {
       dogName: dog.dogName,
       isFemale: dog.isFemale,
       dogBirthdate: dog.birthdate,
-      breedName : dog.breedID?.breedNameEN ? dog.breedID.breedNameEN : null // le ? permet d'eviter que l'appli ne plante si dog.breedID est "undefined"
+      breedName: dog.breedID?.breedNameEN ? dog.breedID.breedNameEN : null, // le ? permet d'eviter que l'appli ne plante si dog.breedID est "undefined"
+      username: dog.userID.username,
     }
     return dogInfo;
   })
@@ -127,12 +109,42 @@ export default function PromenadeInscriptionScreen ({ navigation, route }) {
   return (
     <View style={styles.container}>
       <View style={styles.walkEventInfo}>
-        <Text> Nom : {mapData[0].eventName}</Text>
-        <Text> Date : {mapData[0].eventDate} Heure: {mapData[0].eventTime}</Text>
-        <Text> Ville: {mapData[0].eventCity} environment: {mapData[0].walkID.environment} </Text>
-        <Text> rythme: {mapData[0].walkID.rythme}</Text>
-        <Text> distance: {mapData[0].walkID.distance} km durée: {mapData[0].walkID.duration} min</Text>
-        <Text> description: {mapData[0].walkID.description}</Text>
+        <View style={styles.walkEventLine}>
+          <Text style={styles.textPropriety}> Nom : </Text>
+          <Text style={styles.textValue}>{mapData[0].eventName}</Text>
+        </View>
+        <View style={styles.walkEventLine}>
+          <Text style={styles.textPropriety}> Date - Heure : </Text>
+          <Text style={styles.textValue}>{mapData[0].eventDate} - {mapData[0].eventTime} </Text>
+        </View>
+        <View style={styles.twoProprietyOnOneLine}>      
+          <View style={styles.walkEventLine}>
+            <Text style={styles.textPropriety}> Ville: </Text>
+            <Text style={styles.textValue}>{mapData[0].eventCity} </Text>
+          </View>
+          <View style={styles.walkEventLine}>
+            <Text style={styles.textPropriety}> Environment: </Text>
+            <Text style={styles.textValue}> {mapData[0].walkID.environment} </Text>
+          </View>
+        </View> 
+        <View style={styles.walkEventLine}>
+          <Text style={styles.textPropriety}> rythme: </Text>
+          <Text style={styles.textValue}>{mapData[0].walkID.rythme} </Text>
+        </View>
+        <View style={styles.twoProprietyOnOneLine}>      
+          <View style={styles.walkEventLine}>
+            <Text style={styles.textPropriety}> Distance: </Text>
+            <Text style={styles.textValue}>{mapData[0].walkID.distance} km </Text>
+          </View>
+          <View style={styles.walkEventLine}>
+            <Text style={styles.textPropriety}> Durée: </Text>
+            <Text style={styles.textValue}> {mapData[0].walkID.duration} min </Text>
+          </View>
+        </View> 
+        <View style={styles.walkEventLine}>
+          <Text style={styles.textPropriety}> description: </Text>
+          <Text style={styles.textValue}>{mapData[0].walkID.description}</Text>
+        </View>
       </View>
       <View style={styles.buttonsContainer}>
           <TouchableOpacity
@@ -163,7 +175,7 @@ export default function PromenadeInscriptionScreen ({ navigation, route }) {
                   dogName={item.dogName} 
                   breedName={item.breedName} 
                   isFemale={item.isFemale}
-                  username="Humain : inconnu pour le moment" 
+                  username={item.username} 
                 />
               }
               keyExtractor={item => item.key}
@@ -205,5 +217,19 @@ export default function PromenadeInscriptionScreen ({ navigation, route }) {
         borderRadius: 10,
         marginBottom: 80,
       },
+      walkEventLine: {
+        flexDirection: 'row',
+        justifyContent: "space-between",
+        alignItems: "center",
+      },
+      textValue: {
+        color: "blue",
+        fontWeight: "bold",
+      },
+      twoProprietyOnOneLine: {
+        flexDirection: 'row',
+        justifyContent: "space-between",
+        alignItems: "center",
+      }
     });
     

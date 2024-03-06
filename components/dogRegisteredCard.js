@@ -22,20 +22,20 @@ import {
   export default function DogRegisteredCard (props) {
   
     let dogGender = props.isFemale ? "femelle" : "mâle";
-    let breedName = props.breedName ? props.breedName : "race inconnue";
+    let breedName = props.breedName ? props.breedName : "inconnue";
       return (
           <Pressable>
               <View style={styles.card}>
                   <View style={styles.dogPicture}>
                   </View>
                   <View style={styles.centralTexts}>
-                      <Text style={styles.text}> {props.dogName} </Text>
-                      <Text style={styles.text}> {dogGender}     </Text>
-                      <Text style={styles.text}> {breedName}     </Text>
+                      <Text style={styles.text}> Chien : {props.dogName} </Text>
+                      <Text style={styles.text}> Genre : {dogGender}     </Text>
+                      <Text style={styles.text}> Race : {breedName}     </Text>
                   </View> 
                   <View style={styles.rightPart}>
                       <View style={styles.userInfo}>
-                        <Text style={styles.text}> {props.username}     </Text>  
+                        <Text style={styles.text}> Humain : {props.username}     </Text>  
                       </View>
                   </View>
               </View>
@@ -64,7 +64,7 @@ import {
           height: "70%",
       },
       centralTexts: {
-        width: "30%",
+        width: "50%",
   
       },
       rightPart: {
@@ -73,18 +73,9 @@ import {
           justifyContent: "space-around",
           
       },
-      dateTime: {
-          width: "100%",
-          height: "30%",
-          flexDirection: "row",
-      },
       timePicture: {
          /*  width: "20%",
           height: "90%", */
-      },
-      time: {
-          width: "80%",
-          height: "90%",
       },
       participateButton: {
           width: "90%",
