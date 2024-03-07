@@ -29,13 +29,25 @@ import {
                   <View style={styles.dogPicture}>
                   </View>
                   <View style={styles.centralTexts}>
-                      <Text style={styles.text}> Chien : {props.dogName} </Text>
-                      <Text style={styles.text}> Genre : {dogGender}     </Text>
-                      <Text style={styles.text}> Race : {breedName}     </Text>
+                      <View style={styles.walkEventLine}>
+                        <Text style={styles.textPropriety}> Chien : </Text>
+                        <Text style={styles.textValue}>{props.dogName}</Text>
+                      </View>
+                      <View style={styles.walkEventLine}>
+                        <Text style={styles.textPropriety}> Genre : </Text>
+                        <Text style={styles.textValue}> {dogGender} </Text>
+                      </View>
+                      <View style={styles.walkEventLine}>
+                        <Text style={styles.textPropriety}> Race : </Text>
+                        <Text style={styles.textValue}> {breedName} </Text>
+                      </View>
                   </View> 
                   <View style={styles.rightPart}>
                       <View style={styles.userInfo}>
-                        <Text style={styles.text}> Humain : {props.username}     </Text>  
+                        <View style={styles.walkEventLine}>
+                          <Text style={styles.textPropriety}> Humain : </Text>
+                          <Text style={styles.textValue}> {props.username} </Text>
+                        </View>
                       </View>
                   </View>
               </View>
@@ -104,5 +116,20 @@ import {
           fontSize: 12,
           color: "black",
       },
+      walkEventLine: {
+        flexDirection: 'row',
+        justifyContent: "space-between",
+        alignItems: "center",
+      },
+      textValue: {
+        color: "#6190E6",
+        fontWeight: "bold",
+        alignItems: "left",
+      },
+      twoProprietyOnOneLine: {
+        flexDirection: 'row',
+        justifyContent: "space-between",
+        alignItems: "center",
+      }
   });
     
