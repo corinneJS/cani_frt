@@ -159,8 +159,8 @@ export default function PromenadeCreationScreen ({ navigation }) {
             <TextInput placeholder="Rythme" onChangeText={(value) => setRythme(value)} value={rythme} style={styles.input} />
           </View>
           <View style={styles.distDuree}>
-            <TextInput placeholder="Distance" onChangeText={(value) => setDistance(value)} value={distance} style={styles.input} />
-            <TextInput placeholder="Durée" onChangeText={(value) => setDuration(value)} value={duration} style={styles.input} />
+            <TextInput placeholder="Distance (en km)" onChangeText={(value) => setDistance(value)} value={distance} style={styles.input} />
+            <TextInput placeholder="Durée (en minutes)" onChangeText={(value) => setDuration(value)} value={duration} style={styles.input} />
           </View>
           <TextInput placeholder="Description" onChangeText={(value) => setDescription(value)} value={description} style={styles.input} />
         </View>
