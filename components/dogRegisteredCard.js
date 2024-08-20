@@ -66,7 +66,7 @@ import {
           shadowOffset: {width: -2, height: 4},
           shadowOpacity: 0.2,
           shadowRadius: 3,
-          borderRadius: 50,
+          borderRadius: 5,
           flexDirection: "row",
           justifyContent: "space-around",
           alignItems: "center",
@@ -124,7 +124,7 @@ import {
       textValue: {
         color: "#6190E6",
         fontWeight: "bold",
-        alignItems: "left",
+        alignItems: "flex-start",
       },
       twoProprietyOnOneLine: {
         flexDirection: 'row',

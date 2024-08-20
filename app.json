@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "frontend",
-    "slug": "frontend",
+    "slug": "caniconnect",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -35,10 +35,11 @@
     "plugins": [
       "expo-font"
     ],
-    "owner": "caniconnect",
+    "owner": "corinnejs",
     "extra": {
+      
       "eas": {
-        "projectId": "51276322-0b74-4b57-893c-ffc527bd4606"
+        "projectId": "da75a3e4-eebd-4000-9e88-b9df202ca3db"
       }
     }
   }
