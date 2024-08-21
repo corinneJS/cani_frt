@@ -1,6 +1,6 @@
 import { useSelector} from "react-redux";
 import { infoDog } from "../reducers/dog";
-
+import Constants from "expo-constants";
 
 
 // Les 4pattes rattachés à un userID
@@ -8,7 +8,9 @@ import { infoDog } from "../reducers/dog";
 export const findDogsByUserID_webSrv = async (userID) => {
   console.log("findDogsByUserID_webSrv, reception userId ", userID);
 
-  const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}dogs/first_fromuser/${userID}`);
+  const response = await fetch(
+    `${Constants.expoConfig.extra.EXPO_PUBLIC_BASE_URL}dogs/first_fromuser/${userID}`
+  );
   console.log("retour response /firstDog dans le webSrv", response);
 
   const data = await response.json();
@@ -33,7 +35,7 @@ export const updateDog_webSrv = async (infoDog) => {
   console.log("updateDog_webSrv,  rest", rest);
   
   const response = await fetch(
-    `${process.env.EXPO_PUBLIC_BASE_URL}dogs/updateDog/${dogID}`,
+    `${Constants.expoConfig.extra.EXPO_PUBLIC_BASE_URL}dogs/updateDog/${dogID}`,
     {
       method: "PUT",
       headers: { "Content-Type": "application/json" },

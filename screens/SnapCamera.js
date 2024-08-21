@@ -13,7 +13,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useDispatch } from 'react-redux';
 import { addPhoto } from '../reducers/user';
 import { addDogPhoto } from '../reducers/dog';
-
+import Constants from "expo-constants";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useIsFocused } from '@react-navigation/native';
 // import feuille de style globale
@@ -48,10 +48,13 @@ export default function SnapCamera() {
       type: 'image/jpeg',
     });
 
-    const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}upload`, {
-      method: "POST",
-      body: formData,
-    })
+    const response = await fetch(
+      `${Constants.expoConfig.extra.EXPO_PUBLIC_BASE_URL}upload`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
     const data = await response.json();
       console.log("data retourné par fetch upload vers backend", data);
       

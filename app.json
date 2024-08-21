@@ -37,7 +37,7 @@
     ],
     "owner": "corinnejs",
     "extra": {
-      
+      "EXPO_PUBLIC_BASE_URL":"http://192.168.1.198:3000/",
       "eas": {
         "projectId": "da75a3e4-eebd-4000-9e88-b9df202ca3db"
       }

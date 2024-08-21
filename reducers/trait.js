@@ -1,12 +1,15 @@
-import { createAsyncThunk,createSlice } from '@reduxjs/toolkit';
+import Constants from "expo-constants";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 // Création d'un thunk asynchrone
 export const fetchTraitsAsync = createAsyncThunk(
-  'traits/fetchTraits',
+  "traits/fetchTraits",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}traits/`);
-      if (!response.ok) throw new Error('Network response was not ok');
+      const response = await fetch(
+        `${Constants.expoConfig.extra.EXPO_PUBLIC_BASE_URL}traits/`
+      );
+      if (!response.ok) throw new Error("Network response was not ok");
       const data = await response.json();
       return data;
     } catch (error) {
@@ -24,9 +27,8 @@ const initialTraitState = {
       photoUrl: "",
       breedID: "",
     },
-  ]
+  ],
 };
-
 
 export const traitsSlice = createSlice({
   name: "traits",
@@ -51,11 +53,11 @@ export const traitsSlice = createSlice({
     // Action pour reset le caractère
     resetTraitStore: () => initialState,
 
-    // 
+    //
     traitList: (state, action) => {
-      state.value.traitID = action.payload.traitID; 
+      state.value.traitID = action.payload.traitID;
 
-      state.value.traitName = action.payload.traitName; 
+      state.value.traitName = action.payload.traitName;
       state.value.description = action.payload.description;
       state.value.photoUrl = action.payload.PhotoUrl;
       state.value.breedID = action.payload.breedID;
@@ -84,6 +86,13 @@ export const traitsSlice = createSlice({
   },
 });
 
-export const { addTrait, removeTrait,updateTraitList, resetTraitStore, traitList, traitDogList } = traitsSlice.actions;
+export const {
+  addTrait,
+  removeTrait,
+  updateTraitList,
+  resetTraitStore,
+  traitList,
+  traitDogList,
+} = traitsSlice.actions;
 export default traitsSlice.reducer;
-Traits
+Traits;

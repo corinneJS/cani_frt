@@ -1,6 +1,6 @@
 import { useSelector} from "react-redux";
 import { infoUser } from "../reducers/user";
-
+import Constants from "expo-constants";
 
 
 
@@ -17,7 +17,7 @@ export const updateUser_webSrv = async (infoUser) => {
   console.log("updateUser_webSrv,  rest", rest);
   
   const response = await fetch(
-    `${process.env.EXPO_PUBLIC_BASE_URL}users/updateUser/${userID}`,
+    `${Constants.expoConfig.extra.EXPO_PUBLIC_BASE_URL}users/updateUser/${userID}`,
     {
       method: "PUT",
       headers: { "Content-Type": "application/json" },

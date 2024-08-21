@@ -1,9 +1,9 @@
-
+import Constants from "expo-constants";
 export const findTraitsByDogID_webSrv = async (dogID) => {
   console.log("findTraitsByDogID_webSrv, reception dogID ", dogID);
 
   const response = await fetch(
-    `${process.env.EXPO_PUBLIC_BASE_URL}traits/${dogID}`
+    `${Constants.expoConfig.extra.EXPO_PUBLIC_BASE_URL}traits/${dogID}`
   );
 
   console.log("retour response /findTraitsBydogID dans le webSrv", response);
@@ -17,14 +17,13 @@ export const findTraitsByDogID_webSrv = async (dogID) => {
   }
 };
 export const AllTraits_webSrv = async () => {
-      const response = await fetch(
-        `${process.env.EXPO_PUBLIC_BASE_URL}traits/`
-      );
-      const data = await response.json();
+  const response = await fetch(
+    `${Constants.expoConfig.extra.EXPO_PUBLIC_BASE_URL}traits/`
+  );
+  const data = await response.json();
   if (data.result) {
-    return {"result": true, "traits": data.trait };
-  }else{
-    return { "result": false, "error": "traits not found" };
-  };
-  
+    return { result: true, traits: data.trait };
+  } else {
+    return { result: false, error: "traits not found" };
+  }
 };
