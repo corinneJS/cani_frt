@@ -1,10 +1,8 @@
-import { config } from "dotenv";
-const srvURL = Constants.manifest.extra.srvURL;
+import Constants from "expo-constants";
+const srvURL = Constants.expoConfig.extra.EXPO_PUBLIC_BASE_URL;
 
 export const OneBreedById_webSrv = async (idBreed) => {
-  const response = await fetch(
-    `${srvURL}breeds?idBreed=${idBreed}`
-  );
+  const response = await fetch(`${srvURL}breeds?idBreed=${idBreed}`);
   const data = await response.json();
   console.log("Retour web-service", data);
   if (data) {

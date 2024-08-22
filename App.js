@@ -25,7 +25,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import BreedsScreen from "./screens/BreedsScreen";
-
+import BreedDetailScreen from "./screens/BreedDetailScreen";
 import WelcomeScreen from "./screens/WelcomeScreen";
 import ProfilScreen from "./screens/ProfilScreen";
 import DogProfilScreen from "./screens/DogProfilScreen";
@@ -235,30 +235,73 @@ export default function App() {
           screenOptions={({ navigation }) => ({
             headerTransparent: true,
             headerShown: true,
-            headerRight: () => (<CustomHeaderRight navigation={navigation} screenName=""/>)  
-          })}>
+            headerRight: () => (
+              <CustomHeaderRight navigation={navigation} screenName="" />
+            ),
+          })}
+        >
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{ title: "🐾 caniConnect" }}
+          />
+          <Stack.Screen
+            name="DogProfil"
+            component={DogProfilScreen}
+            options={{ title: "🐾 Profil 4 pattes" }}
+          />
+          <Stack.Screen
+            name="BreedDetail"
+            component={BreedDetailScreen}
+            options={{ title: "🐾 Race de chiens" }}
+          />
+          <Stack.Screen
+            name="SnapCamera"
+            component={SnapCamera}
+            options={{ title: "🐾 Camera" }}
+          />
+          <Stack.Screen
+            name="UserProfil"
+            component={UserProfilScreen}
+            options={{ title: "🐾 caniConnect" }}
+          />
+          <Stack.Screen
+            name="UserHistory"
+            component={UserHistoryScreen}
+            options={{ title: "🐾 caniConnect" }}
+          />
+          <Stack.Screen
+            name="Welcome"
+            component={WelcomeScreen}
+            options={{ title: "🐾 caniConnect" }}
+          />
+          <Stack.Screen
+            name="Register"
+            component={RegisterScreen}
+            options={{ title: "🐾 S'inscrire" }}
+          />
+          <Stack.Screen
+            name="TabNavigator"
+            component={TabNavigator}
+            options={{ title: "🐾 caniConnect" }}
+          />
+          <Stack.Screen
+            name="PromenadeCreation"
+            component={PromenadeCreationScreen}
+          />
+          <Stack.Screen
+            name="PromenadeRecherche"
+            component={PromenadeRechercheScreen}
+          />
+          <Stack.Screen
+            name="PromenadeInscription"
+            component={PromenadeInscriptionScreen}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
 
-              
-          <Stack.Screen name="Login" component={LoginScreen} options={{ title: "🐾 caniConnect" }}/>
-          <Stack.Screen name="DogProfil" component={DogProfilScreen} options={{title: "🐾 Profil 4 pattes"}}/>
-          <Stack.Screen name="SnapCamera" component={SnapCamera} options={{title: "🐾 Camera"}}/>
-          <Stack.Screen name="UserProfil" component={UserProfilScreen} options={{ title: "🐾 caniConnect" }}/>
-          <Stack.Screen name="UserHistory" component={UserHistoryScreen} options={{ title: "🐾 caniConnect" }}/>
-          <Stack.Screen name="Welcome" component={WelcomeScreen} options={{ title: "🐾 caniConnect" }}/>
-          <Stack.Screen name="Register" component={RegisterScreen} options={{ title: "🐾 S'inscrire" }}/>
-          <Stack.Screen name="TabNavigator" component={TabNavigator} options={{ title: "🐾 caniConnect" }}/>
-          <Stack.Screen name="PromenadeCreation" component={PromenadeCreationScreen}/>
-          <Stack.Screen name="PromenadeRecherche" component={PromenadeRechercheScreen}/>
-          <Stack.Screen name="PromenadeInscription" component={PromenadeInscriptionScreen}/>
-          </Stack.Navigator>
-         </NavigationContainer>
-          
-              {/* </PersistGate> */}
-     
-          </Provider>
-          
-     
-
+      {/* </PersistGate> */}
+    </Provider>
   );
 }
 

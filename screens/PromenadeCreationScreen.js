@@ -32,7 +32,7 @@ export default function PromenadeCreationScreen ({ navigation }) {
   const user = useSelector((state) => state.user.value);
   const dog = useSelector((state) => state.dog.value);
 
-  const [currentPosition, setCurrentPosition] = useState({latitude: -16.5, longitude: -151.74});
+  const [currentPosition, setCurrentPosition] = useState({latitude: 2.3, longitude: 48.8});
   const [name, setName] = useState("");
   const [environment, setEnvironment] = useState("");
   const [rythme, setRythme] = useState("");

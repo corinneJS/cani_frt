@@ -29,7 +29,10 @@ export default function WelcomeScreen({navigation}) {
     >
       <SafeAreaView>
         <View style={globalCSS.container}>
-          <Image source={require("../assets/ccLogoColor.png")}></Image>
+          <Image
+            style={styles.image}
+            source={require("../assets/ccLogoColor.png")}
+          />
           <Text style={globalCSS.title}>On va se promener ?</Text>
           <Text style={globalCSS.stitle}>
             Localisez et rejoignez les 4pattes préférés de votre loulou de
@@ -57,11 +60,9 @@ export default function WelcomeScreen({navigation}) {
 }
 
 const styles = StyleSheet.create({
-  backgrdImage: {
-    flex: 1,
-    resizeMode: "cover",
-    height: "100%",
-    width: "100%",
-    justifyContent: "center",
-  },
+  image: {
+    resizeMode: "contain",
+
+    width: "90%",
+    },
 }); 
