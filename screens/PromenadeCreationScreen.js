@@ -21,7 +21,7 @@ import { addWalk, removeWalk, importWalks, addItinerary } from '../reducers/walk
 import { infoUser } from '../reducers/user';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
-
+import Constants from "expo-constants";
 //feuille de style global
 const globalCSS = require("../styles/global.js");
 
@@ -50,6 +50,7 @@ export default function PromenadeCreationScreen ({ navigation }) {
 
   useEffect(() => {
     (async () => {
+      //On demande au chargement de la page l'authorisation d'accès à la géolocalisation
       const { status } = await Location.requestForegroundPermissionsAsync();
 
       if (status === 'granted') {
@@ -76,19 +77,19 @@ export default function PromenadeCreationScreen ({ navigation }) {
       return;
     } else {
       // Send new walk to backend to register it in database
-      fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/walks/create`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          name: name, 
-          environment: environment, 
+      fetch(`${Constants.expoConfig.extra.EXPO_PUBLIC_BASE_URL}/walks/create`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name,
+          environment: environment,
           rythme: rythme,
           distance: distance,
           description: description,
           token: user.token, // user.token vient du store redux
           dogID: dog.dogID, // dog.dogID vient du store redux
-          duration : duration,
-          dateCreated: new Date,
+          duration: duration,
+          dateCreated: new Date(),
           dateModified: null,
           itinerary: itinerary,
           eventName: eventName,
@@ -96,34 +97,37 @@ export default function PromenadeCreationScreen ({ navigation }) {
           eventTime: eventTime,
           eventCity: eventCity,
         }),
-      }).then((response) => response.json())
+      })
+        .then((response) => response.json())
         .then((data) => {
           // Dispatch in Redux store if the new place have been registered in database
           if (data.result) {
-            dispatch(addWalk({
-              name: name, 
-              environment: environment, 
-              rythme: rythme,
-              distance: distance,
-              description: description,
-              duration : duration,
-            }))
+            dispatch(
+              addWalk({
+                name: name,
+                environment: environment,
+                rythme: rythme,
+                distance: distance,
+                description: description,
+                duration: duration,
+              })
+            );
             dispatch(addItinerary(itinerary));
 
-            console.log("reducer walk:", walk.walks)
-            console.log("itinerary:", itinerary)
-            console.log("reducer walk/itineraries:", walk.itineraries)
-            setName('');
-            setEnvironment('');
-            setRythme('');
+            console.log("reducer walk:", walk.walks);
+            console.log("itinerary:", itinerary);
+            console.log("reducer walk/itineraries:", walk.itineraries);
+            setName("");
+            setEnvironment("");
+            setRythme("");
             setDistance();
-            setDescription('');
+            setDescription("");
             setDuration();
             setItinerary([]);
-            setEventName('');
-            setEventDate('');
-            setEventTime('');
-            setEventCity('');
+            setEventName("");
+            setEventDate("");
+            setEventTime("");
+            setEventCity("");
             Alert.alert("Promenade créée avec succès !");
           }
         });
@@ -139,45 +143,108 @@ export default function PromenadeCreationScreen ({ navigation }) {
       colors={["#F2B872", "#FFFFFF"]}
       style={globalCSS.backgrdContainer}
     >
-      <Text>Welcome to caniconnect PromenadeCreationScreen !</Text>
-      <MapView onLongPress={(e) => handleLongPress(e)} mapType="standard" style={styles.map} 
+      <Text>Créer votre promenade</Text>
+      <MapView
+        onLongPress={(e) => handleLongPress(e)}
+        mapType="standard"
+        style={styles.map}
         region={{
-            latitude: currentPosition.latitude,
-            longitude: currentPosition.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
+          latitude: currentPosition.latitude,
+          longitude: currentPosition.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
       >
-        {currentPosition && <Marker coordinate={currentPosition} title="My position" pinColor="#fecb2d" />}
+        {currentPosition && (
+          <Marker
+            coordinate={currentPosition}
+            title="My position"
+            pinColor="#fecb2d"
+          />
+        )}
         {markers}
       </MapView>
       <View style={styles.formContent}>
         <View style={styles.walkInputs}>
-          <TextInput placeholder="Nom de la promenade" onChangeText={(value) => setName(value)} value={name} style={styles.input} />
+          <Text>Cliquez sur la carte pour créer votre itinéraire puis renseigner les infos ci-dessous :</Text>
+          <TextInput
+            placeholder="Nom de la promenade"
+            onChangeText={(value) => setName(value)}
+            value={name}
+            style={styles.input}
+          />
           <View style={styles.envRythme}>
-            <TextInput placeholder="Environnement" onChangeText={(value) => setEnvironment(value)} value={environment} style={styles.input} />
-            <TextInput placeholder="Rythme" onChangeText={(value) => setRythme(value)} value={rythme} style={styles.input} />
+            <TextInput
+              placeholder="Environnement"
+              onChangeText={(value) => setEnvironment(value)}
+              value={environment}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Rythme"
+              onChangeText={(value) => setRythme(value)}
+              value={rythme}
+              style={styles.input}
+            />
           </View>
           <View style={styles.distDuree}>
-            <TextInput placeholder="Distance (en km)" onChangeText={(value) => setDistance(value)} value={distance} style={styles.input} />
-            <TextInput placeholder="Durée (en minutes)" onChangeText={(value) => setDuration(value)} value={duration} style={styles.input} />
+            <TextInput
+              placeholder="Distance (en km)"
+              onChangeText={(value) => setDistance(value)}
+              value={distance}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Durée (en minutes)"
+              onChangeText={(value) => setDuration(value)}
+              value={duration}
+              style={styles.input}
+            />
           </View>
-          <TextInput placeholder="Description" onChangeText={(value) => setDescription(value)} value={description} style={styles.input} />
+          <TextInput
+            placeholder="Description"
+            onChangeText={(value) => setDescription(value)}
+            value={description}
+            style={styles.input}
+          />
         </View>
 
         <View style={styles.walkEventInputs}>
-          <TextInput placeholder="Nom de l'événement" onChangeText={(value) => setEventName(value)} value={eventName} style={styles.input} />
+          <TextInput
+            placeholder="Nom de l'événement"
+            onChangeText={(value) => setEventName(value)}
+            value={eventName}
+            style={styles.input}
+          />
           <View style={styles.dateTime}>
-            <TextInput placeholder="Date" onChangeText={(value) => setEventDate(value)} value={eventDate} style={styles.input} />
-            <TextInput placeholder="Heure" onChangeText={(value) => setEventTime(value)} value={eventTime} style={styles.input} />
+            <TextInput
+              placeholder="Date"
+              onChangeText={(value) => setEventDate(value)}
+              value={eventDate}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Heure"
+              onChangeText={(value) => setEventTime(value)}
+              value={eventTime}
+              style={styles.input}
+            />
           </View>
-          <TextInput placeholder="Ville" onChangeText={(value) => setEventCity(value)} value={eventCity} style={styles.input} />       
+          <TextInput
+            placeholder="Ville"
+            onChangeText={(value) => setEventCity(value)}
+            value={eventCity}
+            style={styles.input}
+          />
         </View>
 
-        <TouchableOpacity onPress={() => handleNewWalk()} style={globalCSS.button} activeOpacity={0.8}>
-            <Text style={globalCSS.textButton}>Valider</Text>
+        <TouchableOpacity
+          onPress={() => handleNewWalk()}
+          style={globalCSS.button}
+          activeOpacity={0.8}
+        >
+          <Text style={globalCSS.textButton}>Valider</Text>
         </TouchableOpacity>
-        
       </View>
       <StatusBar style="auto" />
     </LinearGradient>
@@ -193,12 +260,12 @@ const styles = StyleSheet.create({
     },
     map: {
       width: '100%',
-      height: '30%',
+      height: '50%',
     },
     formContent: {
       width: "100%",
       justifyContent: "center",
-      alignItems: "center",
+      alignItems: "flex-start",
     },
     input: {
       width: "40%",

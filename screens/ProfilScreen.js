@@ -1,7 +1,7 @@
 import {
   KeyboardAvoidingView,
   Platform,
-  
+  Image,
   SafeAreaView,
   View,
   StatusBar,
@@ -40,6 +40,21 @@ export default function ProfilScreen({ navigation }) {
               <TouchableOpacity
                 style={globalCSS.profilContainer}
                 onPress={() =>
+                  navigation.navigate("DogProfil", {
+                    dogID: reduxInfoDog.dogID,
+                    userID: reduxInfoUser.userID,
+                  })
+                }
+              >
+                <Image
+                  source={{ uri: reduxInfoDog.photoUrl }}
+                  style={globalCSS.dogImage}
+                />
+                <Text style={globalCSS.stitle}>{reduxInfoDog.dogName}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={globalCSS.profilContainer}
+                onPress={() =>
                   navigation.navigate("UserProfil", {
                     userID: reduxInfoUser.userID,
                   })
@@ -51,18 +66,6 @@ export default function ProfilScreen({ navigation }) {
                   color="#F2B872"
                 />
                 <Text style={globalCSS.stitle}>{reduxInfoUser.username}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={globalCSS.profilContainer}
-                onPress={() =>
-                  navigation.navigate("DogProfil", {
-                    dogID: reduxInfoDog.dogID,
-                    userID: reduxInfoUser.userID,
-                  })
-                }
-              >
-                <MaterialCommunityIcons name="dog" size={80} color="black" />
-                <Text style={globalCSS.stitle}>{reduxInfoDog.dogName}</Text>
               </TouchableOpacity>
             </View>
             <View>

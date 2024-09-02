@@ -18,7 +18,7 @@ import {
 } from "react-native";
 import { DatePickerModal } from "react-native-paper-dates";
 import Gallery from "../components/Gallery.js";
-// import CityDropDown from "../components/CityDropDown.js";
+
 import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -130,31 +130,7 @@ export default function UserProfilScreen({ route, navigation }) {
   //---------------------------------------------------------------------------------------------------------------------------------------//
   // Gestion
 
-  // Galerie :
-  // photo de profil
-
-  // Fonction pour gérer l'API cities
-  const searchCity = async (query) => {
-    // Prevent search with an empty query
-    if (query === "") {
-      return;
-    }
-
-    const response = await fetch(
-      `https://api-adresse.data.gouv.fr/search/?q=${query}`
-    );
-    const features = await response.json();
-
-    console.log(features);
-    const suggestions = features.map((data, i) => {
-      return {
-        id: i,
-        title: data.properties.name,
-        context: data.properties.context,
-      };
-    });
-    setDataSet(suggestions);
-  };
+  
 
   // Fonction pour gérer le datePicker
 
@@ -306,20 +282,7 @@ export default function UserProfilScreen({ route, navigation }) {
                 value={userInfo.city}
                 style={globalCSS.input}
               />
-              <View>
-                <AutocompleteDropdown
-                  onChangeText={(value) => searchCity(value)}
-                  onSelectItem={(item) => handleFieldChange("city", item)}
-                  onBlur={() => handleUpdateUserInfo("city")}
-                  dataSet={dataSet}
-                  textInputProps={{ placeholder: "Rechercher votre ville" }}
-                  inputContainerStyle={styles.inputContainer}
-                  containerStyle={styles.dropdownContainer}
-                  suggestionsListContainerStyle={styles.suggestionListContainer}
-                  closeOnSubmit
-                />
-              </View>
-
+             
               <TouchableOpacity
                 onPress={() => handleSave()}
                 style={globalCSS.button}
@@ -328,8 +291,7 @@ export default function UserProfilScreen({ route, navigation }) {
                 <Text style={globalCSS.textButton}>Valider</Text>
               </TouchableOpacity>
 
-              <Text>Modifié le :{userInfo.dateModified}</Text>
-              <Text>Crée le :{userInfo.dateCreated}</Text>
+              
             </View>
           </View>
           <StatusBar barStyle={"default"} hidden={false} />

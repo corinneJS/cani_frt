@@ -1,5 +1,5 @@
 // Ecran de connexion
-// Auteur : Junior
+// Auteur : Corinne
 // Objet : permettre l'authentification d'un user déjà identifié
 // par la saisie d'un mot de passe ou via la connexion google.
 // possibilité de choisir de s'inscrire

@@ -20,7 +20,7 @@ import { useIsFocused } from '@react-navigation/native';
 const globalCSS = require("../styles/global.js");
 
 
-export default function SnapCamera() {
+export default function SnapCamera({ route ,navigation}) {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
 
@@ -28,53 +28,51 @@ export default function SnapCamera() {
   const [type, setType] = useState(CameraType.back);
   const [flashMode, setFlashMode] = useState(FlashMode.off);
 
-  let cameraRef = useRef(null);
+  const cameraRef = useRef(null);
 
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status === 'granted');
+      setHasPermission(status === "granted");
     })();
   }, []);
 
   const takePicture = async () => {
-    const photo = await cameraRef.takePictureAsync({ quality: 0.3 });
-    console.log("photo.Uri", photo.uri)
-    const formData = new FormData();
+    if (cameraRef.current) {
+      const photo = await cameraRef.current.takePictureAsync({ quality: 0.3 });
+      console.log("photo.Uri", photo.uri);
+      const formData = new FormData();
 
-    formData.append('photoFromFront', {
-      uri: photo.uri,
-      name: 'photo.jpg',
-      type: 'image/jpeg',
-    });
+      formData.append("photoFromFront", {
+        uri: photo.uri,
+        name: "photo.jpg",
+        type: "image/jpeg",
+      });
 
-    const response = await fetch(
-      `${Constants.expoConfig.extra.EXPO_PUBLIC_BASE_URL}upload`,
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
-    const data = await response.json();
+      const response = await fetch(
+        `${Constants.expoConfig.extra.EXPO_PUBLIC_BASE_URL}upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const data = await response.json();
       console.log("data retourné par fetch upload vers backend", data);
-      
-    if (data.result) {
+
+      if (data.result) {
         const dogPhotoData = {
           dogPhotoName: "une photo",
           uri: data.url,
-          isProfilPhoto : true}
-        dispatch(addDogPhoto({dogPhotoData}));    
-        return { result: true, photo:dogPhotoData };
-  } else {
-    return { result: false, error: "Take Photo : Pb upload photo" };
-  }
- 
-}
- 
- 
- 
-        
- 
+          isProfilPhoto: true,
+        };
+        dispatch(addDogPhoto({ dogPhotoData }));
+        navigation.goBack();
+        return { result: true, photo: dogPhotoData };
+      } else {
+        return { result: false, error: "Take Photo : Pb upload photo" };
+      }
+    }
+  };
 
   if (!hasPermission || !isFocused) {
     return <View />;
@@ -92,8 +90,8 @@ export default function SnapCamera() {
           <Camera
             type={type}
             flashMode={flashMode}
-            ref={(ref) => (cameraRef = ref)}
-            style={styles.camera}
+            ref={(ref) => (cameraRef.current = ref)}
+            style={styles.cameraContainer}
           >
             <View style={styles.buttonsContainer}>
               <TouchableOpacity
@@ -128,7 +126,9 @@ export default function SnapCamera() {
             </View>
 
             <View style={styles.snapContainer}>
-              <TouchableOpacity onPress={() => cameraRef && takePicture()}>
+              <TouchableOpacity
+                onPress={() => cameraRef.current && takePicture()}
+              >
                 <FontAwesome name="circle-thin" size={95} color="#ffffff" />
               </TouchableOpacity>
             </View>
@@ -138,17 +138,20 @@ export default function SnapCamera() {
       </SafeAreaView>
     </LinearGradient>
   );
-
-  }
+}
 const styles = StyleSheet.create({
-  camera: {
-    flex: 1,
+  cameraContainer: {
+    flex:1,
+    width:'100%',
+    height:'100%'
   },
   buttonsContainer: {
-    flex: 0.1,
+    
     flexDirection: 'row',
     alignItems: 'flex-end',
+    width:'100%',
     justifyContent: 'space-between',
+    marginTop:20,
     paddingTop: 20,
     paddingLeft: 20,
     paddingRight: 20,
@@ -162,7 +165,10 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   snapContainer: {
+    
     flex: 1,
+    width:'100%',
+    height:'100%',
     alignItems: 'center',
     justifyContent: 'flex-end',
     paddingBottom: 25,

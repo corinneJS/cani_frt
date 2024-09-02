@@ -22,7 +22,7 @@ import {
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import WalkEventSearchCard from '../components/walkEventSearchCard';
-
+import Constants from "expo-constants";
 //feuille de style global
 const globalCSS = require("../styles/global.js");
 
@@ -82,10 +82,13 @@ export default function PromenadeRechercheScreen ({ navigation }) {
   };
 
   const handleSearch = async() => {
-    const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}walks/walkevent/${eventCity}`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    });
+    const response = await fetch(
+      `${Constants.expoConfig.extra.EXPO_PUBLIC_BASE_URL}walks/walkevent/${eventCity}`,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      }
+    );
     const data = await response.json();
 
     if (!data.result) {

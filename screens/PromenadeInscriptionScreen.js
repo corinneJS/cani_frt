@@ -23,7 +23,7 @@ import { infoUser } from '../reducers/user';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import DogRegisteredCard  from '../components/dogRegisteredCard';
-
+import Constants from "expo-constants";
 //feuille de style global
 const globalCSS = require("../styles/global.js");
 
@@ -72,21 +72,22 @@ export default function PromenadeInscriptionScreen ({ navigation, route }) {
 
   const handleRegister = () => {
     // Send new walk to backend to register it in database
-    fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/walks/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
+    fetch(`${Constants.expoConfig.extra.EXPO_PUBLIC_BASE_URL}/walks/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
         eventID: eventIDSent, // eventID vient de route.params
         token: tokenSent, // user.token vient du store redux
         dogID: dogIDSent, // dog.dogID vient du store redux
       }),
-    }).then((response) => response.json())
+    })
+      .then((response) => response.json())
       .then((data) => {
         //console.log("here data", data);
         if (data.result) {
-          Alert.alert("Inscription effectuée")
+          Alert.alert("Inscription effectuée");
         } else {
-          Alert.alert("Inscription non effectuée : un problème est survenu")
+          Alert.alert("Inscription non effectuée : un problème est survenu");
         }
       });
   };
